@@ -1,0 +1,71 @@
+.sidebar {
+    width: 10%; /* Responsive width */
+    height: 100%; /* Height of sidebar will always match that of the window.*/
+    background-color: #f1f1f1;
+    border-top-right-radius: 10px; /* Rounding the top corners. */
+    margin: 0;
+    padding: 0;
+    position: fixed;
+    overflow: auto;
+    /* Positions sidebar in the top left corner. */
+    top: 0;
+    left: 0;
+
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.sidebar a {
+    display: block;
+    color: black;
+    height: 10%;
+    text-decoration: none;
+    text-align: center;
+    margin-left: 5%;
+    margin-right: 5%;
+    border-radius: 10px;
+    /* Responsive size of the tezt. */
+    font-size: 1vw;
+
+    border-bottom: 0.1vh solid white;
+
+    /* Vertically align the text. */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+/* Colour when the element is hovered over. */
+.sidebar a:hover:not(.active) {
+    background-color: white;
+  }
+
+/* Change the colour depending on which page is 'active'. */
+.sidebar a.active {
+  color: orange;
+}
+
+#logo {
+    padding-top: 2.5%;
+    padding-bottom: 2.5%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    /* Respponsive width for when the window size is adjusted. */
+    width: 75%;
+
+}
+
+/* Change the sidebar to just display the icons without the text. */
+@media screen and (max-width: 1000px) {
+  h3.sidebar-label, h4.sidebar-label {
+    display: none;
+  }
+  /* Adjust the size of the icons to fill more of the space in absence of text. */
+  .sidebar-icon {
+    width: 75%;
+  }
+}
+/* Set the position of the icons. */
+.sidebar-icon{
+  margin-right: 5%;
+}
