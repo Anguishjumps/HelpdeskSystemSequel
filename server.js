@@ -9,11 +9,11 @@ app.set('view engine', 'ejs')
 
 app.get('/', (req, res) => {
     console.log("Here")
-    res.render("index", {text: 'Test Text'})
+    res.render("login", {text: 'Test Text'})
 })
 
 const userRouter = require('./routes/user')
-app.use('/users', userRouter)
+app.use('/user', userRouter)
 
 const specRouter = require('./routes/specialist')
 app.use('/specialist', specRouter)

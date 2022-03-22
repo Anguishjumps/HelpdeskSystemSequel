@@ -4,29 +4,29 @@ const router = express.Router()
 router.use(logger)
 
 router.get('/', (req, res) => {
-    res.send("User Main")
+    res.render("user/main")
 })
 
-router.get('/specialist-contact', (req, res) => {
-    res.send("Specialist Contact")
+router.get('/contact', (req, res) => {
+    res.render("user/contact")
 })
 
 router.get('/history', (req, res) => {
-    res.send("User History")
+    res.render("user/history")
 })
 
 router.get("/new", (req, res) => {
-    res.render("users/new")
+    res.render("user/new")
   })
   
 router.post("/", (req, res) => {
     const isValid = true
     if (isValid) {
         users.push({ firstName: req.body.firstName })
-        res.redirect(`/users/${users.length - 1}`)
+        res.redirect(`/user/${users.length - 1}`)
     } else {
         console.log("Error")
-        res.render("users/new", { firstName: req.body.firstName })
+        res.render("user/new", { firstName: req.body.firstName })
     }
 })
 
