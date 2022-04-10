@@ -7,18 +7,22 @@ router.get('/', (req, res) => {
     res.render("user/main")
 })
 
-router.get('/contact', (req, res) => {
-    res.render("user/contact")
+router.get('/new', (req, res) => {
+    res.render("user/new")
 })
 
 router.get('/history', (req, res) => {
     res.render("user/history")
 })
 
-router.get("/new", (req, res) => {
-    res.render("user/new")
+router.get("/contact", (req, res) => {
+    res.render("user/contact")
   })
-  
+
+router.get("/active-issues", (req, res) => {
+    res.render("user/active-issues")
+  })
+
 router.post("/", (req, res) => {
     const isValid = true
     if (isValid) {
