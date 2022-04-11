@@ -21,11 +21,3 @@
 * WinSCP
 * CyberDuck
 * Google Cloud Platform
-
-## Authors
-* **Lewis Clark**
-* **Tom Hurrel**
-* **Jamie White**
-* **Jonathon Williams**
-* **Raynell Braganza**
-* **Jayesh Utchanah**
