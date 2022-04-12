@@ -1,29 +1,17 @@
-// var mysql = require('mysql');
-
-// var conn = mysql.createConnection({
-//     host: "localhost",
-//     user: "teamb029",
-//     password: "pXdBPQK4cL",
-//     database: "teamb029",
-
-
+// const mysql = require('mysql');
+// //local mysql db connection
+// const dbConn = mysql.createConnection({
+//     host: 'localhost',
+//     user: 'teamb029',
+//     password: 'pXdBPQK4cL',
+//     database: 'teamb029'
 // });
-
-// conn.connect(function(err) {
+// dbConn.connect(function(err) {
 //     if (err) throw err;
-//     console.log("Connected!");
+//     console.log("Database Connected!");
+// });
+// module.exports = dbConn;
 
-//     connection.query('SELECT * FROM ticket', (err, rows) => {
-//         connection.release()
-
-//         if (!err) {
-//             res.send(rows)
-//         } else {
-//             console.log(err)
-//         }
-//     })
-// })
-// module.exports = conn;
 
 const data = [{
         id: 1,
