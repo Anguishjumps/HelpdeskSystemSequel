@@ -24,6 +24,21 @@
 						<li colspan=1><input name="searchbar" type="text" class="textinput" id="searchbar" value="" size="30" />
 						<input type="submit" name="Search" id="Search" value="Search 🔎" class="searchbutton" title="mouseover text" /></li>	
 					</ul>
+					<div class="active-issues-div" id="active-issues-div">
+                        <h1>Active Issues</h1>
+                        <script>
+                            for (let i = 0; i < 10; i++) {
+                                document.addEventListener('DOMContentLoaded', function() {
+                                    var div = document.createElement('div');
+                                    div.id = 'card';
+                                    div.innerHTML = '<h1>Card ' + i +'<h1>';
+                                    div.className = 'active-issues-div';
+                                 
+                                    document.getElementById("active-issues-div").appendChild(div);
+                                }, false);
+                            }
+                        </script>
+                    </div>
 				</div>
 			</div>
 		</div>
