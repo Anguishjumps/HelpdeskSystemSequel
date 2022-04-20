@@ -2,6 +2,7 @@
 <html>
 	<title>Active Issues</title>
 	<link href="/css/shellstylesheet.css" rel="stylesheet">
+	<link href="/css/active-issues.css" rel="stylesheet">
 	<head> 
 	</head>
 	<body>
@@ -33,7 +34,9 @@
                                     div.id = 'card';
                                     div.innerHTML = '<h1>Card ' + i +'<h1>';
                                     div.className = 'active-issues-div';
-                                 
+									div.addEventListener('click', function (event) {
+										fetch('./active-issues/'+i, {method: 'POST'})
+									});
                                     document.getElementById("active-issues-div").appendChild(div);
                                 }, false);
                             }
@@ -42,6 +45,5 @@
 				</div>
 			</div>
 		</div>
-			
 	</body>
 </html>

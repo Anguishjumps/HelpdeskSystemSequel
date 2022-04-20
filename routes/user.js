@@ -23,6 +23,11 @@ router.get("/active-issues", (req, res) => {
     res.render("user/active-issues")
   })
 
+router.post("/active-issues/:id", (req, res) => {
+    res.redirect(`/user/${users.length - 1}`)
+    console.log("bungo")
+  })
+
 router.post("/", (req, res) => {
     const isValid = true
     if (isValid) {
