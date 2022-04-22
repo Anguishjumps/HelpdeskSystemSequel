@@ -2,6 +2,7 @@ const express = require('express')
 const data = require('../database')
 const router = express.Router()
 
+
 var problemType = [];
 for (let i = 0; i < data.length; i++) {
     var problem_type = data[i].maintag;

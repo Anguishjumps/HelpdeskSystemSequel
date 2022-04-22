@@ -1,18 +1,3 @@
-// const mysql = require('mysql');
-// //local mysql db connection
-// const dbConn = mysql.createConnection({
-//     host: 'localhost',
-//     user: 'teamb029',
-//     password: 'pXdBPQK4cL',
-//     database: 'teamb029'
-// });
-// dbConn.connect(function(err) {
-//     if (err) throw err;
-//     console.log("Database Connected!");
-// });
-// module.exports = dbConn;
-
-
 const data = [{
         id: 1,
         date: "02/05/2020",

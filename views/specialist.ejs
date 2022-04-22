@@ -1,6 +1,9 @@
-</head>
-<link rel="stylesheet" href="css/specialist-page.css">
-<title>Specialist List</title>
+<!DOCTYPE html>
+
+<head>
+    <link rel="stylesheet" href="css/specialist-page.css">
+    <title>Specialist List</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 
 <body>
@@ -67,9 +70,9 @@
                                         <div class="full-row">
                                             <label for="viewReporterID">Reporter</label>
                                             <div class="input-extended input-extended-right">
-                                                <select onchange="getPhoneNo(this);" id="viewReporterID" name="reporterID" class="personnel-select " <?=$ _SESSION[ 'deptName']=='Operator' ? '' : 'disabled' ?>>
+                                                <select onchange="getPhoneNo(this);" id="viewReporterID" name="reporterID" class="personnel-select ">
                                                     <!-- Add all reporters from database as items to select -->
-                                                        <option value=<?= $personnel->ID ?>><?= $personnel->FullName ?></option>
+                                                        <option value=1></option>
                                                 </select>
                                                 <!-- Selected reporter phone number (not editable) -->
                                                 <label class="input-extension-right" for="reporterID" id="viewReporterNo"></label>
@@ -79,9 +82,9 @@
                                         <div class="full-row">
                                             <label for="viewOperatorID">Phone Operator</label>
                                             <div class="input-extended input-extended-right">
-                                                <select onchange="getPhoneNo(this);" id="viewOperatorID" name="operatorID" class="personnel-select " <?=$ _SESSION[ 'deptName']=='Operator' ? '' : 'disabled' ?>>
+                                                <select onchange="getPhoneNo(this);" id="viewOperatorID" name="operatorID" class="personnel-select ">
                                                     <!-- Add all operators from database as items to select -->
-                                                        <option value=<?= $operator->ID ?>><?= $operator->Workload ?>) <?= $operator->FullName ?></option>
+                                                        <option value=1></option>
                                                 </select>
                                                 <!-- Selected operator phone number (not editable) -->
                                                 <label class="input-extension-right" for="operatorID" id="viewOperatorNo"></label>
@@ -91,7 +94,7 @@
                                         <div class="full-row">
                                             <label for="viewAssignedSpecialistID">Assigned Specialist</label>
                                             <div class="input-extended input-extended-right">
-                                                <select onchange="getPhoneNo(this); addExternalSpecialist(this)" id="viewAssignedSpecialistID" name="assignedSpecialistID" <?=( $_SESSION[ 'deptName']=="Specialist" ? "disabled" : "") ?> class="personnel-select ">
+                                                <select onchange="getPhoneNo(this); addExternalSpecialist(this)" id="viewAssignedSpecialistID" name="assignedSpecialistID" class="personnel-select ">
                                                     <option selected value=0>Not assigned</option>
                                                     <!-- Option to add external specialist -->
                                                     <option value=-1>New External Specialist</option>
@@ -246,7 +249,7 @@
                                         <ul class="ticket-list" data-state="<%state%>" datatypeID="<%data.problemType[i]%>">
                                             <% for (var u =0; u < Object.keys(data.data).length;  u++ ) { %>
                                                 <%if (data.data[u].ticketstate == state && data.data[u].maintag == data.problemType[i]) { %>
-                                                    <li onclick="showTicket()" class="ticket" id="ticket" draggable="true" ondragstart="onDragStart(event)" data-ID="<%= data.data[u].id %>" data-Description="<%= data.data[u].ticketdescription %>" data-Reporter="<%= data.data[u].userid %>" data-AssignedSpecialistID="<%= data.data[u].assignedspecialist %>">
+                                                    <li onclick='showTicket()' class="ticket" id="ticket" draggable="true" ondragstart="onDragStart(event)" data-ID="<%= data.data[u].id %>" data-Description="<%= data.data[u].ticketdescription %>" data-Reporter="<%= data.data[u].userid %>" data-AssignedSpecialistID="<%= data.data[u].assignedspecialist %>">
                                                         <div class="ticket-body">
                                                             <p class="ticket-id">
                                                                 <%= data.data[u].id %>
@@ -265,13 +268,11 @@
                                     </td>
                                     <% }); %>
                             </tr>
-                            <% } %>
-
+                            <% }; %>
                     </tbody>
                 </table>
             </main>
         </div>
     </div>
-
-    <!-- JS -->
-    <script src="js/ticket-list.js"></script>
+</body>
+<script src="javascript/functions.js"></script>
