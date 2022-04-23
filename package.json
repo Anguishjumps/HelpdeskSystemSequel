@@ -1,0 +1,27 @@
+{
+  "name": "helpdesksystemsequel",
+  "version": "1.0.0",
+  "description": "* Our client 'Make-It-All' has tasked us with the development of a helpdesk system to replace their current manual logging system.\r * It will be used by 'Helpdesk Operators' alongside 'System Specialists' who can add, update and resolve various problems that personnel in their company are having.\r * 'Operators' log the calls they receive in the system and create/assign problem tickets to 'Specialists' who are best suited to solve the problem.",
+  "main": "index.js",
+  "scripts": {
+    "devStart": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Anguishjumps/HelpdeskSystemSequel.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Anguishjumps/HelpdeskSystemSequel/issues"
+  },
+  "homepage": "https://github.com/Anguishjumps/HelpdeskSystemSequel#readme",
+  "dependencies": {
+    "ejs": "^3.0.2",
+    "express": "^4.17.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
