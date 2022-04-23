@@ -1,10 +1,24 @@
 const express = require('express')
 const router = express.Router()
+let resultObject = {result:[]}
 
 router.use(logger)
 
 router.get('/', (req, res) => {
-    res.render("user/main")
+    res.render("user/main", resultObject)
+})
+
+router.post('/searched', (req, res) => {
+// doing a db search on inputted text object
+    //grab search term
+    let searchTerm = req.body.searchbar
+    console.log("search term: "+ searchTerm)
+    //init db query with search term
+    //pretend we got a db, make results object
+    //list results in charlotte's js in main or partial
+    //get results and make a results object
+    let resultObject = {result:[{issue: "printer", resolution: "restart"}, {issue: "computer", resolution: "off and on again"}]}
+    res.render("user/main", resultObject) // FIX
 })
 
 router.get('/new', (req, res) => {
@@ -17,11 +31,11 @@ router.get('/history', (req, res) => {
 
 router.get("/contact", (req, res) => {
     res.render("user/contact")
-  })
+})
 
 router.get("/active-issues", (req, res) => {
     res.render("user/active-issues")
-  })
+})
 
 router.post("/active-issues", (req, res) => {
     console.log(req.body.id)
@@ -42,7 +56,7 @@ router.post("/", (req, res) => {
 })
 
 router
-.route("/:id")
+    .route("/:id")
     .get((req, res) => {
         console.log(req.user)
         res.send(`Get User With ID ${req.params.id}`)
@@ -52,7 +66,7 @@ router
     })
     .delete((req, res) => {
         res.send(`Delete User With ID ${req.params.id}`)
-})
+    })
 
 const users = [{ name: "Kyle" }, { name: "Sally" }]
 router.param("id", (req, res, next, id) => {
@@ -65,4 +79,15 @@ function logger(req, res, next) {
     next()
 }
 
+
 module.exports = router
+
+/*login
+usermain
+userspec
+user hist
+
+secialistmain
+specialsit analyst
+*/
+
