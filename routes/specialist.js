@@ -14,6 +14,7 @@ console.log(problemType);
 
 router
     .get('/', (req, res) => {
+
         res.render('specialist', { data: { data: data, problemType: problemType } })
     })
     .get('/analyst', (req, res) => {
