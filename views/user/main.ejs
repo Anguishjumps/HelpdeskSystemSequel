@@ -1,153 +1,184 @@
 <html>
-	<title>Test Main Page</title>
-	<link href="./shellstylesheet.css" rel="stylesheet">
-	<head>
-        <style>
-            /*
+<title>Test Main Page</title>
+<link href="./shellstylesheet.css" rel="stylesheet">
+
+<head>
+	<style>
+		/*
 #9EA3B0 light grey
 #546A7B blue
 #0D1F2D navy
 */
 
-* {
-    box-sizing: border-box
-} 
+		* {
+			box-sizing: border-box
+		}
 
-body {
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	background-color: #0D1F2D;
-}
-.center {
-	text-align:center;
-}
-body,td,th {
-	color: #F0F0F0; 
-}
+		body {
+			font-family: Verdana, Arial, Helvetica, sans-serif;
+			background-color: #0D1F2D;
+		}
 
-.textinput {
-	font-size:larger;
-	text-align:centre;
-	border: 2px solid black;
-	font-weight: bold;
-	margin: auto;
-	cursor: text;
-	width: 80%;
-	height: 10%;
-	border-radius: 4px;
-}
+		.center {
+			text-align: center;
+		}
 
-.searchbutton {
-	font-size:larger;
-	text-align:centre;
-	color: #2C2C3C;
-	border: 2px solid black;
-	font-weight: bold;
-	background-color: #85C7F2;
-	margin: auto;
-	cursor: pointer;
-	width: 10%;
-	height: 10%;
-	border-radius: 4px;
-	transition: transform .2s;
-}
-.searchbutton:hover {
-  transform: scale(1.1);
-}
+		body,
+		td,
+		th {
+			color: #F0F0F0;
+		}
 
-.container {
-	width: 100%;
-	overflow: hidden;
-	
-}
+		.textinput {
+			font-size: larger;
+			text-align: centre;
+			border: 2px solid black;
+			font-weight: bold;
+			margin: auto;
+			cursor: text;
+			width: 80%;
+			height: 10%;
+			border-radius: 4px;
+		}
 
-.maindiv {            
-    width: 79%;           
-	height: 100%;
-    background: #0D1F2D;
-	border: 0px solid #2C2C3C;
-	overflow: hidden;
-	float:left;
-}
-.maindiv ul {
-    list-style: none; 
-    line-height: 100%;
+		.searchbutton {
+			font-size: larger;
+			text-align: centre;
+			color: #2C2C3C;
+			border: 2px solid black;
+			font-weight: bold;
+			background-color: #85C7F2;
+			margin: auto;
+			cursor: pointer;
+			width: 10%;
+			height: 10%;
+			border-radius: 4px;
+			transition: transform .2s;
+		}
 
-}
+		.searchbutton:hover {
+			transform: scale(1.1);
+		}
 
-/Navigation Bar/
-.sidebarheader {
-	margin: auto;
-	width: 50%;
-	padding: 10px;
-}
-.sidebarbutton {
-	font-size:larger;
-	text-align:centre;
-	color: #F0F0F0;
-	border: 1px solid black;
-	font-weight: bold;
-	background-color: #546A7B;
-	margin: auto;
-	cursor: pointer;
-	width: 100%;
-	height: 20%;
-}
-.sidebarbutton:hover {
-  background-color: #9EA3B0;
-  
-}
-.nav {            
-    width: 20%;           
-	height: 100%;
-    background: #5D6F7D;
-	border: 1px solid #2C2C3C;
-	overflow: auto;
-	float:left;
-}
-.nav ul {
-    line-height: 100%;
-	list-style-type: none;
-	padding: 0;
-	margin: 0;
-}
-.nav li {
-	margin: auto;
-	text-align: centre;
-}
-        </style>
-	</head>
-	<body>
-		<div class="container">
-			<div class="header">
+		.container {
+			width: 100%;
+			overflow: hidden;
+
+		}
+
+		.maindiv {
+			width: 79%;
+			height: 100%;
+			background: #0D1F2D;
+			border: 0px solid #2C2C3C;
+			overflow: hidden;
+			float: left;
+		}
+
+		.maindiv ul {
+			list-style: none;
+			line-height: 100%;
+
+		}
+
+		/Navigation Bar/ .sidebarheader {
+			margin: auto;
+			width: 50%;
+			padding: 10px;
+		}
+
+		.sidebarbutton {
+			font-size: larger;
+			text-align: centre;
+			color: #F0F0F0;
+			border: 1px solid black;
+			font-weight: bold;
+			background-color: #546A7B;
+			margin: auto;
+			cursor: pointer;
+			width: 100%;
+			height: 20%;
+		}
+
+		.sidebarbutton:hover {
+			background-color: #9EA3B0;
+
+		}
+
+		.nav {
+			width: 20%;
+			height: 100%;
+			background: #5D6F7D;
+			border: 1px solid #2C2C3C;
+			overflow: auto;
+			float: left;
+		}
+
+		.nav ul {
+			line-height: 100%;
+			list-style-type: none;
+			padding: 0;
+			margin: 0;
+		}
+
+		.nav form {
+			margin: auto;
+			text-align: centre;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="container">
+		<div class="header">
+		</div>
+		<div class="wrapper clearfix">
+			<div class="nav">
+				<ul>
+					<h1 class="sidebarheader">Sidebar</h1>
+					<li colspan=1><input type="submit" name="Search" id="Search" value="Search 🔎" class="sidebarbutton"
+							title="mouseover text" /></li>
+					<form action="/user/history" method="get">
+						<input type="submit" value="HISTORY" class="sidebarbutton">
+					</form>
+					<form action="/user/contact" method="get">
+						<input type="submit" value="CONTACT" class="sidebarbutton">
+					</form>
+					<form action="/" method="get">
+						<input type="submit" value="LOGOUT" class="sidebarbutton">
+					</form>
+				</ul>
 			</div>
-			<div class="wrapper clearfix">
-				<div class="nav">
-					<ul>
-						<h1 class="sidebarheader">Sidebar</h1>
-						<li colspan=1><input type="submit" name="Search" id="Search" value="Search 🔎" class="sidebarbutton" title="mouseover text" /></li>	
-						<form action="/user/history" method="get">
-							<input type="submit" value="HISTORY">
-						  </form>
-						  <form action="/user/contact" method="get">
-							<input type="submit" value="CONTACT">
-						  </form>
-						  <form action="/" method="get">
-							<input type="submit" value="LOGOUT">
-						  </form>
-						<li colspan=1><input type="submit" name="History" id="History" value="History" class="sidebarbutton" title="mouseover text" /></li>	
-						<li colspan=1><input type="submit" name="Contact" id="Contact" value="Contact" class="sidebarbutton" title="mouseover text" /></li>	
-						<li colspan=1><input type="submit" name="Log Out" id="Log Out" value="Log Out" class="sidebarbutton" title="mouseover text" /></li>
-					</ul>
-				</div>
+			<div class="maindiv">
+				<ul>
+					<h1>Welcome to the mainpage!</h1>
+					<form action="/user/searched" method="post">
+						<li colspan=1><input name="searchbar" type="text" class="textinput" id="searchbar" value=""
+								size="30" />
+							<input type="submit" value="Search" class="searchbutton">
+					</form>
+				</ul>
+				<% if(result.length > 0) { %>
+				<table>
+					<tr>
+						<th>Issue</th>
+						<th>Resolution</th>
+					</tr>
+					<% for(let singleresult of result) { %>
+					<tr> 
+						<td><%= singleresult.issue %></td>
+						<td><%= singleresult.resolution %></td> 
+						
+				</tr>
+					<% } %>
+				</table>
+				<% } %>
 				<div class="maindiv">
-					<ul>
-						<h1>Welcome to the mainpage!</h1>
-						<li colspan=1><input name="searchbar" type="text" class="textinput" id="searchbar" value="" size="30" />
-						<input onclick="myFunction()" type="submit" name="Search" id="Search" value="Search 🔎" class="searchbutton" title="mouseover text" /></li>	
-					</ul>
+					<%- include('partials/onepartial')  %>
 				</div>
 			</div>
 		</div>
-			
-	</body>
+	</div>
+</body>
+
 </html>
