@@ -1,0 +1,27 @@
+/*
+#9EA3B0 light grey
+#546A7B blue
+#0D1F2D navy
+*/
+
+.active-issues-div {
+    /*border: 5px solid #ff0000;*/
+    width: fit-content;
+    height: fit-content;
+    margin-left: 3rem;
+    align-items: center;
+}
+
+#card {
+    margin-bottom: 3rem;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    display: flex;
+}
+
+#card-button {
+    width: 30rem;
+    height: 10rem;
+
+    background-color: #546A7B;
+    border: 1px solid #37454f;
+}

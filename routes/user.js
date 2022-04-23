@@ -37,9 +37,16 @@ router.get("/active-issues", (req, res) => {
     res.render("user/active-issues")
 })
 
+router.post("/active-issues", (req, res) => {
+    console.log(req.body.id)
+    res.redirect(`/user/new/`)
+    console.log("bungo")
+  })
+
 router.post("/", (req, res) => {
     const isValid = true
     if (isValid) {
+        console.log("ayo")
         users.push({ firstName: req.body.firstName })
         res.redirect(`/user/${users.length - 1}`)
     } else {
@@ -72,6 +79,7 @@ function logger(req, res, next) {
     next()
 }
 
+
 module.exports = router
 
 /*login
@@ -82,3 +90,4 @@ user hist
 secialistmain
 specialsit analyst
 */
+
