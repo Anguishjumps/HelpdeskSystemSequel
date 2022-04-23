@@ -62,7 +62,7 @@ body,td,th {
 	border: 0px solid #2C2C3C;
 	overflow: hidden;
 	float:left;
-	border: medium solid green;
+	/*border: medium solid green;*/
 
 }
 .maindiv ul {
@@ -76,7 +76,7 @@ body,td,th {
 	margin: auto;
 	width: 50%;
 	padding: 10px;
-	border: medium solid blue;
+	/*border: medium solid blue;*/
 
 }
 .sidebarbutton {
@@ -102,7 +102,7 @@ body,td,th {
 	border: 1px solid #2C2C3C;
 	overflow: auto;
 	float:left;
-	border: medium solid red;
+	/*border: medium solid red;*/
 
 }
 .nav ul {

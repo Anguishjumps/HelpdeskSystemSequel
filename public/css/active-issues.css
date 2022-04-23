@@ -5,7 +5,7 @@
 */
 
 .active-issues-div {
-    border: 5px solid #ff0000;
+    /*border: 5px solid #ff0000;*/
     width: fit-content;
     height: fit-content;
     margin-left: 3rem;
@@ -13,25 +13,15 @@
 }
 
 #card {
-    background-color: #546A7B;
-    border: 1px solid #37454f;
     margin-bottom: 3rem;
-    width: 30rem;
-    height: 10rem;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    display: flex;
 }
 
-#card:active {
-    /*background-color: #546A7B;
-    border: 1px solid #37454f;
-    margin-bottom: 3rem;
+#card-button {
     width: 30rem;
     height: 10rem;
-    box-shadow: inset 0px -10px 25px rgba(0, 0, 0, 0.2),  0px 5px 5px rgba(0, 0, 0, 0.19);*/
-    color: #efefef;
-    text-shadow: -1px -1px 0px #777, -1px -1px 0px #777;
-    box-shadow: inset 1px 1px 4px #222;
-    transform: translateY(1px); /*  Add per Vince's helpful comment  */
-  
 
+    background-color: #546A7B;
+    border: 1px solid #37454f;
 }

@@ -23,14 +23,16 @@ router.get("/active-issues", (req, res) => {
     res.render("user/active-issues")
   })
 
-router.post("/active-issues/:id", (req, res) => {
-    res.redirect(`/user/${users.length - 1}`)
+router.post("/active-issues", (req, res) => {
+    console.log(req.body.id)
+    res.redirect(`/user/new/`)
     console.log("bungo")
   })
 
 router.post("/", (req, res) => {
     const isValid = true
     if (isValid) {
+        console.log("ayo")
         users.push({ firstName: req.body.firstName })
         res.redirect(`/user/${users.length - 1}`)
     } else {
@@ -53,7 +55,7 @@ router
 })
 
 const users = [{ name: "Kyle" }, { name: "Sally" }]
-    router.param("id", (req, res, next, id) => {
+router.param("id", (req, res, next, id) => {
     req.user = users[id]
     next()
 })
@@ -64,12 +66,3 @@ function logger(req, res, next) {
 }
 
 module.exports = router
-  
-/*login
-usermain
-userspec
-user hist
-
-secialistmain
-specialsit analyst
-*/

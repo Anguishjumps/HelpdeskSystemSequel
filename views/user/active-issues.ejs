@@ -25,22 +25,23 @@
 						<li colspan=1><input name="searchbar" type="text" class="textinput" id="searchbar" value="" size="30" />
 						<input type="submit" name="Search" id="Search" value="Search 🔎" class="searchbutton" title="mouseover text" /></li>	
 					</ul>
-					<div class="active-issues-div" id="active-issues-div">
-                        <h1>Active Issues</h1>
-                        <script>
-                            for (let i = 0; i < 10; i++) {
-                                document.addEventListener('DOMContentLoaded', function() {
-                                    var div = document.createElement('div');
-                                    div.id = 'card';
-                                    div.innerHTML = '<h1>Card ' + i +'<h1>';
-                                    div.className = 'active-issues-div';
-									div.addEventListener('click', function (event) {
-										fetch('./active-issues/'+i, {method: 'POST'})
-									});
-                                    document.getElementById("active-issues-div").appendChild(div);
-                                }, false);
-                            }
-                        </script>
+					<div class="active-issues-div">
+						<div id="header-div">
+	                        <h1>Active Issues</h1>
+						</div>
+						<div id="card-holder-div">
+							<script>
+								for (let i = 0; i < 10; i++) {
+									document.addEventListener('DOMContentLoaded', function() {
+										var div = document.createElement('div');
+										div.id = 'card';
+										div.innerHTML = '<form action="/user/active-issues" method="POST"><button id="card-button">Card '+i+'</button>'
+										div.idName = 'card-holder-div';
+										document.getElementById("card-holder-div").appendChild(div);
+									}, false);
+								}
+							</script>
+						</div>
                     </div>
 				</div>
 			</div>
