@@ -75,13 +75,19 @@
 			float: left;
 		}
 
+		.resultsDiv {
+			border: 5px outset red;
+			background-color: lightblue;
+			text-align: center;
+		}
+
 		.maindiv ul {
 			list-style: none;
 			line-height: 100%;
 
 		}
 
-		/Navigation Bar/ .sidebarheader {
+		.sidebarheader {
 			margin: auto;
 			width: 50%;
 			padding: 10px;
@@ -135,17 +141,17 @@
 		<div class="wrapper clearfix">
 			<div class="nav">
 				<ul>
-					<h1 class="sidebarheader">Sidebar</h1>
-					<li colspan=1><input type="submit" name="Search" id="Search" value="Search 🔎" class="sidebarbutton"
-							title="mouseover text" /></li>
+					<h1 class="sidebarheader">Menu</h1>
+					<!-- <li colspan=1><input type="submit" name="Search" id="Search" value="Search 🔎" class="sidebarbutton"
+							title="mouseover text" /></li> -->
 					<form action="/user/history" method="get">
-						<input type="submit" value="HISTORY" class="sidebarbutton">
+						<input type="submit" value="User History" class="sidebarbutton">
 					</form>
 					<form action="/user/contact" method="get">
-						<input type="submit" value="CONTACT" class="sidebarbutton">
+						<input type="submit" value="Contact" class="sidebarbutton">
 					</form>
 					<form action="/" method="get">
-						<input type="submit" value="LOGOUT" class="sidebarbutton">
+						<input type="submit" value="Log Out" class="sidebarbutton">
 					</form>
 				</ul>
 			</div>
@@ -153,26 +159,40 @@
 				<ul>
 					<h1>Welcome to the mainpage!</h1>
 					<form action="/user/searched" method="post">
-						<li colspan=1><input name="searchbar" type="text" class="textinput" id="searchbar" value=""
+						<li colspan=1><input placeholder="Search for a problem type..." name="searchbar" type="text" class="textinput" id="searchbar" value=""
 								size="30" />
 							<input type="submit" value="Search" class="searchbutton">
 					</form>
 				</ul>
-				<% if(result.length > 0) { %>
+				<% if (result.length > 0) { %>
 				<table>
 					<tr>
 						<th>Issue</th>
 						<th>Resolution</th>
 					</tr>
 					<% for(let singleresult of result) { %>
-					<tr> 
+					<tr>
 						<td><%= singleresult.issue %></td>
-						<td><%= singleresult.resolution %></td> 
-						
-				</tr>
+						<td><%= singleresult.resolution %></td>
+
+					</tr>
 					<% } %>
 				</table>
 				<% } %>
+				<div class="resultsdiv">
+					<% if(result.length > 0) { %>
+					<% for(let singleresult of result) { %>
+					<div class="resultsdiv">
+						<h2>
+							<%= singleresult.issue %>
+						</h2>
+						<p>
+							<%= singleresult.resolution %>
+						</p>
+					</div>
+					<% } %>
+					<% } %>
+				</div>
 				<div class="maindiv">
 					<%- include('partials/onepartial')  %>
 				</div>

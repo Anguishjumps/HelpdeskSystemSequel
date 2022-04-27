@@ -5,19 +5,35 @@ let resultObject = {result:[]}
 router.use(logger)
 
 router.get('/', (req, res) => {
-    res.render("user/main", resultObject)
+        con.connect(function(err) {
+            if (err) throw err;
+            con.query("SELECT * from Ticket;", function(err, result, fields) {
+                if (err) throw err;
+                res.render('user/main', { data: result })
+
+            });
+        });
+
 })
 
 router.post('/searched', (req, res) => {
 // doing a db search on inputted text object
     //grab search term
     let searchTerm = req.body.searchbar
-    console.log("search term: "+ searchTerm)
-    //init db query with search term
-    //pretend we got a db, make results object
-    //list results in charlotte's js in main or partial
-    //get results and make a results object
-    let resultObject = {result:[{issue: "printer", resolution: "restart"}, {issue: "computer", resolution: "off and on again"}]}
+    let resultObject
+    if (searchTerm == "printer" || "printer jam") {
+        console.log("search term: "+ searchTerm)
+        //init db query with search term
+    
+        //pretend we got a db, make results object
+        //list results in charlotte's js in main or partial
+        //get results and make a results object
+        resultObject = {result:[{issue: "printer", resolution: "restart"}, {issue: "computer", resolution: "off and on again"}]}
+    }
+    if (searchTerm == "bottle") {
+        console.log("search term: "+ searchTerm)
+        resultObject = {result:[{issue: "broken bottle", resolution: "kick"}, {issue: "hello", resolution: "goodbye"}]}
+    }
     res.render("user/main", resultObject) // FIX
 })
 
