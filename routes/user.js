@@ -1,6 +1,15 @@
 const express = require('express')
 const router = express.Router()
 let resultObject = {result:[]}
+var mysql = require('mysql');
+
+var con = mysql.createConnection({
+    host: "localhost",
+    user: "teamb029",
+    password: "pXdBPQK4cL",
+    database: "teamb029",
+    multipleStatements: true
+});
 
 router.use(logger)
 
