@@ -164,13 +164,13 @@
 							<input type="submit" value="Search" class="searchbutton">
 					</form>
 				</ul>
-				<% if (result.length > 0) { %>
+				<% if (results.length > 0) { %>
 				<table>
 					<tr>
 						<th>Issue</th>
 						<th>Resolution</th>
 					</tr>
-					<% for(let singleresult of result) { %>
+					<% for(let singleresult of results) { %>
 					<tr>
 						<td><%= singleresult.issue %></td>
 						<td><%= singleresult.resolution %></td>
@@ -180,8 +180,8 @@
 				</table>
 				<% } %>
 				<div class="resultsdiv">
-					<% if(result.length > 0) { %>
-					<% for(let singleresult of result) { %>
+					<% if(results.length > 0) { %>
+					<% for(let singleresult of results) { %>
 					<div class="resultsdiv">
 						<h2>
 							<%= singleresult.issue %>
