@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-let resultObject = {results:[]}
+let resultObject = {something:[]}
 var mysql = require('mysql');
 
 var con = mysql.createConnection({
@@ -37,11 +37,11 @@ router.post('/searched', (req, res) => {
         //pretend we got a db, make results object
         //list results in charlotte's js in main or partial
         //get results and make a results object
-        resultObject = {results:[{issue: "printer", resolution: "restart"}, {issue: "computer", resolution: "off and on again"}]}
+        resultObject = {something:[{issue: "printer", resolution: "restart"}, {issue: "computer", resolution: "off and on again"}]}
     }
     if (searchTerm == "bottle") {
         console.log("search term: "+ searchTerm)
-        resultObject = {results:[{issue: "broken bottle", resolution: "kick"}, {issue: "hello", resolution: "goodbye"}]}
+        resultObject = {something:[{issue: "broken bottle", resolution: "kick"}, {issue: "hello", resolution: "goodbye"}]}
     }
     res.render("user/main", resultObject) // FIX
 })
