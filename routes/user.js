@@ -16,7 +16,7 @@ router.use(logger)
 router.get('/', (req, res) => {
         con.connect(function(err) {
             if (err) throw err;
-            con.query("SELECT * from Ticket;", function(err, result, fields) {
+            con.query("SELECT DISTINCT TagTable.tagName FROM Ticket LEFT JOIN `TagTable` ON  Ticket.mainTag = TagTable.ID;", function(err, result, fields) {
                 if (err) throw err;
                 res.render('user/main', { data: result })
 

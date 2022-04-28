@@ -164,19 +164,17 @@
 							<input type="submit" value="Search" class="searchbutton">
 					</form>
 				</ul>
-				<% if (data.length > 0) { %>
 				<table>
 					<tr>
 						<th>Issue</th>
 						<th>Resolution</th>
 					</tr>
-					<% for(let singleresult of data) { %>
+					<% for(var u = 0; u < Object.keys(data).length; u++) { %>
 					<tr>
-						<td><%= data %></td>
+						<td><%= data[u].tagName %></td>
 					</tr>
 					<% } %>
 				</table>
-				<% } %>
 				<div class="resultsdiv">
 					<% if(data.length > 0) { %>
 					<% for(let singleresult of data) { %>
