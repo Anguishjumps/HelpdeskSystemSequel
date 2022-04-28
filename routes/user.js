@@ -1,4 +1,5 @@
 const express = require('express')
+const { route } = require('express/lib/application')
 const router = express.Router()
 let resultObject = {result:[]}
 
@@ -38,11 +39,10 @@ router.get("/active-issues", (req, res) => {
 })
 
 router.post("/active-issues", (req, res) => {
-    console.log(req.body.id)
-    res.redirect(`/user/new/`)
-    console.log("bungo")
+    res.redirect(`/user/active-issues/`+ req.body.cardno)
   })
 
+<<<<<<< Updated upstream
 router.post("/", (req, res) => {
     const isValid = true
     if (isValid) {
@@ -67,11 +67,11 @@ router
     .delete((req, res) => {
         res.send(`Delete User With ID ${req.params.id}`)
     })
+=======
+router.get("/active-issues/:cardno", (req, res) => {
+    res.render("user/card-details", {cardno: req.params.cardno})
+>>>>>>> Stashed changes
 
-const users = [{ name: "Kyle" }, { name: "Sally" }]
-router.param("id", (req, res, next, id) => {
-    req.user = users[id]
-    next()
 })
 
 function logger(req, res, next) {
