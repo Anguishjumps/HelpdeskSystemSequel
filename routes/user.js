@@ -37,9 +37,12 @@ router.get("/contact", (req, res) => {
 router.get("/active-issues", (req, res) => {
     con.connect(function(err) {
         if (err) throw err;
-        con.query("SELECT ID, mainTag, secondaryTag, tertiaryTag, ticketDescription FROM `Ticket` WHERE ticketState <> 'RESOLVED';", function(err, result, fields) {
+        con.query("SELECT ID, Date, mainTag, secondaryTag, tertiaryTag, \
+        ticketDescription, ticketPriority, solutionID, resolvedTimestamp, \
+        ticketState, assignedSpecialistID, resolvedDescription FROM Ticket WHERE userID = 1;", function(err, result, fields) {
             if (err) throw err;
-            console.log(result)
+            result = JSON.stringify(result)
+            result = JSON.parse(result)    
             res.render("user/active-issues", { tickets: result })
 
         });

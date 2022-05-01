@@ -42,14 +42,15 @@
 												<button id="card-button">\
 													<table>\
 														<tr>\
-															<td><h1>Ticket ID '+tickets[i].id+'</h1></td>\
-															<td>Submitted (Date) by (Name)</td>\
+															<td><h3>Ticket ID: '+tickets[i].ID+'</h3></td>\
+															<td>'+tickets[i].ticketState+'</td>\
 														</tr>\
 														<tr>\
-															<td>Ticket Creation Date</td>\
+															<td><h1>'+tickets[i].ticketDescription+'</h1></td>\
+															<td>'+tickets[i].mainTag+'</td>\
 														</tr>\
 														<tr>\
-															<td><div class="tag-shape" >Tag</div></td>\
+															<td><div class="tag-shape">'+tickets[i].mainTag+'</div></td>\
 														</tr>\
 													</table>\
 												</button>\
