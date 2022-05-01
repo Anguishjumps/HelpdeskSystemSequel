@@ -35,7 +35,15 @@ router.get("/contact", (req, res) => {
 })
 
 router.get("/active-issues", (req, res) => {
-    res.render("user/active-issues")
+    con.connect(function(err) {
+        if (err) throw err;
+        con.query("SELECT ID, mainTag, secondaryTag, tertiaryTag, ticketDescription FROM `Ticket` WHERE ticketState <> 'RESOLVED';", function(err, result, fields) {
+            if (err) throw err;
+            console.log(result)
+            res.render("user/active-issues", { tickets: result })
+
+        });
+    });    
 })
 
 router.post("/active-issues", (req, res) => {
@@ -43,15 +51,7 @@ router.post("/active-issues", (req, res) => {
   })
 
 router.get("/active-issues/:cardno", (req, res) => {
-    con.connect(function(err) {
-        if (err) throw err;
-        con.query("SELECT ID, mainTag, secondaryTag, tertiaryTag, ticketDescription FROM `Ticket` WHERE ticketState <> 'RESOLVED';", function(err, result, fields) {
-            if (err) throw err;
-            print(result)
-            res.render("user/card-details", { data: result })
-
-        });
-    });    
+    res.render("user/card-details")
 })
 
 function logger(req, res, next) {

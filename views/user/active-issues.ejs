@@ -31,7 +31,8 @@
 						</div>
 						<div id="card-holder-div">
 							<script>
-								for (let i = 0; i < 10; i++) {
+								var tickets = "<%= locals.tickets %>";
+								for (let i = 0; i < tickets.length; i++) {
 									document.addEventListener('DOMContentLoaded', function() {
 										var div = document.createElement('div');
 										div.id = 'card';
@@ -41,7 +42,7 @@
 												<button id="card-button">\
 													<table>\
 														<tr>\
-															<td><h1>Ticket Name '+i+'</h1></td>\
+															<td><h1>Ticket ID '+tickets[i].id+'</h1></td>\
 															<td>Submitted (Date) by (Name)</td>\
 														</tr>\
 														<tr>\
