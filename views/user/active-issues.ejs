@@ -36,8 +36,23 @@
 										var div = document.createElement('div');
 										div.id = 'card';
 										div.innerHTML = '<form action="/user/active-issues" method="POST">\
-											<input type = "hidden" name = "cardno" value = "'+i+'"/>\
-											<button id="card-button">Card '+i+'</button>'
+											<div>\
+												<input type = "hidden" name = "cardno" value = "'+i+'"/>\
+												<button id="card-button">\
+													<table>\
+														<tr>\
+															<td><h1>Ticket Name '+i+'</h1></td>\
+															<td>Submitted (Date) by (Name)</td>\
+														</tr>\
+														<tr>\
+															<td>Ticket Creation Date</td>\
+														</tr>\
+														<tr>\
+															<td><div class="tag-shape" >Tag</div></td>\
+														</tr>\
+													</table>\
+												</button>\
+											</div>'
 										div.idName = 'card-holder-div';
 										document.getElementById("card-holder-div").appendChild(div);
 									}, false);

@@ -42,36 +42,16 @@ router.post("/active-issues", (req, res) => {
     res.redirect(`/user/active-issues/`+ req.body.cardno)
   })
 
-<<<<<<< Updated upstream
-router.post("/", (req, res) => {
-    const isValid = true
-    if (isValid) {
-        console.log("ayo")
-        users.push({ firstName: req.body.firstName })
-        res.redirect(`/user/${users.length - 1}`)
-    } else {
-        console.log("Error")
-        res.render("user/new", { firstName: req.body.firstName })
-    }
-})
-
-router
-    .route("/:id")
-    .get((req, res) => {
-        console.log(req.user)
-        res.send(`Get User With ID ${req.params.id}`)
-    })
-    .put((req, res) => {
-        res.send(`Update User With ID ${req.params.id}`)
-    })
-    .delete((req, res) => {
-        res.send(`Delete User With ID ${req.params.id}`)
-    })
-=======
 router.get("/active-issues/:cardno", (req, res) => {
-    res.render("user/card-details", {cardno: req.params.cardno})
->>>>>>> Stashed changes
+    con.connect(function(err) {
+        if (err) throw err;
+        con.query("SELECT ID, mainTag, secondaryTag, tertiaryTag, ticketDescription FROM `Ticket` WHERE ticketState <> 'RESOLVED';", function(err, result, fields) {
+            if (err) throw err;
+            print(result)
+            res.render("user/card-details", { data: result })
 
+        });
+    });    
 })
 
 function logger(req, res, next) {
