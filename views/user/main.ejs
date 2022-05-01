@@ -172,13 +172,20 @@
 									<input type="submit" id = "maintag_button" value= <%= data[u].tagName %> class="sidebarbutton">
 								</form>
 							</td> 
-							
 							<%	if((u - 1) % 3 == 0 && u != 0) {
-						%>
-					</tr>
-					<tr>
-						<% }} %>
-				</table>
+								%>
+								</tr>
+								<tr>
+									<% }} %>
+									</table>
+									<button onclick="testbuttonfunc()" id="testbtn12"
+									>
+									test button 12
+									</button>
+									<button onclick="testbuttonfunc()" id="testbtn23"
+									>
+									test button 23
+									</button>
 
 				<div class="maindiv">
 					<%- include('partials/onepartial')  %>
@@ -186,6 +193,13 @@
 			</div>
 		</div>
 	</div>
+	<script type="text/javascript">
+		function testbuttonfunc() {
+			// let currentVal = document.getElementById("testbtn").value
+			let currentVal2 = event.target.id
+			console.log(currentVal2)
+		}
+		</script>
 </body>
 
 </html>
