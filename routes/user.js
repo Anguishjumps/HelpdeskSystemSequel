@@ -46,6 +46,17 @@ router.post('/searched', (req, res) => {
     res.render("user/main", resultObject) // FIX
 })
 
+router.get('/maintag', (req, res) => {
+        let searchTerm = req.body.maintag_button
+        con.connect(function(err) {
+            if (err) throw err;
+            con.query("SELECT * FROM Ticket;", function(err, result, fields) {
+                if (err) throw err;
+                res.render('user/main', { data: result })
+            });
+        });
+    })
+
 router.get('/new', (req, res) => {
     res.render("user/new")
 })
@@ -61,6 +72,7 @@ router.get("/contact", (req, res) => {
 router.get("/active-issues", (req, res) => {
     res.render("user/active-issues")
 })
+
 
 router.post("/", (req, res) => {
     const isValid = true
