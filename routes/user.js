@@ -46,15 +46,19 @@ router.post('/searched', (req, res) => {
     res.render("user/main", resultObject) // FIX
 })
 
-router.get('/maintag', (req, res) => {
-        let searchTerm = req.body.maintag_button
-        con.connect(function(err) {
-            if (err) throw err;
-            con.query("SELECT * FROM Ticket;", function(err, result, fields) {
+router.post('/maintag', (req, res) => {
+    console.log("LOOK AT ME")
+        let problemCategory = req.body.problemCategory
+        let myQuery = `SELECT Ticket.ticketDescription, Ticket.resolvedDescription FROM TagTable INNER JOIN Ticket ON TagTable.ID = Ticket.mainTag WHERE tagName = "`+problemCategory+`" AND ticketState = "RESOLVED"`
+        console.log("problem category: " + problemCategory)
+        // con.connect(function(err) {
+        //     if (err) throw err;
+            con.query(myQuery, function(err, result, fields) {
                 if (err) throw err;
+                console.log("result: " + Object.values(result).map(el=>console.log(el)))
                 res.render('user/main', { data: result })
             });
-        });
+        // });
     })
 
 router.get('/new', (req, res) => {

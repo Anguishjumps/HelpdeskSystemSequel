@@ -167,26 +167,19 @@
 				<table>
 					<tr>
 						<% for(var u = 0; u < Object.keys(data).length; u++) { %>
-							<td>
-								<form action="/user/maintag" method="get">
-									<input type="submit" id = "maintag_button" value= <%= data[u].tagName %> class="sidebarbutton">
-								</form>
-							</td> 
-							<%	if((u - 1) % 3 == 0 && u != 0) {
+						<td>
+							<!-- <form action="/user/maintag" method="get"> -->
+							<button onclick="grabProblemCategory()" type="submit" id=<%= data[u].tagName %>
+								class="sidebarbutton">
+								<%= data[u].tagName %> </button>
+							<!-- </form> -->
+						</td>
+						<%	if((u - 1) % 3 == 0 && u != 0) {
 								%>
-								</tr>
-								<tr>
-									<% }} %>
-									</table>
-									<button onclick="testbuttonfunc()" id="testbtn12"
-									>
-									test button 12
-									</button>
-									<button onclick="testbuttonfunc()" id="testbtn23"
-									>
-									test button 23
-									</button>
-
+					</tr>
+					<tr>
+						<% }} %>
+				</table>
 				<div class="maindiv">
 					<%- include('partials/onepartial')  %>
 				</div>
@@ -194,12 +187,36 @@
 		</div>
 	</div>
 	<script type="text/javascript">
-		function testbuttonfunc() {
+
+		function createHiddenFormAndPost(path, params, method = 'post') {
+
+			// The rest of this code assumes you are not using a library.
+			// It can be made less verbose if you use one.
+			const form = document.createElement('form');
+			form.method = method;
+			form.action = path;
+
+			for (const key in params) {
+				if (params.hasOwnProperty(key)) {
+					const hiddenField = document.createElement('input');
+					hiddenField.type = 'hidden';
+					hiddenField.name = key;
+					hiddenField.value = params[key];
+
+					form.appendChild(hiddenField);
+				}
+			}
+
+			document.body.appendChild(form);
+			form.submit();
+		}
+		function grabProblemCategory() {
 			// let currentVal = document.getElementById("testbtn").value
 			let currentVal2 = event.target.id
+			createHiddenFormAndPost('/user/maintag', { problemCategory: currentVal2 });
 			console.log(currentVal2)
 		}
-		</script>
+	</script>
 </body>
 
 </html>
