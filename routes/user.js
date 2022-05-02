@@ -18,7 +18,7 @@ router.get('/', (req, res) => {
             if (err) throw err;
             con.query("SELECT DISTINCT TagTable.tagName FROM Ticket LEFT JOIN `TagTable` ON  Ticket.mainTag = TagTable.ID;", function(err, result, fields) {
                 if (err) throw err;
-                res.render('user/main', { data: result })
+                res.render('user/main', { data: result, source: "initialEntry" })
 
             });
         });
@@ -43,7 +43,7 @@ router.post('/searched', (req, res) => {
         console.log("search term: "+ searchTerm)
         resultObject = {data:[{issue: "broken bottle", resolution: "kick"}, {issue: "hello", resolution: "goodbye"}]}
     }
-    res.render("user/main", resultObject) // FIX
+    res.render("user/main", {resultObject,  source: "searchEntry"} ) // FIX
 })
 
 router.post('/maintag', (req, res) => {
@@ -56,7 +56,7 @@ router.post('/maintag', (req, res) => {
             con.query(myQuery, function(err, result, fields) {
                 if (err) throw err;
                 console.log("result: " + Object.values(result).map(el=>console.log(el)))
-                res.render('user/main', { data: result })
+                res.render('user/main', { data: result, source: "maintagEntry" })
             });
         // });
     })

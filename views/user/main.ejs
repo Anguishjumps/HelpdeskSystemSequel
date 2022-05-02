@@ -131,6 +131,18 @@
 			margin: auto;
 			text-align: centre;
 		}
+
+		table,
+		th,
+		td {
+			border: 1px solid black;
+			border-collapse: collapse;
+		}
+
+		th,
+		td {
+			padding: 15px;
+		}
 	</style>
 </head>
 
@@ -164,25 +176,48 @@
 							<input type="submit" value="Search" class="searchbutton">
 					</form>
 				</ul>
+				<%	if(source == "initialEntry") {
+					%>
 				<table>
 					<tr>
 						<% for(var u = 0; u < Object.keys(data).length; u++) { %>
 						<td>
-							<!-- <form action="/user/maintag" method="get"> -->
 							<button onclick="grabProblemCategory()" type="submit" id=<%= data[u].tagName %>
 								class="sidebarbutton">
 								<%= data[u].tagName %> </button>
-							<!-- </form> -->
 						</td>
 						<%	if((u - 1) % 3 == 0 && u != 0) {
-								%>
+											%>
 					</tr>
 					<tr>
 						<% }} %>
 				</table>
+				<% } else if (source == "maintagEntry") { %>
+				<h1>maintagEntry</h1>
+				<table>
+					<tr>
+						<th>issue</th>
+						<th>resolution</th>
+					</tr>
+					<tr>
+						<% for(var u = 0; u < Object.keys(data).length; u++) { %>
+						<td>
+							<%= data[u].ticketDescription %>
+						</td>
+						<td>
+							<%= data[u].resolvedDescription %>
+						</td>
+					</tr>
+					<tr>
+						<% } %>
+				</table>
+				<% } else { %>
+				<h1>searchEntry</h1>
+				<% } %>
 				<div class="maindiv">
 					<%- include('partials/onepartial')  %>
 				</div>
+
 			</div>
 		</div>
 	</div>
