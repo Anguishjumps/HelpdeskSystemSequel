@@ -1,13 +1,149 @@
 <!DOCTYPE html>
 <html>
+  <title>Specialist Contact</title>
+  <link href="/css/shellstylesheet.css" rel="stylesheet">
   <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
-      <title>Hello</title>
       <meta name="description" content="">
       <meta name="viewport" content="width=device-width, initial-scale=1">
+      <script>
+        var specialists = <%- JSON.stringify(locals.specialists) %>;
+        console.log(specialists[0]);
+        for (let i = 0; i < (Math.ceil(specialists.length)); i++) {
+          console.log("row"+i);
+          var divNewName='row'+i;
+          console.log("got here1");
+          document.createElement(divNewName);
+          divNewName.className = "row";
+          console.log("got here2");
+        }
+      </script>
   </head>
-  <body>
-      Do contact me
-  </body>
+  <style>    
+    /*div/non-shell css:*/
+    .maindiv {            
+      overflow-x: hidden;
+        overflow-y: auto;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    
+    .row {
+      margin-left:-5px;
+      margin-right:-5px;
+      margin-bottom: 20px;
+    }
+      
+    .column {
+      float: left;
+      width: 33%;
+      padding: 5px;
+    }
+    
+    /* Clearfix (clear floats) */
+    .row::after {
+      content: "";
+      clear: both;
+      display: table;
+    }
+    
+    
+    table.test {
+      border-collapse: collapse;
+      border-spacing: 0;
+      width: 100%;
+      border: 1px solid #ddd;
+      background-color: white;
+    }
+    
+    th, td {
+      text-align: left;
+      padding: 16px;
+    }
+    
+    .specialism{
+      color: #545454;
+    }
+    
+    tr, td:nth-child(even) {
+      color: #51B7DD ;
+    }
+    
+    
+    tr:nth-child(even) {
+      background-color: #545454;
+    }
+    
+    /* Responsive layout - makes the two columns stack on top of each other instead of next to each other on screens that are smaller than 600 px */
+    @media screen and (max-width: 600px) {
+      .column {
+        width: 100%;
+      }
+    }
+    
+        </style>
+	<body>
+		<div class="container">
+			<div class="header">
+			</div>
+			<div class="wrapper clearfix">
+				<div class="nav">
+					<ul>
+						<h1 class="sidebarheader">Sidebar</h1>
+						<li colspan=1><input type="submit" name="Search" id="Search" value="Search 🔎" class="sidebarbutton" title="mouseover text" /></li>	
+						<li colspan=1><input type="submit" name="Search" id="Search" value="History" class="sidebarbutton" title="mouseover text" /></li>	
+						<li colspan=1><input type="submit" name="Search" id="Search" value="Contact" class="sidebarbutton" title="mouseover text" /></li>	
+						<li colspan=1><input type="submit" name="Search" id="Search" value="Log Out" class="sidebarbutton" title="mouseover text" /></li>
+					</ul>
+				</div>
+				<div class="maindiv">
+					<ul>
+						<h1>This is not the sidebar</h1>
+						<li colspan=1><input name="searchbar" type="text" class="textinput" id="searchbar" value="" size="30" />
+						<input type="submit" name="Search" id="Search" value="Search 🔎" class="searchbutton" title="mouseover text" /></li>	
+					</ul>
+                    <br></br>
+                                        <!--Row 1-->
+          `<div id ="row"></div>
+            <script>
+              var specialists = <%- JSON.stringify(locals.specialists) %>;
+              console.log(specialists[0]);
+              for (let i = 0; i <specialists.length; i++) {
+                console.log(specialists[i]);
+                document.addEventListener('DOMContentLoaded', function() {
+                  var div = document.createElement('div');
+                  div.id = 'specialisttable';
+                  div.innerHTML = '<div class="column">\
+                     <table class="test">\
+                          <tr>\
+                          <th colspan="2" style="text-align: center;"><img src="/css/img_avatar.png" style="width:75%"></th>\
+                          \
+                          </tr>\
+                          <tr>\
+                          <td>Name:</td>\
+                          <td>'+specialists[i].fullName+'</td>\
+                          </tr>\
+                          <tr>\
+                          <td class="specialism">Specialism:</td>\
+                          <td>'+specialists[i].tagName+'</td>\
+                          </tr>\
+                          <tr>\
+                          <td>Phone number:</td>\
+                          <td>'+specialists[i].phoneNo+'</td>\
+                          </tr>\
+                      </table>\
+                      </div>'
+                  div.idName = 'testrow';
+                  document.getElementById("row").appendChild(div);
+                }, false);
+              }
+            </script>
+				</div>
+			</div>
+		</div>
+
+			
+	</body>
 </html>
