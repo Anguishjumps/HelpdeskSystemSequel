@@ -137,6 +137,78 @@
 		td {
 			padding: 15px;
 		}
+
+		/* Modal */
+
+
+		/* The Modal (background) */
+
+		.modal {
+			display: none;
+			position: fixed;
+			z-index: 1;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+			overflow: auto;
+			background-color: rgb(0, 0, 0);
+			background-color: rgba(0, 0, 0, 0.4);
+		}
+
+		.modal-content {
+			background-color: #fefefe;
+			margin: 5% auto;
+			border: 1px solid #888;
+			width: 50%;
+			border-radius: 0.5rem;
+		}
+
+		@media (max-width: 768px) {
+			.modal-content {
+				width: 75%;
+			}
+		}
+
+		.modal-header {
+			height: 40px;
+			padding: 1rem;
+			border-top-right-radius: 10px;
+			border-top-left-radius: 10px;
+			display: flex;
+		}
+
+		.modal-title {
+			font-weight: 100;
+			width: 100%;
+			margin: 0;
+		}
+
+		.modal-body {
+			padding: 1rem;
+			font-size: 0.75rem;
+		}
+
+		.modal-footer {
+			padding: 1rem;
+			display: flex;
+		}
+
+		.button-close {
+			float: right;
+			width: 3rem;
+			height: 3rem;
+			background-color: lightgrey;
+		}
+
+		.button-close-bottom {
+			margin-left: auto;
+			background-color: lightgrey;
+		}
+
+		.modal-footer>button {
+			display: inline-block;
+		}
 	</style>
 </head>
 
@@ -150,6 +222,9 @@
 					<h1 class="sidebarheader">Menu</h1>
 					<!-- <li colspan=1><input type="submit" name="Search" id="Search" value="Search 🔎" class="sidebarbutton"
 							title="mouseover text" /></li> -->
+					<form action="/user" method="get">
+						<input type="submit" value="Home" class="sidebarbutton">
+					</form>
 					<form action="/user/history" method="get">
 						<input type="submit" value="User History" class="sidebarbutton">
 					</form>
@@ -161,6 +236,111 @@
 					</form>
 				</ul>
 			</div>
+
+			<!-- View ticket modal -->
+
+			<div id="make-ticket-modal" class="modal fade" tabindex="-1">
+				<div class="modal-dialog">
+					<form id="update-form" name="update-form" action="user/make" method="POST" class="modal-form">
+						<!-- Invisible field used for post back to same page -->
+						<input type="hidden" name="form_type" value="update-ticket">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h3 class="modal-title">View ticket</h3>
+								<button type="button" onclick="closeModal();" class="modal-close button-close"
+									data-bs-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
+							</div>
+							<hr>
+							<div class="modal-body">
+								<div class="wrapper">
+									<!-- Ticket ID (automatically generated so cannot be edited) -->
+									<div class="half-row">
+										<label for="viewID">Ticket ID</label>
+										<input id="viewID" name="ID" type="number" placeholder="" value="" required
+											disabled>
+									</div>
+									<!-- Created timestamp of the ticket (not editable) -->
+									<div class="half-row">
+										<label for="viewCreatedTimestamp">Created Timestamp</label>
+										<input id="viewCreatedTimestamp" name="createdTimestamp" type="text"
+											placeholder="" disabled>
+									</div>
+									<!-- Dropdown list of reporters -->
+									<div class="full-row">
+										<label for="viewReporterID">Reporter</label>
+										<div class="input-extended input-extended-right">
+											<select onchange="getPhoneNo(this);" id="viewReporterID" name="reporterID"
+												class="personnel-select ">
+												<!-- Add all reporters from database as items to select -->
+												<option value=1></option>
+											</select>
+											<!-- Selected reporter phone number (not editable) -->
+											<label class="input-extension-right" for="reporterID"
+												id="viewReporterNo"></label>
+										</div>
+									</div>
+									<!-- Dropdown list of specialist -->
+									<div class="full-row">
+										<label for="viewAssignedSpecialistID">Assigned Specialist</label>
+										<div class="input-extended input-extended-right">
+											<select onchange="getPhoneNo(this); addExternalSpecialist(this)"
+												id="viewAssignedSpecialistID" name="assignedSpecialistID"
+												class="personnel-select ">
+												<option selected value=0>Not assigned</option>
+												<!-- Option to add external specialist -->
+												<option value=-1>New External Specialist</option>
+												<!-- Add all specialists from database as items to select -->
+												<option></option>
+											</select>
+											<!-- Selected specialist phone number (not editable) -->
+											<label class="input-extension-right" for="specialistID"
+												id="viewSpecialistNo"></label>
+										</div>
+									</div>
+									<!-- Dropdown list of priorities for the ticket -->
+									<div class="half-row">
+										<label for="viewTicketPriority">Priority</label>
+										<select id="viewTicketPriority" name="ticketPriority">
+											<option value=1>1 (Lowest)</option>
+											<option value=2>2</option>
+											<option value=3>3</option>
+											<option value=4>4</option>
+											<option value=5>5 (Highest)</option>
+										</select>
+									</div>
+
+									<!-- Dropdown list of hardware -->
+									<div class="hardware-input half-row">
+										<label for="viewHardwareID">Hardware</label>
+										<select id="viewHardwareID" name="hardwareID">
+											<option value=0>Problem is not hardware related</option>
+											<!-- Add all hardware from database as items to select -->
+											<option value=1></option>
+										</select>
+									</div>
+									<!-- Resolved timestamp (not editable as automatically generated) -->
+									<div class="full-row">
+										<label for="viewResolvedTimestamp">Resolved Timestamp</label>
+										<input id="viewResolvedTimestamp" name="resolvedTimestamp" disabled type="text"
+											placeholder="">
+									</div>
+								</div>
+							</div>
+							<!-- Button group to either cancel or submit ticket -->
+							<hr>
+							<div class="modal-footer">
+								<button type="button" onclick="closeModal();" class="modal-close button-close-bottom"
+									data-bs-dismiss="modal">Close</button>
+								<button type="submit">Update ticket</button>
+								<!-- another onclick  -->
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+
+
+
 			<div class="maindiv">
 				<ul>
 					<h1>Welcome to the mainpage!</h1>
@@ -169,6 +349,7 @@
 								class="textinput" id="searchbar" value="" size="30" />
 							<input type="submit" value="Search" class="searchbutton">
 					</form>
+					<button onclick="initiateNewTicketForm()" type="submit">new ticket</button>
 				</ul>
 				<%	if(source == "initialEntry") {
 					%>
@@ -204,6 +385,27 @@
 					<tr>
 						<% } %>
 				</table>
+				<% } else if (source == "newTicketEntry") { %>
+				<h1>newTicket</h1>
+				<form name="test" action="/user/processNewTicket" method="post">
+					User ID:
+					<input type="text" id="userId" name="userId" value=""><br><br>
+					Problem Description <input type="text" id="problemDescription" name="problemDescription"
+						value=""><br><br>
+					Main Tag: <select name="mainTag" id="mainTag">
+						<option value="" selected="selected">Select main tag</option>
+					</select>
+					<br><br>
+					Secondary Tag: <select name="secondaryTag" id="secondaryTag">
+						<option value="" selected="selected">Please select main tag first</option>
+					</select>
+					<br><br>
+					Tertiary Tag: <select name="tertiaryTag" id="tertiaryTag">
+						<option value="" selected="selected">Please select secondary tag first</option>
+					</select>
+					<br><br>
+					<input type="submit" value="Submit">
+				</form>
 				<% } else { %>
 				<h1>searchEntry</h1>
 				<% if (data.length == 0) { %>
@@ -236,7 +438,7 @@
 	</div>
 	<script type="text/javascript">
 
-		function createHiddenFormAndPost(path, params, method = 'post') {
+		function standardPost(path, params, method = 'post') {
 
 			// The rest of this code assumes you are not using a library.
 			// It can be made less verbose if you use one.
@@ -261,10 +463,54 @@
 		function grabProblemCategory() {
 			// let currentVal = document.getElementById("testbtn").value
 			let currentVal2 = event.target.id
-			createHiddenFormAndPost('/user/maintag', { problemCategory: currentVal2 });
+			standardPost('/user/maintag', { problemCategory: currentVal2 });
 			console.log(currentVal2)
 		}
+		function initiateNewTicketForm() {
+			// ACTION: you can capture anything from the form here and pass to route
+			standardPost('/user/initiatenewticket', {})
+		}
+
+		var subjectObject = {
+			"Front-end": {
+				"HTML": ["Links", "Images", "Tables", "Lists"],
+				"CSS": ["Borders", "Margins", "Backgrounds", "Float"],
+				"JavaScript": ["Variables", "Operators", "Functions", "Conditions"]
+			},
+			"Back-end": {
+				"PHP": ["Variables", "Strings", "Arrays"],
+				"SQL": ["SELECT", "UPDATE", "DELETE"]
+			}
+		}
+		window.onload = function () {
+			var subjectSel = document.getElementById("mainTag");
+			var topicSel = document.getElementById("secondaryTag");
+			var chapterSel = document.getElementById("tertiaryTag");
+			for (var x in subjectObject) {
+				subjectSel.options[subjectSel.options.length] = new Option(x, x);
+			}
+			subjectSel.onchange = function () {
+				//empty Chapters- and Topics- dropdowns
+				chapterSel.length = 1;
+				topicSel.length = 1;
+				//display correct values
+				for (var y in subjectObject[this.value]) {
+					topicSel.options[topicSel.options.length] = new Option(y, y);
+				}
+			}
+			topicSel.onchange = function () {
+				//empty Chapters dropdown
+				chapterSel.length = 1;
+				//display correct values
+				var z = subjectObject[subjectSel.value][this.value];
+				for (var i = 0; i < z.length; i++) {
+					chapterSel.options[chapterSel.options.length] = new Option(z[i], z[i]);
+				}
+			}
+		}
 	</script>
+
 </body>
+<script src="javascript/functions1.js"></script>
 
 </html>

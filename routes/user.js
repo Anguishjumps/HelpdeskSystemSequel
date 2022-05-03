@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-let resultObject = {data:[]}
+let resultObject = { data: [] }
 var mysql = require('mysql');
 
 var con = mysql.createConnection({
@@ -10,47 +10,80 @@ var con = mysql.createConnection({
     database: "teamb029",
     multipleStatements: true
 });
-con.connect(function(err) {
-    if (err) throw err; 
+con.connect(function (err) {
+    if (err) throw err;
 })
 
 router.use(logger)
 
 router.get('/', (req, res) => {
-            con.query("SELECT DISTINCT TagTable.tagName FROM Ticket LEFT JOIN `TagTable` ON  Ticket.mainTag = TagTable.ID;", function(err, result, fields) {
-                if (err) throw err;
-                res.render('user/main', { data: result, source: "initialEntry" })
+    con.query("SELECT DISTINCT TagTable.tagName FROM Ticket LEFT JOIN `TagTable` ON  Ticket.mainTag = TagTable.ID;", function (err, result, fields) {
+        if (err) throw err;
+        res.render('user/main', { data: result, source: "initialEntry" })
 
-            });
+    });
 
 })
+
+router.post('/initiatenewticket', (req, res) => {
+    console.log("Initiating new ticket form...")
+
+    //making connection for drop downs
+    //to capture search term if needed too
+
+    let myQuery = "SELECT * FROM TagTable;"
+    con.query(myQuery, function (err, result, fields) {
+        if (err) throw err;
+        console.log("result: " + Object.values(result).map(el => console.log(el)))
+        res.render('user/main', { data: result, source: "newTicketEntry" })
+    });
+});
+// })
 
 router.post('/searched', (req, res) => {
     let searchTerm = req.body.searchbar
-    let myQuery = `SELECT ticketDescription, resolvedDescription FROM Ticket WHERE ticketState = "RESOLVED" AND ((ticketDescription  LIKE '%`+searchTerm.toLowerCase()+`%' OR resolvedDescription LIKE '%`+searchTerm.toLowerCase()+`%') OR (ticketDescription  LIKE '%`+searchTerm+`%' OR resolvedDescription LIKE '%`+searchTerm+`%'))`
+    let myQuery = `SELECT ticketDescription, resolvedDescription FROM Ticket WHERE ticketState = "RESOLVED" AND ((ticketDescription  LIKE '%` + searchTerm.toLowerCase() + `%' OR resolvedDescription LIKE '%` + searchTerm.toLowerCase() + `%') OR (ticketDescription  LIKE '%` + searchTerm + `%' OR resolvedDescription LIKE '%` + searchTerm + `%'))`
     let resultObject
-    con.query(myQuery, function(err, result, fields) {
+    con.query(myQuery, function (err, result, fields) {
         if (err) throw err;
-        result.map(el=>console.log(el))
+        result.map(el => console.log(el))
         res.render('user/main', { data: result, source: "searchEntry" })
     });
 })
-
-
 router.post('/maintag', (req, res) => {
     console.log("LOOK AT ME")
-        let problemCategory = req.body.problemCategory
-        let myQuery = `SELECT Ticket.ticketDescription, Ticket.resolvedDescription FROM TagTable INNER JOIN Ticket ON TagTable.ID = Ticket.mainTag WHERE tagName = "`+problemCategory+`" AND ticketState = "RESOLVED"`
-        console.log("problem category: " + problemCategory)
-        // con.connect(function(err) {
-        //     if (err) throw err;
-            con.query(myQuery, function(err, result, fields) {
-                if (err) throw err;
-                console.log("result: " + Object.values(result).map(el=>console.log(el)))
-                res.render('user/main', { data: result, source: "maintagEntry" })
-            });
-        // });
-    })
+    let problemCategory = req.body.problemCategory
+    let myQuery = `SELECT Ticket.ticketDescription, Ticket.resolvedDescription FROM TagTable INNER JOIN Ticket ON TagTable.ID = Ticket.mainTag WHERE tagName = "` + problemCategory + `" AND ticketState = "RESOLVED"`
+    //order by date
+    console.log("problem category: " + problemCategory)
+    // con.connect(function(err) {
+    //     if (err) throw err;
+    con.query(myQuery, function (err, result, fields) {
+        if (err) throw err;
+        console.log("result: " + Object.values(result).map(el => console.log(el)))
+        res.render('user/main', { data: result, source: "maintagEntry" })
+    });
+    // });
+})
+
+
+router.post('/processNewTicket', (req, res) => {
+    console.log(req.body)
+    let userId = req.body.userId
+    // WRITE THE REST
+    let mainTagNumber = req.body.mainTagNumber
+    console.log(mainTagNumber)
+
+    // let myQuery = `SELECT Ticket.ticketDescription, Ticket.resolvedDescription FROM TagTable INNER JOIN Ticket ON TagTable.ID = Ticket.mainTag WHERE tagName = "`+problemCategory+`" AND ticketState = "RESOLVED"`
+    // // con.connect(function(err) {
+    // //     if (err) throw err;
+    //     con.query(myQuery, function(err, result, fields) {
+    //         if (err) throw err;
+    //         console.log("result: " + Object.values(result).map(el=>console.log(el)))
+    // res.render('user/main', { data: result, source: "maintagEntry" })
+    // });
+    // });
+})
 
 router.get('/new', (req, res) => {
     res.render("user/new")
