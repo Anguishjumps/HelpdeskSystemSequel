@@ -142,7 +142,23 @@ router.get('/new', (req, res) => {
 })
 
 router.get('/history', (req, res) => {
-    res.render("user/history")
+    pool.getConnection(function(err, connection) {
+        if (err) {
+            return cb(err);
+        }
+        connection.query("SELECT ID, Date, mainTag, secondaryTag, tertiaryTag, \
+        ticketDescription, ticketPriority, solutionID, resolvedTimestamp, \
+        ticketState, assignedSpecialistID, resolvedDescription FROM Ticket WHERE userID = 1;", function (err, result) {
+            connection.release()
+            if (!err) {
+                result = JSON.stringify(result)
+                result = JSON.parse(result)    
+                res.render("user/history", { tickets: result })
+            } else {
+                console.log(err)
+            }
+        });
+    });   
 })
 
 router
