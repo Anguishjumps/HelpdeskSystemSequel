@@ -31,14 +31,14 @@ router.post('/initiatenewticket', (req, res) => {
     //making connection for drop downs
 
     var subjectObject = {
-        "Front-end": {
-            "HTML": ["Links", "Images", "Tables", "Lists"],
-            "CSS": ["Borders", "Margins", "Backgrounds", "Float"],
-            "JavaScript": ["Variables", "Operators", "Functions", "Conditions"]
+        1: {
+            3: [8, "Images", "Tables", "Lists"],
+            "4": ["9", "Margins", "Backgrounds", "Float"],
+            "5": ["9", "Operators", "Functions", "Conditions"]
         },
-        "Back-end": {
-            "PHP": ["Variables", "Strings", "Arrays"],
-            "SQL": ["SELECT", "UPDATE", "DELETE"]
+        2: {
+            "6": ["Variables", "Strings", "Arrays"],
+            "7": ["SELECT", "UPDATE", "DELETE"]
         }
     }
     res.render('user/main', { data: subjectObject, source: "newTicketEntry" })
@@ -83,18 +83,21 @@ router.post('/maintag', (req, res) => {
 router.post('/processNewTicket', (req, res) => {
     console.log(req.body)
     let userId = req.body.userId
-    // WRITE THE REST
-    let mainTagNumber = req.body.mainTagNumber
-    console.log(mainTagNumber)
+    let problemDescription = req.body.problemDescription
+    let mainTag = req.body.mainTag
+    let secondaryTag = req.body.secondaryTag
+    let tertiaryTag = req.body.tertiaryTag
 
-    // let myQuery = `SELECT Ticket.ticketDescription, Ticket.resolvedDescription FROM TagTable INNER JOIN Ticket ON TagTable.ID = Ticket.mainTag WHERE tagName = "`+problemCategory+`" AND ticketState = "RESOLVED"`
-    // // con.connect(function(err) {
-    // //     if (err) throw err;
-    //     con.query(myQuery, function(err, result, fields) {
-    //         if (err) throw err;
-    //         console.log("result: " + Object.values(result).map(el=>console.log(el)))
+    let myQuery = "INSERT INTO Ticket(mainTag, secondaryTag, tertiaryTag, userID, ticketDescription, ticketPriority, ticketState) VALUES("+mainTag+", "+secondaryTag+", "+tertiaryTag+", "+userId+", '"+problemDescription+"', "+3+", 'TODO')"
+
+    // con.connect(function(err) {
+    //     if (err) throw err;
+        con.query(myQuery, function(err, result, fields) {
+            if (err) throw err;
+            console.log("result: " + Object.values(result).map(el=>console.log(el)))
     // res.render('user/main', { data: result, source: "maintagEntry" })
-    // });
+    res.redirect(req.get('referer'));
+    });
     // });
 })
 

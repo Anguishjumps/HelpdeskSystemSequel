@@ -389,7 +389,7 @@
 				<h1>newTicket</h1>
 				<form name="test" action="/user/processNewTicket" method="post">
 					User ID:
-					<input type="text" id="userId" name="userId" value=""><br><br>
+					<input type="number" id="userId" name="userId" value=""><br><br>
 					Problem Description <input type="text" id="problemDescription" name="problemDescription"
 						value=""><br><br>
 					Main Tag: <select name="mainTag" id="mainTag">
@@ -472,16 +472,16 @@
 		}
 
 		var subjectObject = {
-			"Front-end": {
-				"HTML": ["Links", "Images", "Tables", "Lists"],
-				"CSS": ["Borders", "Margins", "Backgrounds", "Float"],
-				"JavaScript": ["Variables", "Operators", "Functions", "Conditions"]
-			},
-			"Back-end": {
-				"PHP": ["Variables", "Strings", "Arrays"],
-				"SQL": ["SELECT", "UPDATE", "DELETE"]
-			}
-		}
+        1: {
+            3: [8, "Images", "Tables", "Lists"],
+            "4": ["9", "Margins", "Backgrounds", "Float"],
+            "5": ["9", "Operators", "Functions", "Conditions"]
+        },
+        2: {
+            "6": ["Variables", "Strings", "Arrays"],
+            "7": ["SELECT", "UPDATE", "DELETE"]
+        }
+    }
 
 		window.onload = function() {
 			var subjectSel = document.getElementById("mainTag");
