@@ -29,14 +29,27 @@ router.post('/initiatenewticket', (req, res) => {
     console.log("Initiating new ticket form...")
 
     //making connection for drop downs
+
+    var subjectObject = {
+        "Front-end": {
+            "HTML": ["Links", "Images", "Tables", "Lists"],
+            "CSS": ["Borders", "Margins", "Backgrounds", "Float"],
+            "JavaScript": ["Variables", "Operators", "Functions", "Conditions"]
+        },
+        "Back-end": {
+            "PHP": ["Variables", "Strings", "Arrays"],
+            "SQL": ["SELECT", "UPDATE", "DELETE"]
+        }
+    }
+    res.render('user/main', { data: subjectObject, source: "newTicketEntry" })
     //to capture search term if needed too
 
-    let myQuery = "SELECT * FROM TagTable;"
-    con.query(myQuery, function (err, result, fields) {
-        if (err) throw err;
-        console.log("result: " + Object.values(result).map(el => console.log(el)))
-        res.render('user/main', { data: result, source: "newTicketEntry" })
-    });
+    // let myQuery = "SELECT * FROM TagTable;"
+    // con.query(myQuery, function (err, result, fields) {
+    //     if (err) throw err;
+    //     console.log("result: " + Object.values(result).map(el => console.log(el)))
+    //     res.render('user/main', { data: result, source: "newTicketEntry" })
+    // });
 });
 // })
 
