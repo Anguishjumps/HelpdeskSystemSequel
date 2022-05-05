@@ -424,6 +424,7 @@ table tr:nth-child(odd) {
 }
 
 .modal-content {
+    color: #0D1F2D;
     background-color: #fefefe;
     margin: 5% auto;
     border: 1px solid #888;
