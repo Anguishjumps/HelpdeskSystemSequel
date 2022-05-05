@@ -1,9 +1,10 @@
 const express = require('express')
 const router = express.Router()
-let resultObject = {results:[]}
+let resultObject = { data: [] }
 var mysql = require('mysql');
 
-var con = mysql.createConnection({
+var pool = mysql.createPool({
+    connectionLimit: 10,
     host: "localhost",
     user: "teamb029",
     password: "pXdBPQK4cL",
@@ -14,36 +15,126 @@ var con = mysql.createConnection({
 router.use(logger)
 
 router.get('/', (req, res) => {
-        con.connect(function(err) {
-            if (err) throw err;
-            con.query("SELECT * from Ticket;", function(err, result, fields) {
-                if (err) throw err;
-                res.render('user/main', { data: result })
-
-            });
+    pool.getConnection(function(err, connection) {
+        if (err) {
+            return cb(err);
+        }
+        connection.query("SELECT DISTINCT TagTable.tagName FROM Ticket LEFT JOIN `TagTable` ON  Ticket.mainTag = TagTable.ID;", function(err, result) {
+            connection.release()
+            if (!err) {
+                res.render('user/main', { data: result, source: "initialEntry" })
+            } else {
+                console.log(err)
+            }
         });
+    });
+})
 
+router.post('/initiatenewticket', (req, res) => {
+    pool.getConnection(function(err, connection) {
+        if (err) {
+            return cb(err);
+        }
+        console.log("Initiating new ticket form...")
+
+        //making connection for drop downs
+
+        var subjectObject = {
+            1: {
+                3: [8, "Images", "Tables", "Lists"],
+                "4": ["9", "Margins", "Backgrounds", "Float"],
+                "5": ["9", "Operators", "Functions", "Conditions"]
+            },
+            2: {
+                "6": ["Variables", "Strings", "Arrays"],
+                "7": ["SELECT", "UPDATE", "DELETE"]
+            }
+        }
+        res.render('user/main', { data: subjectObject, source: "newTicketEntry" })
+            //to capture search term if needed too
+
+        let myQuery = "SELECT * FROM TagTable;"
+        con.query(myQuery, function(err, result, fields) {
+            if (err) throw err;
+            console.log("result: " + Object.values(result).map(el => console.log(el)))
+            res.render('user/main', { data: result, source: "newTicketEntry" })
+        });
+    });
 })
 
 router.post('/searched', (req, res) => {
-// doing a db search on inputted text object
-    //grab search term
-    let searchTerm = req.body.searchbar
-    let resultObject
-    if (searchTerm == "printer" || "printer jam") {
-        console.log("search term: "+ searchTerm)
-        //init db query with search term
-    
-        //pretend we got a db, make results object
-        //list results in charlotte's js in main or partial
-        //get results and make a results object
-        resultObject = {results:[{issue: "printer", resolution: "restart"}, {issue: "computer", resolution: "off and on again"}]}
-    }
-    if (searchTerm == "bottle") {
-        console.log("search term: "+ searchTerm)
-        resultObject = {results:[{issue: "broken bottle", resolution: "kick"}, {issue: "hello", resolution: "goodbye"}]}
-    }
-    res.render("user/main", resultObject) // FIX
+    pool.getConnection(function(err, connection) {
+        if (err) {
+            return cb(err);
+        }
+        let searchTerm = req.body.searchbar
+        let myQuery = `SELECT ticketDescription, resolvedDescription FROM Ticket WHERE ticketState = "RESOLVED" AND ((ticketDescription  LIKE '%` + searchTerm.toLowerCase() + `%' OR resolvedDescription LIKE '%` + searchTerm.toLowerCase() + `%') OR (ticketDescription  LIKE '%` + searchTerm + `%' OR resolvedDescription LIKE '%` + searchTerm + `%'))`
+        let resultObject
+        connection.query(myQuery, function(err, result, fields) {
+            connection.release()
+            if (!err) {
+                res.render('user', { data: result })
+            } else {
+                console.log(err)
+            }
+            result.map(el => console.log(el))
+            res.render('user/main', { data: result, source: "searchEntry" })
+        });
+    });
+})
+
+router.post('/maintag', (req, res) => {
+    pool.getConnection(function(err, connection) {
+        if (err) {
+            return cb(err);
+        }
+        console.log("LOOK AT ME")
+        let problemCategory = req.body.problemCategory
+        let myQuery = `SELECT Ticket.ticketDescription, Ticket.resolvedDescription FROM TagTable INNER JOIN Ticket ON TagTable.ID = Ticket.mainTag WHERE tagName = "` + problemCategory + `" AND ticketState = "RESOLVED"`
+            //order by date
+        console.log("problem category: " + problemCategory)
+            // con.connect(function(err) {
+            //     if (err) throw err;
+        connection.query(myQuery, function(err, result, fields) {
+            connection.release()
+            if (!err) {
+                res.render('user', { data: result })
+            } else {
+                console.log(err)
+            }
+            console.log("result: " + Object.values(result).map(el => console.log(el)))
+            res.render('user/main', { data: result, source: "maintagEntry" })
+        });
+    });
+})
+
+router.post('/processNewTicket', (req, res) => {
+    pool.getConnection(function(err, connection) {
+        if (err) {
+            return cb(err);
+        }
+        console.log(req.body)
+        let userId = req.body.userId
+        let problemDescription = req.body.problemDescription
+        let mainTag = req.body.mainTag
+        let secondaryTag = req.body.secondaryTag
+        let tertiaryTag = req.body.tertiaryTag
+
+        let myQuery = "INSERT INTO Ticket(mainTag, secondaryTag, tertiaryTag, userID, ticketDescription, ticketPriority, ticketState) VALUES(" + mainTag + ", " + secondaryTag + ", " + tertiaryTag + ", " + userId + ", '" + problemDescription + "', " + 3 + ", 'TODO')"
+
+        // con.connect(function(err) {
+        //     if (err) throw err;
+        connection.query(myQuery, function(err, result, fields) {
+            connection.release()
+            if (!err) {
+                res.render('user', { data: result })
+            } else {
+                console.log(err)
+            }
+            console.log("result: " + Object.values(result).map(el => console.log(el)))
+                // res.render('user/main', { data: result, source: "maintagEntry" })
+        });
+    });
 })
 
 router.get('/new', (req, res) => {
@@ -51,45 +142,71 @@ router.get('/new', (req, res) => {
 })
 
 router.get('/history', (req, res) => {
-    res.render("user/history")
-})
-
-router.get("/contact", (req, res) => {
-    res.render("user/contact")
-})
-
-router.get("/active-issues", (req, res) => {
-    res.render("user/active-issues")
-})
-
-router.post("/", (req, res) => {
-    const isValid = true
-    if (isValid) {
-        users.push({ firstName: req.body.firstName })
-        res.redirect(`/user/${users.length - 1}`)
-    } else {
-        console.log("Error")
-        res.render("user/new", { firstName: req.body.firstName })
-    }
+    pool.getConnection(function(err, connection) {
+        if (err) {
+            return cb(err);
+        }
+        connection.query("SELECT ID, Date, mainTag, secondaryTag, tertiaryTag, \
+        ticketDescription, ticketPriority, solutionID, resolvedTimestamp, \
+        ticketState, assignedSpecialistID, resolvedDescription FROM Ticket WHERE userID = 1;", function(err, result) {
+            connection.release()
+            if (!err) {
+                result = JSON.stringify(result)
+                result = JSON.parse(result)
+                res.render("user/history", { tickets: result })
+            } else {
+                console.log(err)
+            }
+        });
+    });
 })
 
 router
-    .route("/:id")
-    .get((req, res) => {
-        console.log(req.user)
-        res.send(`Get User With ID ${req.params.id}`)
-    })
-    .put((req, res) => {
-        res.send(`Update User With ID ${req.params.id}`)
-    })
-    .delete((req, res) => {
-        res.send(`Delete User With ID ${req.params.id}`)
-    })
+    .get('/contact', (req, res) => {
+        pool.getConnection(function(err, connection) {
+            if (err) {
+                return cb(err);
+            }
+            connection.query("SELECT PersonnelTable.fullName, TagTable.tagName, PersonnelTable.phoneNo \
+         from Specialist join PersonnelTable on Specialist.specialistID = PersonnelTable.ID \
+         join TagTable on Specialist.tagID=TagTable.ID;", (err, result) => {
+                connection.release();
 
-const users = [{ name: "Kyle" }, { name: "Sally" }]
-router.param("id", (req, res, next, id) => {
-    req.user = users[id]
-    next()
+                if (!err) {
+                    res.render('user/contact', { specialists: result })
+                } else {
+                    console.log(err)
+                }
+            });
+        });
+    });
+
+router.get("/active-issues", (req, res) => {
+    pool.getConnection(function(err, connection) {
+        if (err) {
+            return cb(err);
+        }
+        connection.query("SELECT ID, Date, mainTag, secondaryTag, tertiaryTag, \
+        ticketDescription, ticketPriority, solutionID, resolvedTimestamp, \
+        ticketState, assignedSpecialistID, resolvedDescription FROM Ticket WHERE userID = 1;", function(err, result) {
+            connection.release()
+            if (!err) {
+                result = JSON.stringify(result)
+                result = JSON.parse(result)
+                res.render("user/active-issues", { tickets: result })
+            } else {
+                console.log(err)
+            }
+        });
+    });
+})
+
+router.post("/active-issues", (req, res) => {
+    res.redirect(`/user/active-issues/` + req.body.cardno)
+})
+
+router.get("/active-issues/:cardno", (req, res) => {
+    res.render("user/card-details")
 })
 
 function logger(req, res, next) {
@@ -98,12 +215,3 @@ function logger(req, res, next) {
 }
 
 module.exports = router
-
-/*login
-usermain
-userspec
-user hist
-
-secialistmain
-specialsit analyst
-*/
