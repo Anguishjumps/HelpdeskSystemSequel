@@ -351,7 +351,7 @@
 					</form>
 					<button onclick="initiateNewTicketForm()" type="submit">new ticket</button>
 				</ul>
-				<%	if(source == "initialEntry") {
+				<%	if(point == "initialEntry") {
 					%>
 				<table>
 					<tr>
@@ -366,7 +366,7 @@
 					<tr>
 						<% }} %>
 				</table>
-				<% } else if (source == "maintagEntry") { %>
+				<% } else if (point == "maintagEntry") { %>
 				<h1>maintagEntry</h1>
 				<table>
 					<tr>
@@ -385,7 +385,7 @@
 					<tr>
 						<% } %>
 				</table>
-				<% } else if (source == "newTicketEntry") { %>
+				<% } else if (point == "newTicketEntry") { %>
 				<h1>newTicket</h1>
 				<form name="test" action="/user/processNewTicket" method="post">
 					User ID:
