@@ -1,9 +1,11 @@
 /*
+PALETTE DETAILS
 #9EA3B0 light grey
 #546A7B blue
 #0D1F2D navy
 */
 
+/*Basic site-wide settings -----------------------------------------*/
 * {
     box-sizing: border-box
 } 
@@ -18,7 +20,13 @@ body {
 body,td,th {
 	color: #F0F0F0; 
 }
+html, body {
+  margin:0px;
+  height:100%;
+}
+/*Due to a quirk in CSS, heights relating to the viewport will use vh instead of % because it refuses to recognise the viewport itself as a parent*/
 
+/*Search bar and search button -------------------------------------*/
 .textinput {
 	font-size:larger;
 	text-align:centre;
@@ -27,7 +35,7 @@ body,td,th {
 	margin: auto;
 	cursor: text;
 	width: 80%;
-	height: 10%;
+	height: 10vh;
 	border-radius: 4px;
 }
 
@@ -41,7 +49,7 @@ body,td,th {
 	margin: auto;
 	cursor: pointer;
 	width: 10%;
-	height: 10%;
+	height: 10vh;
 	border-radius: 4px;
 	transition: transform .2s;
 }
@@ -49,24 +57,52 @@ body,td,th {
   transform: scale(1.1);
 }
 
+/*Full page container for div layout*/
 .container {
 	width: 100%;
 	overflow: hidden;
 	
 }
-
+/*Main div for non-sidebar content*/
 .maindiv {            
-    width: 79%;           
-	height: 100%;
+    width: 79%; /*Cannot be set to exactly 80% width because it will overflow and break*/           
+	height: 100vh;
     background: #0D1F2D;
 	border: 0px solid #2C2C3C;
 	overflow: hidden;
 	float:left;
 }
+
 .maindiv ul {
     list-style: none; 
     line-height: 100%;
 
+
+/*USER HISTORY PAGE CSS --------------------------------------------------------------------*/
+/*History page dynamic scrollable container div*/
+.historydiv {            
+    width: 90%;           
+	height: 80vh;
+    background: #040504;
+	border: 0px solid #2C2C3C;
+	overflow-y:scroll;
+	float:left;
+	border-radius: 6px;
+	text-align: center
+	
+}
+
+/*Individual cards to be dynamically added through a JS loop*/
+.historycard {            
+    width: 95%;           
+	height: 150px;
+    background: #546A7B;
+	border: 0px solid #2C2C3C;
+	overflow: hidden;
+	display: block;
+	margin: auto;
+	margin-bottom: 10px;
+	border-radius: 4px;
 }
 
 .historydiv {            
@@ -91,6 +127,7 @@ body,td,th {
 	margin: 20 auto;
 	border-radius: 4px;
 }
+/*Cards use a table layout for organisation*/
 .historycard table {
 	margin: 10 auto;
 	text-align: center;
@@ -98,6 +135,8 @@ body,td,th {
     line-height: 100%;
 	width: 100%;
 	height: 80%;
+	table-layout: fixed;
+	overflow: hidden;
 
 }
 .cardbutton {
@@ -117,25 +156,35 @@ body,td,th {
 .cardbutton:hover {
   transform: scale(1.1);
 }
+/*END OF USER HISTORY SECTION*/
 
-/*Tag Arrow*/
+/*Tag 'Arrow'*/
+/*Actual arrow code in CSS is unecessarily verbose*/
 .tag-shape {
-	width: 10%;
-	height: 100%;
-	margin: auto auto;
+	width: 15%;
+	display: inline-block;
+	height: 45px;
+	margin: auto;
+	padding: 2px;
 	text-align: center;
 	font-weight: bold;
+	font-size: 12px;
 	background-color: #EE4444;
 	border: 2px solid black;
 	border-top-left-radius: 15px;
 	border-bottom-right-radius: 15px;
 }
 
-/*Navigation Bar*/
+/*NAVIGATION SIDEBAR CSS -----------------------------------------------------*/
+/*Should be universal across every page. Please tell me if its broken for you!*/
 .sidebarheader {
+	margin: auto;
+	width: 50%;
+	padding: 10px;
 	margin: 20 auto;
 	text-align: center;
 	width: 100%;
+	line-height:100%;
 }
 .sidebarbutton {
 	font-size:larger;
@@ -145,7 +194,7 @@ body,td,th {
 	margin: 10 auto;
 	cursor: pointer;
 	width: 100%;
-	height: 20%;
+	height: 20vh;
 	border: 0px;
 	border-radius: 8px;
 }
@@ -153,14 +202,14 @@ body,td,th {
   background-color: #9EA3B0;
   
 }
+/*Sidebar container*/
 .nav {            
-    width: 20%;           
-	height: 100%;
+    width: 20%;   
+	height: 100vh;
     background: #5D6F7D;
 	overflow: auto;
 	text-align: centre;
 	float:left;
-	border: 2px solid black;
 }
 .nav ul {
     line-height: 100%;
