@@ -28,6 +28,10 @@ app.get('/', (req, res) => {
 })
 
 
+
+const userRouter = require('./routes/user')
+app.use('/user', userRouter)
+
 app.post('/loginCheck', (req, res) => {
             const hashPassword = async(password, saltRounds = 10) => {
                 try {
