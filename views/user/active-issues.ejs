@@ -1,13 +1,65 @@
 <!DOCTYPE html>
 <html>
-  <head>
-      <meta charset="utf-8">
-      <meta http-equiv="X-UA-Compatible" content="IE=edge">
-      <title>Hello</title>
-      <meta name="description" content="">
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-  </head>
-  <body>
-      Active Issues: Emotional Damage
-  </body>
+	<title>Active Issues</title>
+	<link href="/css/shellstylesheet.css" rel="stylesheet">
+	<link href="/css/active-issues.css" rel="stylesheet">
+	<body>
+		<div class="container">
+			<div class="header">
+			</div>
+			<div class="wrapper clearfix">
+				<div class="nav">
+					<ul>
+						<h1 class="sidebarheader">Site Navigation</h1>
+						<li colspan=1><input type="submit" onclick="location.href='./';" name="NavHome" id="NavHome" value="Home" class="sidebarbutton" title="Browse Existing Solutions" /></li>	
+						<li colspan=1><input type="submit" onclick="location.href='./history';" name="NavHistory" id="NavHistory" value="User History ðŸ“‹" class="sidebarbutton" title="Access Your Past Tickets" /></li>	
+						<li colspan=1><input type="submit" onclick="location.href='./contact';" name="NavContact" id="NavContact" value="Contact Specialist âœ‰ï¸" class="sidebarbutton" title="Submit a Ticket to Our Specialists" /></li>	
+						<li colspan=1><input type="submit" onclick="location.href='../';" name="NavLogout" id="NavLogout" value="Log Out ðŸ’¨" class="sidebarbutton" title="Log Out of Your Account" /></li>
+					</ul>
+				</div>
+				<div class="maindiv">
+					<ul>
+						<h1>This is not the sidebar</h1>
+						<li colspan=1><input name="searchbar" type="text" class="textinput" id="searchbar" value="" size="30" />
+						<input type="submit" name="Search" id="Search" value="Search ðŸ”Ž" class="searchbutton" title="mouseover text" /></li>	
+					</ul>
+			<div class="historydiv" id="historydiv">
+				<div id="header-div">
+	                <h1>Active Issues</h1>
+					</div>
+						<script>
+							var tickets = <%- JSON.stringify(locals.tickets) %>;
+							for (let i = 0; i < tickets.length; i++) {
+								document.addEventListener('DOMContentLoaded', function() {
+									var div = document.createElement('div');
+									div.id = 'card';
+									div.innerHTML = '<form action="/user/active-issues" method="POST">\
+										<div>\
+											<input type = "hidden" name = "cardno" value = "'+i+'"/>\
+											<button id="card-button">\
+												<table>\
+													<tr>\
+														<td><h3>Ticket ID: '+tickets[i].ID+'</h3></td>\
+														<td>'+tickets[i].ticketState+'</td>\
+													</tr>\
+													<tr>\
+														<td><h1>'+tickets[i].ticketDescription+'</h1></td>\
+														<td>'+tickets[i].mainTag+'</td>\
+													</tr>\
+													<tr>\
+														<td><div class="tag-shape">'+tickets[i].mainTag+'</div></td>\
+													</tr>\
+												</table>\
+											</button>\
+										</div>'
+									div.className = 'historycard';
+									document.getElementById("historydiv").appendChild(div);
+								}, false);
+							}
+						</script>
+                    </div>
+				</div>
+			</div>
+		</div>
+	</body>
 </html>

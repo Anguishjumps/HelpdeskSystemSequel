@@ -1,13 +1,76 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html>
-  <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Hello</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-    </head>
-    <body>
-        <img src="/assets/First_Shitless_Old_Man.png" alt="History!">
-  </body>
+	<title>Test Main Page</title>
+	<link href="/css/shellstylesheet.css" rel="stylesheet">
+	<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	</head>
+	<body>
+		<div class="container">
+			<div class="header">
+			</div>
+			<div class="wrapper clearfix">
+				<div class="nav">
+					<ul>
+						<h1 class="sidebarheader">Site Navigation</h1>
+						<li colspan=1><input type="submit" onclick="location.href='./';" name="NavHome" id="NavHome" value="Home" class="sidebarbutton" title="Browse Existing Solutions" /></li>	
+						<li colspan=1><input type="submit" onclick="location.href='./history';" name="NavHistory" id="NavHistory" value="User History 📋" class="sidebarbutton" title="Access Your Past Tickets" /></li>	
+						<li colspan=1><input type="submit" onclick="location.href='./contact';" name="NavContact" id="NavContact" value="Contact Specialist ✉️" class="sidebarbutton" title="Submit a Ticket to Our Specialists" /></li>	
+						<li colspan=1><input type="submit" onclick="location.href='../';" name="NavLogout" id="NavLogout" value="Log Out 💨" class="sidebarbutton" title="Log Out of Your Account" /></li>
+					</ul>
+				</div>
+				<div class="maindiv" id="maindiv">
+					<ul>
+						<h1>Make-It-All Virtual Helpdesk System</h1>
+						<li colspan=1><input name="searchbar" type="text" class="textinput" id="searchbar" value="" placeholder="Type to Begin Search" size="30" />
+						<input type="submit" name="Search" id="Search" value="Search 🔎" class="searchbutton" title="mouseover text" /></li>	
+					</ul>
+					<ul>
+						<!-- END OF SIDEBAR CODE, START OF USER HISTORY CODE------------------------------------------------ -->
+						<div class="historydiv" id="historydiv">
+						<h1>User History</h1>
+						<script>
+							var tickets = <%- JSON.stringify(locals.tickets) %>
+							for (let i = 0; i < tickets.length; i++) {
+								document.addEventListener('DOMContentLoaded', function() {
+									var div = document.createElement('div');
+									div.id = 'card';
+									
+									div.innerHTML = '\
+									<table>\
+									    <col width="75%" />\
+										<col width="25%" />\
+										<row height="50%"/>\
+										<row height="50%"/>\
+										<tr>\
+											<td><b style="font-size:20px">'+tickets[i].ticketDescription+'</b></td>\
+											<td>Solved '+tickets[i].resolvedTimestamp+' by '+tickets[i].assignedSpecialistName+'</td>\
+										</tr>\
+										<tr>\
+											<td>Ticket Creation Date:'+tickets[i].Date+'</td>\
+											<td rowspan="2"><input type="submit" name="cardbutton" id="cardbutton" value="View Solution" class="cardbutton" title="Visit Solution Page" /></td>\
+										</tr>\
+										<tr>\
+											<td><div class="tag-shape">'+tickets[i].mainTag+'</div>\
+												<div class="tag-shape" style="background-color:#0FAA0F" >'+tickets[i].secondaryTag+'</div>\
+												<div class="tag-shape" style="background-color:#2222CC" >'+tickets[i].tertiaryTag+'</div>\
+											</td>\
+										</tr>\
+									</table>\
+									';
+									
+									div.className = 'historycard';
+								 
+									document.getElementById("historydiv").appendChild(div);
+								}, false);
+							}
+						</script>
+						</div>
+					</ul>
+				</div>
+			</div>
+		</div>
+			
+	</body>
+
 </html>
