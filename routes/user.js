@@ -12,8 +12,6 @@ var pool = mysql.createPool({
     multipleStatements: true
 });
 
-router.use(logger)
-
 router.get('/', (req, res) => {
     pool.getConnection(function(err, connection) {
         if (err) {
@@ -67,7 +65,7 @@ router.post('/initiatenewticket', (req, res) => {
         con.query(myQuery, function(err, result, fields) {
             if (err) throw err;
             console.log("result: " + Object.values(result).map(el => console.log(el)))
-            res.render('user/main', { data: result, source: "newTicketEntry" })
+            //res.render('user/main', { data: result, source: "newTicketEntry" })
         });
     });
 })
@@ -263,9 +261,11 @@ router.get("/active-issues", (req, res) => {
         if (err) {
             return cb(err);
         }
-        connection.query("SELECT ID, Date, mainTag, secondaryTag, tertiaryTag, \
-        ticketDescription, ticketPriority, solutionID, resolvedTimestamp, \
-        ticketState, assignedSpecialistID, resolvedDescription FROM Ticket WHERE userID = 1;", function(err, result) {
+        connection.query("SELECT ID, Date, (SELECT tagName FROM TagTable WHERE Ticket.mainTag = TagTable.ID) AS mainTag,\
+         (SELECT tagName FROM TagTable WHERE Ticket.secondaryTag = TagTable.ID) AS secondaryTag,\
+          (SELECT tagName FROM TagTable WHERE Ticket.tertiaryTag = TagTable.ID) AS tertiaryTag,\
+           ticketDescription, ticketPriority, solutionID, resolvedTimestamp, ticketState,\
+            assignedSpecialistID, resolvedDescription FROM Ticket WHERE userID = 1;", function (err, result) {
             connection.release()
             if (!err) {
                 result = JSON.stringify(result)
@@ -404,4 +404,3 @@ router.get("/active-issues/:cardno", (req, res) => {
 })
 
 module.exports = router
-
