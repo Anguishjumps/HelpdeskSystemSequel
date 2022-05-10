@@ -7,9 +7,23 @@
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="description" content="">
       <meta name="viewport" content="width=device-width, initial-scale=1">
+      <script>
+        var specialists = <%- JSON.stringify(locals.specialists) %>;
+        console.log(specialists[0]);
+        for (let i = 0; i < (Math.ceil(specialists.length)); i++) {
+          console.log("row"+i);
+          var divNewName='row'+i;
+          console.log("got here1");
+          document.createElement(divNewName);
+          divNewName.className = "row";
+          console.log("got here2");
+        }
+      </script>
   </head>
   <style>    
-    /div/non-shell css:/
+
+    /*div/non-shell css:*/
+
     .maindiv {            
       overflow-x: hidden;
         overflow-y: auto;
@@ -80,7 +94,9 @@
 				<div class="nav">
 					<ul>
 						<h1 class="sidebarheader">Sidebar</h1>
-						<li colspan=1><input type="submit" name="Search" id="Search" value="Search ðŸ”Ž" class="sidebarbutton" title="mouseover text" /></li>	
+
+						<li colspan=1><input type="submit" name="Search" id="Search" value="Search 🔎" class="sidebarbutton" title="mouseover text" /></li>	
+
 						<li colspan=1><input type="submit" name="Search" id="Search" value="History" class="sidebarbutton" title="mouseover text" /></li>	
 						<li colspan=1><input type="submit" name="Search" id="Search" value="Contact" class="sidebarbutton" title="mouseover text" /></li>	
 						<li colspan=1><input type="submit" name="Search" id="Search" value="Log Out" class="sidebarbutton" title="mouseover text" /></li>
@@ -90,204 +106,50 @@
 					<ul>
 						<h1>This is not the sidebar</h1>
 						<li colspan=1><input name="searchbar" type="text" class="textinput" id="searchbar" value="" size="30" />
-						<input type="submit" name="Search" id="Search" value="Search ðŸ”Ž" class="searchbutton" title="mouseover text" /></li>	
+
+						<input type="submit" name="Search" id="Search" value="Search 🔎" class="searchbutton" title="mouseover text" /></li>	
 					</ul>
                     <br></br>
                                         <!--Row 1-->
-                    <div class="row">
-                        <div class="column">
-                        <table class="test">
-                            <tr>
-                            <th colspan="2" style="text-align: center;"><img src="img_avatar.png" style="width:75%"></th>
-                            
-                            </tr>
-                            <tr>
-                            <td>Name:</td>
-                            <td>Lester Norris</td>
-                            </tr>
-                            <tr>
-                            <td class="specialism">Specialism:</td>
-                            <td>Network</td>
-                            </tr>
-                            <tr>
-                            <td>Phone number:</td>
-                            <td>07683 045293</td>
-                            </tr>
-                        </table>
-                        </div>
-                        <div class="column">
-                        <table class="test">
-                            <tr>
-                            <th colspan="2" style="text-align: center;"><img src="img_avatar.png" style="width:75%"></th>
-                            
-                            </tr>
-                            <tr>
-                            <td>Name:</td>
-                            <td>Kennedy Whitaker</td>
-                            </tr>
-                            <tr>
-                            <td class="specialism">Specialism:</td>
-                            <td>Computers</td>
-                            </tr>
-                            <tr>
-                            <td>Phone number:</td>
-                            <td>07844 036294</td>
-                            </tr>
-                        </table>
-                        </div>
-                        <div class="column">
-                        <table class="test">
-                            <tr>
-                            <th colspan="2" style="text-align: center;"><img src="img_avatar.png" style="width:75%"></th>
-                            
-                            </tr>
-                            <tr>
-                            <td>Name:</td>
-                            <td>Orlando Wright</td>
-                            </tr>
-                            <tr>
-                            <td class="specialism">Specialism:</td>
-                            <td>Printer</td>
-                            </tr>
-                            <tr>
-                            <td>Phone number:</td>
-                            <td>07844 036294</td>
-                            </tr>
-                        </table>
-                        </div>
-                    </div>
-                    
-                    
-                    <!--Row 2-->
-                    <div class="row">
-                        <div class="column">
-                        <table class="test">
-                            <tr>
-                            <th colspan="2" style="text-align: center;"><img src="img_avatar.png" style="width:75%"></th>
-                            
-                            </tr>
-                            <tr>
-                            <td>Name:</td>
-                            <td>Lester Norris</td>
-                            </tr>
-                            <tr>
-                            <td class="specialism">Specialism:</td>
-                            <td>Network</td>
-                            </tr>
-                            <tr>
-                            <td>Phone number:</td>
-                            <td>07683 045293</td>
-                            </tr>
-                        </table>
-                        </div>
-                        <div class="column">
-                        <table class="test">
-                            <tr>
-                            <th colspan="2" style="text-align: center;"><img src="img_avatar.png" style="width:75%"></th>
-                            
-                            </tr>
-                            <tr>
-                            <td>Name:</td>
-                            <td>Kennedy Whitaker</td>
-                            </tr>
-                            <tr>
-                            <td class="specialism">Specialism:</td>
-                            <td>Computers</td>
-                            </tr>
-                            <tr>
-                            <td>Phone number:</td>
-                            <td>07844 036294</td>
-                            </tr>
-                        </table>
-                        </div>
-                        <div class="column">
-                        <table class="test">
-                            <tr>
-                            <th colspan="2" style="text-align: center;"><img src="img_avatar.png" style="width:75%"></th>
-                            
-                            </tr>
-                            <tr>
-                            <td>Name:</td>
-                            <td>Orlando Wright</td>
-                            </tr>
-                            <tr>
-                            <td class="specialism">Specialism:</td>
-                            <td>Printer</td>
-                            </tr>
-                            <tr>
-                            <td>Phone number:</td>
-                            <td>07844 036294</td>
-                            </tr>
-                        </table>
-                        </div>
-                    </div>
-                    
-                                        <!--Row 3-->
-                    <div class="row">
-                        <div class="column">
-                        <table class="test">
-                            <tr>
-                            <th colspan="2" style="text-align: center;"><img src="img_avatar.png" style="width:75%"></th>
-                            
-                            </tr>
-                            <tr>
-                            <td>Name:</td>
-                            <td>Lester Norris</td>
-                            </tr>
-                            <tr>
-                            <td class="specialism">Specialism:</td>
-                            <td>Network</td>
-                            </tr>
-                            <tr>
-                            <td>Phone number:</td>
-                            <td>07683 045293</td>
-                            </tr>
-                        </table>
-                        </div>
-                        <div class="column">
-                        <table class="test">
-                            <tr>
-                            <th colspan="2" style="text-align: center;"><img src="img_avatar.png" style="width:75%"></th>
-                            
-                            </tr>
-                            <tr>
-                            <td>Name:</td>
-                            <td>Kennedy Whitaker</td>
-                            </tr>
-                            <tr>
-                            <td class="specialism">Specialism:</td>
-                            <td>Computers</td>
-                            </tr>
-                            <tr>
-                            <td>Phone number:</td>
-                            <td>07844 036294</td>
-                            </tr>
-                        </table>
-                        </div>
-                        <div class="column">
-                        <table class="test">
-                            <tr>
-                            <th colspan="2" style="text-align: center;"><img src="img_avatar.png" style="width:75%"></th>
-                            
-                            </tr>
-                            <tr>
-                            <td>Name:</td>
-                            <td>Orlando Wright</td>
-                            </tr>
-                            <tr>
-                            <td class="specialism">Specialism:</td>
-                            <td>Printer</td>
-                            </tr>
-                            <tr>
-                            <td>Phone number:</td>
-                            <td>07844 036294</td>
-                            </tr>
-                        </table>
-                        </div>
-                    </div>
+          `<div id ="row"></div>
+            <script>
+              var specialists = <%- JSON.stringify(locals.specialists) %>;
+              console.log(specialists[0]);
+              for (let i = 0; i <specialists.length; i++) {
+                console.log(specialists[i]);
+                document.addEventListener('DOMContentLoaded', function() {
+                  var div = document.createElement('div');
+                  div.id = 'specialisttable';
+                  div.innerHTML = '<div class="column">\
+                     <table class="test">\
+                          <tr>\
+                          <th colspan="2" style="text-align: center;"><img src="/css/img_avatar.png" style="width:75%"></th>\
+                          \
+                          </tr>\
+                          <tr>\
+                          <td>Name:</td>\
+                          <td>'+specialists[i].fullName+'</td>\
+                          </tr>\
+                          <tr>\
+                          <td class="specialism">Specialism:</td>\
+                          <td>'+specialists[i].tagName+'</td>\
+                          </tr>\
+                          <tr>\
+                          <td>Phone number:</td>\
+                          <td>'+specialists[i].phoneNo+'</td>\
+                          </tr>\
+                      </table>\
+                      </div>'
+                  div.idName = 'testrow';
+                  document.getElementById("row").appendChild(div);
+                }, false);
+              }
+            </script>
 				</div>
 			</div>
 		</div>
+
 			
 	</body>
 </html>
+

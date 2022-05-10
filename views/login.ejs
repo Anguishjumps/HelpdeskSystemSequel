@@ -1,13 +1,113 @@
 <!DOCTYPE html>
+
 <html>
-  <head>
-      <meta charset="utf-8">
-      <meta http-equiv="X-UA-Compatible" content="IE=edge">
-      <title>Hello</title>
-      <meta name="description" content="">
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-  </head>
-  <body>
-      Login Page: <%= locals.text %>
-  </body>
+
+<head>
+
+    <title> Welcome To The Make-It-All Login Page</title>
+
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #0D1F2D;
+            color: white;
+        }
+        
+        input[type=text],
+        input[list=type],
+        input[type=password],
+        select {
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-top: 6px;
+            margin-bottom: 16px;
+        }
+        
+        input[type=submit] {
+            background-color: #f1f1f1;
+            color: black;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        input[type=submit]:hover {
+            background-color: #c9c9c9;
+            color: white;
+        }
+        
+        .header {
+            overflow: hidden;
+            background-color: #f1f1f1;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .main {
+            text-align: center;
+            padding: 5%;
+        }
+        
+        .wrapper {
+            display: inline-block;
+            border: 2px solid white;
+            border-spacing: 15px 50px;
+            padding: 2.5% 7.5%;
+        }
+    </style>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script>
+    </script>
+
+</head>
+
+<body>
+
+    <div class="header">
+
+        <img src="Logo.jpg" alt="Make-It-All Logo" width="500" height="100">
+
+    </div>
+
+    <div class="main">
+
+        <div class="wrapper">
+
+            <form method="post" action="/loginCheck">
+
+                <label for="ID">Your ID Number :</label><br>
+                <input type="text" id="ID" name="ID" required><br>
+
+                <label for="type">Company Role :</label><br>
+                <input list="type" name="type">
+                <datalist id="type">
+        <option value="Employee">
+        <option value="Specialist">
+      </datalist>
+                <br>
+
+                <label for="Password">Password :</label><br>
+                <input type="password" id="password" name="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{5,}" title="Must contain at least one number, one uppercase/lowercase letter, and at least 5 or more characters"><br>
+
+                <br>
+
+                <input type="submit" name="submit" value="submit">
+
+            </form>
+
+        </div>
+
+        <br>
+
+        <div id="Response_Text"></div>
+
+    </div>
+
+</body>
+
 </html>
