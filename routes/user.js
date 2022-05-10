@@ -349,13 +349,28 @@ router
             if (err) {
                 return cb(err);
             }
-            connection.query("SELECT PersonnelTable.fullName, TagTable.tagName, PersonnelTable.phoneNo \
-         from Specialist join PersonnelTable on Specialist.specialistID = PersonnelTable.ID \
-         join TagTable on Specialist.tagID=TagTable.ID;", (err, result) => {
-                connection.release();
+
+            myQuery="SELECT PersonnelTable.fullName, TagTable.tagName, PersonnelTable.phoneNo \
+                from Specialist join PersonnelTable on Specialist.specialistID = PersonnelTable.ID \
+                join TagTable on Specialist.tagID=TagTable.ID;";
+
+            if(req.body.sortBy=="Name"){
+                myQuery="SELECT PersonnelTable.fullName, TagTable.tagName, PersonnelTable.phoneNo from Specialist \
+                join PersonnelTable on Specialist.specialistID = PersonnelTable.ID join TagTable on Specialist.tagID=TagTable.ID\
+                 ORDER by PersonnelTable.fullName";
+            } else if(req.body.sortBy=="Specialism"){
+                myQuery="SELECT PersonnelTable.fullName, TagTable.tagName, PersonnelTable.phoneNo from Specialist \
+                join PersonnelTable on Specialist.specialistID = PersonnelTable.ID join TagTable on Specialist.tagID=TagTable.ID\
+                 ORDER by TagTable.tagName";
+            } else if(req.body.sortBy=="--Choose--"){
+                myQuery="SELECT PersonnelTable.fullName, TagTable.tagName, PersonnelTable.phoneNo \
+                from Specialist join PersonnelTable on Specialist.specialistID = PersonnelTable.ID \
+                join TagTable on Specialist.tagID=TagTable.ID;";
+            }
+            connection.query(myQuery, function (err, result) {
 
                 if (!err) {
-                    res.render('user/contact', { specialists: result })
+                    res.render("user/contact", { specialists: result })
                 } else {
                     console.log(err)
                 }
@@ -365,10 +380,40 @@ router
 
 router.post('/getJson', (req, res) => {
     pool.getConnection(function (err, connection) {
-        console.log("got here");
-        console.log(req.body.sortBy);
+        if (err) {
+            return cb(err);
+        }
+
+        if(req.body.sortBy=="Name"){
+            let myQueryS="SELECT PersonnelTable.fullName, TagTable.tagName, PersonnelTable.phoneNo from Specialist \
+            join PersonnelTable on Specialist.specialistID = PersonnelTable.ID join TagTable on Specialist.tagID=TagTable.ID\
+             ORDER by PersonnelTable.fullName";
+        } else if(req.body.sortBy=="Specialism"){
+            let myQueryS="SELECT PersonnelTable.fullName, TagTable.tagName, PersonnelTable.phoneNo from Specialist \
+            join PersonnelTable on Specialist.specialistID = PersonnelTable.ID join TagTable on Specialist.tagID=TagTable.ID\
+             ORDER by TagTable.tagName";
+        }
+
+        connection.query(myQuery, function (err, result) {
+
+            if (!err) {
+                res.render("user/contact", { specialists: result })
+            } else {
+                console.log(err)
+            }
+        });
+        //let result=req.body.sortBy;
+        //console.log(req.body.sortBy);
+
+        
+                //res.redirect("user/contact", { specialists: result })
+                //res.redirect("/user/contact")
+            
+        });
+
     });
-});
+
+  
 
 
 module.exports = router
@@ -404,3 +449,4 @@ router.get("/active-issues/:cardno", (req, res) => {
 })
 
 module.exports = router
+
