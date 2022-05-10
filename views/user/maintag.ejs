@@ -1,0 +1,188 @@
+<html>
+<title>Test Main Page</title>
+<link href="./shellstylesheet.css" rel="stylesheet">
+
+<head>
+	<style>
+		/*
+#9EA3B0 light grey
+#546A7B blue
+#0D1F2D navy
+*/
+
+		* {
+			box-sizing: border-box
+		}
+
+		body {
+			font-family: Verdana, Arial, Helvetica, sans-serif;
+			background-color: #0D1F2D;
+		}
+
+		.center {
+			text-align: center;
+		}
+
+		body,
+		td,
+		th {
+			color: #F0F0F0;
+		}
+
+		.textinput {
+			font-size: larger;
+			text-align: centre;
+			border: 2px solid black;
+			font-weight: bold;
+			margin: auto;
+			cursor: text;
+			width: 80%;
+			height: 10%;
+			border-radius: 4px;
+		}
+
+		.searchbutton {
+			font-size: larger;
+			text-align: centre;
+			color: #2C2C3C;
+			border: 2px solid black;
+			font-weight: bold;
+			background-color: #85C7F2;
+			margin: auto;
+			cursor: pointer;
+			width: 10%;
+			height: 10%;
+			border-radius: 4px;
+			transition: transform .2s;
+		}
+
+		.searchbutton:hover {
+			transform: scale(1.1);
+		}
+
+		.container {
+			width: 100%;
+			overflow: hidden;
+
+		}
+
+		.maindiv {
+			width: 79%;
+			height: 100%;
+			background: #0D1F2D;
+			border: 0px solid #2C2C3C;
+			overflow: hidden;
+			float: left;
+		}
+
+		.resultsDiv {
+			border: 5px outset red;
+			background-color: lightblue;
+			text-align: center;
+		}
+
+		.maindiv ul {
+			list-style: none;
+			line-height: 100%;
+
+		}
+
+		.sidebarheader {
+			margin: auto;
+			width: 50%;
+			padding: 10px;
+		}
+
+		.sidebarbutton {
+			font-size: larger;
+			text-align: centre;
+			color: #F0F0F0;
+			border: 1px solid black;
+			font-weight: bold;
+			background-color: #546A7B;
+			margin: auto;
+			cursor: pointer;
+			width: 100%;
+			height: 20%;
+		}
+
+		.sidebarbutton:hover {
+			background-color: #9EA3B0;
+
+		}
+
+		.nav {
+			width: 20%;
+			height: 100%;
+			background: #5D6F7D;
+			border: 1px solid #2C2C3C;
+			overflow: auto;
+			float: left;
+		}
+
+		.nav ul {
+			line-height: 100%;
+			list-style-type: none;
+			padding: 0;
+			margin: 0;
+		}
+
+		.nav form {
+			margin: auto;
+			text-align: centre;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="container">
+		<div class="header">
+		</div>
+		<div class="wrapper clearfix">
+			<div class="nav">
+				<ul>
+					<h1 class="sidebarheader">Menu</h1>
+					<!-- <li colspan=1><input type="submit" name="Search" id="Search" value="Search 🔎" class="sidebarbutton"
+							title="mouseover text" /></li> -->
+					<form action="/user/history" method="get">
+						<input type="submit" value="User History" class="sidebarbutton">
+					</form>
+					<form action="/user/contact" method="get">
+						<input type="submit" value="Contact" class="sidebarbutton">
+					</form>
+					<form action="/" method="get">
+						<input type="submit" value="Log Out" class="sidebarbutton">
+					</form>
+				</ul>
+			</div>
+			<div class="maindiv">
+				<ul>
+					<h1>Welcome to the mainpage!</h1>
+					<form action="/user/searched" method="post">
+						<li colspan=1><input placeholder="Search for a problem type..." name="searchbar" type="text"
+								class="textinput" id="searchbar" value="" size="30" />
+							<input type="submit" value="Search" class="searchbutton">
+					</form>
+				</ul>
+				<table>
+					<tr>
+						<% for(var u = 0; u < Object.keys(data).length; u++) { %>
+							<td>
+								<button class="sidebarbutton"><%= data[u].tagName %></button>
+							</td> 
+							<%	if((u - 1) % 3 == 0 && u != 0) {
+						%>
+					</tr>
+					<tr>
+						<% }} %>
+				</table>
+
+				<div class="maindiv">
+					<%- include('partials/onepartial')  %>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>
