@@ -36,29 +36,34 @@ router.post('/initiatenewticket', (req, res) => {
         console.log("Initiating new ticket form...")
 
         //making connection for drop downs
+        // S
+        // SELECT * FROM `TagReleTable` ORDER BY `mainTagID` ASC
+        //SELECT * FROM `TagTable`
 
-        var subjectObject = {
-            1: {
-                3: [8, "Images", "Tables", "Lists"],
-                "4": ["9", "Margins", "Backgrounds", "Float"],
-                "5": ["9", "Operators", "Functions", "Conditions"]
-            },
-            2: {
-                "6": ["Variables", "Strings", "Arrays"],
-                "7": ["SELECT", "UPDATE", "DELETE"]
-            }
-        }
-        res.render('user/main', { data: subjectObject, point: "newTicketEntry" })
-        //to capture search term if needed too
-
-        let myQuery = "SELECT * FROM TagTable;"
-        connection.query(myQuery, function (err, result, fields) {
+        let mainTagQuery = "SELECT DISTINCT TagTable.tagName, TagTable.ID FROM Ticket LEFT JOIN `TagTable` ON  Ticket.mainTag = TagTable.ID;"
+        
+        connection.query(mainTagQuery, function (err, result, fields) {
             if (err) throw err;
+
             console.log("result: " + Object.values(result).map(el => console.log(el)))
-            //res.render('user/main', { data: result, point: "newTicketEntry" })
-        });
-    });
+        })
+    })
+    //res.render('user/main', { data: result, point: "newTicketEntry" })
+    var mainTagObject = {
+        1: {
+            3: [8, "Images", "Tables", "Lists"],
+            "4": ["9", "Margins", "Backgrounds", "Float"],
+            "5": ["9", "Operators", "Functions", "Conditions"]
+        },
+        2: {
+            "6": ["Variables", "Strings", "Arrays"],
+            "7": ["SELECT", "UPDATE", "DELETE"]
+        }
+    }
+    res.render('user/main', { mainTagObject: mainTagObject, point: "newTicketEntry" })
+    //to capture search term if needed too
 })
+
 
 router.post('/searched', (req, res) => {
     pool.getConnection(function (err, connection) {
@@ -105,6 +110,7 @@ router.post('/maintag', (req, res) => {
 })
 
 router.post('/processNewTicket', (req, res) => {
+
     pool.getConnection(function (err, connection) {
         if (err) {
             return cb(err);
@@ -120,11 +126,11 @@ router.post('/processNewTicket', (req, res) => {
         connection.query(myQuery, function (err, result, fields) {
             connection.release()
             if (!err) {
-                res.redirect('/')
+                res.redirect('/user')
             } else {
                 console.log(err)
             }
-            console.log("result: " + Object.values(result).map(el => console.log(el)))
+            // console.log("result: " + Object.values(result).map(el => console.log(el)))
         });
     });
 })

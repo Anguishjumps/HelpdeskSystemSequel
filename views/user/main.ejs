@@ -236,111 +236,6 @@
 					</form>
 				</ul>
 			</div>
-
-			<!-- View ticket modal -->
-
-			<div id="make-ticket-modal" class="modal fade" tabindex="-1">
-				<div class="modal-dialog">
-					<form id="update-form" name="update-form" action="user/make" method="POST" class="modal-form">
-						<!-- Invisible field used for post back to same page -->
-						<input type="hidden" name="form_type" value="update-ticket">
-						<div class="modal-content">
-							<div class="modal-header">
-								<h3 class="modal-title">View ticket</h3>
-								<button type="button" onclick="closeModal();" class="modal-close button-close"
-									data-bs-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
-							</div>
-							<hr>
-							<div class="modal-body">
-								<div class="wrapper">
-									<!-- Ticket ID (automatically generated so cannot be edited) -->
-									<div class="half-row">
-										<label for="viewID">Ticket ID</label>
-										<input id="viewID" name="ID" type="number" placeholder="" value="" required
-											disabled>
-									</div>
-									<!-- Created timestamp of the ticket (not editable) -->
-									<div class="half-row">
-										<label for="viewCreatedTimestamp">Created Timestamp</label>
-										<input id="viewCreatedTimestamp" name="createdTimestamp" type="text"
-											placeholder="" disabled>
-									</div>
-									<!-- Dropdown list of reporters -->
-									<div class="full-row">
-										<label for="viewReporterID">Reporter</label>
-										<div class="input-extended input-extended-right">
-											<select onchange="getPhoneNo(this);" id="viewReporterID" name="reporterID"
-												class="personnel-select ">
-												<!-- Add all reporters from database as items to select -->
-												<option value=1></option>
-											</select>
-											<!-- Selected reporter phone number (not editable) -->
-											<label class="input-extension-right" for="reporterID"
-												id="viewReporterNo"></label>
-										</div>
-									</div>
-									<!-- Dropdown list of specialist -->
-									<div class="full-row">
-										<label for="viewAssignedSpecialistID">Assigned Specialist</label>
-										<div class="input-extended input-extended-right">
-											<select onchange="getPhoneNo(this); addExternalSpecialist(this)"
-												id="viewAssignedSpecialistID" name="assignedSpecialistID"
-												class="personnel-select ">
-												<option selected value=0>Not assigned</option>
-												<!-- Option to add external specialist -->
-												<option value=-1>New External Specialist</option>
-												<!-- Add all specialists from database as items to select -->
-												<option></option>
-											</select>
-											<!-- Selected specialist phone number (not editable) -->
-											<label class="input-extension-right" for="specialistID"
-												id="viewSpecialistNo"></label>
-										</div>
-									</div>
-									<!-- Dropdown list of priorities for the ticket -->
-									<div class="half-row">
-										<label for="viewTicketPriority">Priority</label>
-										<select id="viewTicketPriority" name="ticketPriority">
-											<option value=1>1 (Lowest)</option>
-											<option value=2>2</option>
-											<option value=3>3</option>
-											<option value=4>4</option>
-											<option value=5>5 (Highest)</option>
-										</select>
-									</div>
-
-									<!-- Dropdown list of hardware -->
-									<div class="hardware-input half-row">
-										<label for="viewHardwareID">Hardware</label>
-										<select id="viewHardwareID" name="hardwareID">
-											<option value=0>Problem is not hardware related</option>
-											<!-- Add all hardware from database as items to select -->
-											<option value=1></option>
-										</select>
-									</div>
-									<!-- Resolved timestamp (not editable as automatically generated) -->
-									<div class="full-row">
-										<label for="viewResolvedTimestamp">Resolved Timestamp</label>
-										<input id="viewResolvedTimestamp" name="resolvedTimestamp" disabled type="text"
-											placeholder="">
-									</div>
-								</div>
-							</div>
-							<!-- Button group to either cancel or submit ticket -->
-							<hr>
-							<div class="modal-footer">
-								<button type="button" onclick="closeModal();" class="modal-close button-close-bottom"
-									data-bs-dismiss="modal">Close</button>
-								<button type="submit">Update ticket</button>
-								<!-- another onclick  -->
-							</div>
-						</div>
-					</form>
-				</div>
-			</div>
-
-
-
 			<div class="maindiv">
 				<ul>
 					<h1>Welcome to the mainpage!</h1>
@@ -390,19 +285,33 @@
 				<form name="test" action="/user/processNewTicket" method="post">
 					User ID:
 					<input type="number" id="userId" name="userId" value=""><br><br>
-					Problem Description <input type="text" id="problemDescription" name="problemDescription"
+					Problem Description: <input type="text" id="problemDescription" name="problemDescription"
 						value=""><br><br>
-					Main Tag: <select name="mainTag" id="mainTag">
-						<option value="" selected="selected">Select main tag</option>
+					mainTag:
+					<select name="mainTag" id="mainTag"
+						onchange="secondaryTagChangeFunction(<%=JSON.stringify(mainTagObject)%>)">
+						<option value="select-mainTag-value" selected="selected">Select main tag</option>
+						<% let values = Object.keys(mainTagObject)
+       for (let index=0;index< values.length;index++) { %>
+						<option value="<%=values[index]%>"><%=values[index]%></option>
+						<% }%>
 					</select>
-					<br><br>
-					Secondary Tag: <select name="secondaryTag" id="secondaryTag">
-						<option value="" selected="selected">Please select main tag first</option>
+					<br /><br />
+					secondaryTag:
+					<select name="secondaryTag" id="secondaryTag"
+						onchange="tertiaryTagChangeFunction(<%=JSON.stringify(mainTagObject)%>)">
+						<option value="" selected="selected">
+							Please select main tag first
+						</option>
 					</select>
-					<br><br>
-					Tertiary Tag: <select name="tertiaryTag" id="tertiaryTag">
-						<option value="" selected="selected">Please select secondary tag first</option>
+					<br /><br />
+					tertiaryTag:
+					<select name="tertiaryTag" id="tertiaryTag">
+						<option value="" selected="selected">
+							Please select secondary tag first
+						</option>
 					</select>
+					<br /><br />
 					<br><br>
 					<input type="submit" value="Submit">
 				</form>
@@ -471,45 +380,50 @@
 			standardPost('/user/initiatenewticket', {})
 		}
 
-		var subjectObject = {
-        1: {
-            3: [8, "Images", "Tables", "Lists"],
-            "4": ["9", "Margins", "Backgrounds", "Float"],
-            "5": ["9", "Operators", "Functions", "Conditions"]
-        },
-        2: {
-            "6": ["Variables", "Strings", "Arrays"],
-            "7": ["SELECT", "UPDATE", "DELETE"]
-        }
-    }
+		function secondaryTagChangeFunction(mainTagObject) {
+			let mainTagSel = document.getElementById("mainTag");
+			let secondaryTagSel = document.getElementById("secondaryTag");
+			let tertiaryTagSel = document.getElementById("tertiaryTag")
+			if (mainTagSel.value !== "select-mainTag-value") {
+				let possibleValuesForSecondaryTag = Object.keys(mainTagObject[mainTagSel.value])
+				secondaryTagSel.options[0] = new Option("select secondary tag", "select secondary tag")
+				tertiaryTagSel.length = 0
+				let optionsReset = document.createElement("option")
+				optionsReset.text = "Please select secondary tag first"
+				optionsReset.value = "Please select secondary tag first"
+				tertiaryTagSel.add(optionsReset)
+				for (let index = 0; index < possibleValuesForSecondaryTag.length; index++) {
+					secondaryTagSel.options[index + 1] = new Option(possibleValuesForSecondaryTag[index], possibleValuesForSecondaryTag[index])
+				}
+			} else {
+				secondaryTagSel.length = 0
+				let optionsReset = document.createElement("option")
+				optionsReset.text = "Please select main tag first"
+				optionsReset.value = "Please select main tag first"
+				secondaryTagSel.add(optionsReset)
+				tertiaryTagSel.length = 0
+				optionsReset = document.createElement("option")
+				optionsReset.text = "Please select secondary tag first"
+				optionsReset.value = "Please select secondary tag first"
+				tertiaryTagSel.add(optionsReset)
+			}
+		}
+		function tertiaryTagChangeFunction(mainTagObject) {
+			let mainTagSel = document.getElementById("mainTag");
+			let secondaryTagSel = document.getElementById("secondaryTag");
+			let tertiaryTagSel = document.getElementById("tertiaryTag")
+			if (secondaryTagSel.value !== "select secondary tag") {
+				let possibleValuesForTertiaryTagArr = mainTagObject[mainTagSel.value][secondaryTagSel.value]
+				tertiaryTagSel.options[0] = new Option("select tertiary tag", "select tertiary tag")
+				for (let index = 0; index < possibleValuesForTertiaryTagArr.length; index++) {
+					tertiaryTagSel.options[index + 1] = new Option(possibleValuesForTertiaryTagArr[index], possibleValuesForTertiaryTagArr[index])
+				}
+			}
+		}
 
-		window.onload = function() {
-			var subjectSel = document.getElementById("mainTag");
-			var topicSel = document.getElementById("secondaryTag");
-			var chapterSel = document.getElementById("tertiaryTag");
-			for (var x in subjectObject) {
-				subjectSel.options[subjectSel.options.length] = new Option(x, x);
-			}
-			subjectSel.onchange = function () {
-				//empty Chapters- and Topics- dropdowns
-				chapterSel.length = 1;
-				topicSel.length = 1;
-				//display correct values
-				for (var y in subjectObject[this.value]) {
-					topicSel.options[topicSel.options.length] = new Option(y, y);
-				}
-			}
-			topicSel.onchange = function () {
-				//empty Chapters dropdown
-				chapterSel.length = 1;
-				//display correct values
-				var z = subjectObject[subjectSel.value][this.value];
-				for (var i = 0; i < z.length; i++) {
-					chapterSel.options[chapterSel.options.length] = new Option(z[i], z[i]);
-				}
-			}
-		} 
-		</script>
+	</script>
+
+
 
 </body>
 <script src="javascript/functions1.js"></script>
