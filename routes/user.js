@@ -236,25 +236,6 @@ router.post('/maintag', (req, res) => {
     });
 })
 
-router
-    .get('/contact', (req, res) => {
-        pool.getConnection(function(err, connection) {
-            if (err) {
-                return cb(err);
-            }
-            connection.query("SELECT PersonnelTable.fullName, TagTable.tagName, PersonnelTable.phoneNo \
-         from Specialist join PersonnelTable on Specialist.specialistID = PersonnelTable.ID \
-         join TagTable on Specialist.tagID=TagTable.ID;", (err, result) => {
-                connection.release();
-
-                if (!err) {
-                    res.render('user/contact', { specialists: result })
-                } else {
-                    console.log(err)
-                }
-            });
-        });
-    });
 
 router.get("/active-issues", (req, res) => {
     pool.getConnection(function(err, connection) {
@@ -343,6 +324,7 @@ router.get('/history', (req, res) => {
 
 })
 
+
 router
     .get('/contact', (req, res) => {
         pool.getConnection(function (err, connection) {
@@ -350,23 +332,23 @@ router
                 return cb(err);
             }
 
-            myQuery="SELECT PersonnelTable.fullName, TagTable.tagName, PersonnelTable.phoneNo \
-                from Specialist join PersonnelTable on Specialist.specialistID = PersonnelTable.ID \
-                join TagTable on Specialist.tagID=TagTable.ID;";
+            
 
-            if(req.body.sortBy=="Name"){
-                myQuery="SELECT PersonnelTable.fullName, TagTable.tagName, PersonnelTable.phoneNo from Specialist \
-                join PersonnelTable on Specialist.specialistID = PersonnelTable.ID join TagTable on Specialist.tagID=TagTable.ID\
-                 ORDER by PersonnelTable.fullName";
-            } else if(req.body.sortBy=="Specialism"){
-                myQuery="SELECT PersonnelTable.fullName, TagTable.tagName, PersonnelTable.phoneNo from Specialist \
-                join PersonnelTable on Specialist.specialistID = PersonnelTable.ID join TagTable on Specialist.tagID=TagTable.ID\
-                 ORDER by TagTable.tagName";
-            } else if(req.body.sortBy=="--Choose--"){
+            if(req.query.param1==null){
                 myQuery="SELECT PersonnelTable.fullName, TagTable.tagName, PersonnelTable.phoneNo \
                 from Specialist join PersonnelTable on Specialist.specialistID = PersonnelTable.ID \
                 join TagTable on Specialist.tagID=TagTable.ID;";
-            }
+                
+            
+            }else if(req.query.param1=="Name"){
+                myQuery="SELECT PersonnelTable.fullName, TagTable.tagName, PersonnelTable.phoneNo from Specialist \
+               join PersonnelTable on Specialist.specialistID = PersonnelTable.ID join TagTable on Specialist.tagID=TagTable.ID\
+                ORDER by PersonnelTable.fullName";
+           } else if(req.query.param1=="Specialism"){
+                myQuery="SELECT PersonnelTable.fullName, TagTable.tagName, PersonnelTable.phoneNo from Specialist \
+               join PersonnelTable on Specialist.specialistID = PersonnelTable.ID join TagTable on Specialist.tagID=TagTable.ID\
+                ORDER by TagTable.tagName";
+           }
             connection.query(myQuery, function (err, result) {
 
                 if (!err) {
@@ -384,34 +366,17 @@ router.post('/getJson', (req, res) => {
             return cb(err);
         }
 
-        if(req.body.sortBy=="Name"){
-            let myQueryS="SELECT PersonnelTable.fullName, TagTable.tagName, PersonnelTable.phoneNo from Specialist \
-            join PersonnelTable on Specialist.specialistID = PersonnelTable.ID join TagTable on Specialist.tagID=TagTable.ID\
-             ORDER by PersonnelTable.fullName";
-        } else if(req.body.sortBy=="Specialism"){
-            let myQueryS="SELECT PersonnelTable.fullName, TagTable.tagName, PersonnelTable.phoneNo from Specialist \
-            join PersonnelTable on Specialist.specialistID = PersonnelTable.ID join TagTable on Specialist.tagID=TagTable.ID\
-             ORDER by TagTable.tagName";
-        }
+        myQuery=req.body.sortBy;
 
-        connection.query(myQuery, function (err, result) {
+                res.redirect("/user/contact/?param1="+myQuery)
 
-            if (!err) {
-                res.render("user/contact", { specialists: result })
-            } else {
-                console.log(err)
-            }
         });
-        //let result=req.body.sortBy;
-        //console.log(req.body.sortBy);
-
-        
-                //res.redirect("user/contact", { specialists: result })
-                //res.redirect("/user/contact")
+     
             
         });
 
-    });
+    
+
 
   
 
