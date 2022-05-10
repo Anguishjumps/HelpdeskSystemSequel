@@ -72,6 +72,7 @@ function showTicket(ticketID) {
             console.log(key)
                 // If object key corresponds to a dropdown menu and values haven't been set
             let input = document.querySelector('#view' + key);
+            if ([""])
             // if (["SolutionID", "AssignedSpecialistID"].includes(key) && !result.result[key]) {
             //     // Set to defaults
             //     input.value = 0;
@@ -83,7 +84,7 @@ function showTicket(ticketID) {
             // }
             // else {
             // Set value to result
-            input.value = result[key];
+                input.value = result[key];
             // }
         });
     });
@@ -246,9 +247,9 @@ function onDrop(event) {
     let ticketID = id.replace('ticket', '');
     $.post('/specialist/getDetails', result = {
         ID: $("#" + ticketID).data("id"),
-        //NewTicketState: dropzone.dataset.typeid,
+        NewState: dropzone.dataset.typeid,
         State: $("#" + ticketID).data("state"),
-        //NewMainTag: dropzone.dataset.typeid,
+        NewMainTag: dropzone.dataset.typeid,
         MainTag: $("#" + ticketID).data("maintag"),
         SecondaryTag: $("#" + ticketID).data("secondarytag"),
         AssignedSpecialistID: $("#" + ticketID).data("assignedspecialistid"),
@@ -260,7 +261,8 @@ function onDrop(event) {
         let ticketDetails = result;
         console.log(ticketDetails)
             // If ticket has not been moved
-        if (dropzone.dataset.typeid == ticketDetails.MainTag && dropzone.dataset.state == ticketDetails.State) {
+        if (dropzone.dataset.typeid == ticketDetails.NewMainTag && dropzone.dataset.state == ticketDetails.NewState) {
+            console.log("oioi");
             return false;
         }
         console.log(dropzone.dataset.typeid)

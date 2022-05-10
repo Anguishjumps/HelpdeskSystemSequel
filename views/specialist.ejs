@@ -179,7 +179,7 @@
                                 states.forEach(state => {
                                 %>
                                     <td ondragover="onDragOver(event)" ondrop="onDrop(event)">
-                                        <ul class="ticket-list" data-state="<%=state%>" datatypeID="<%=problemType[i]%>">
+                                        <ul class="ticket-list" data-state="<%=state%>" data-typeID="<%=problemType[i]%>">
                                             <% for (var u =0; u < Object.keys(data[0]).length;  u++ ) {
                                                     %>
                                                 <%if (data[0][u].ticketState == state && data[0][u].mainTag == problemType[i]) { %>
