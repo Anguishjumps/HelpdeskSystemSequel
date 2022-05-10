@@ -15,6 +15,7 @@ app.get('/', (req, res) => {
 
 })
 
+
 const userRouter = require('./routes/user')
 app.use('/user', userRouter)
 
