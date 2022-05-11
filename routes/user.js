@@ -29,7 +29,9 @@ router.get('/', (req, res) => {
 })
 
 router.post('/initiatenewticket', (req, res) => {
+
     pool.getConnection(function (err, connection) {
+
         if (err) {
             return cb(err);
         }
@@ -199,13 +201,13 @@ router.post('/searched', (req, res) => {
 })
 
 router.get('/history', (req, res) => {
-    pool.getConnection(function (err, connection) {
+    pool.getConnection(function(err, connection) {
         if (err) {
             return cb(err);
         }
         connection.query("SELECT ID, Date, mainTag, secondaryTag, tertiaryTag, \
         ticketDescription, ticketPriority, solutionID, resolvedTimestamp, \
-        ticketState, assignedSpecialistID, resolvedDescription FROM Ticket WHERE userID = 1;", function (err, result) {
+        ticketState, assignedSpecialistID, resolvedDescription FROM Ticket WHERE userID = 1;", function(err, result) {
             connection.release()
             if (!err) {
                 result = JSON.stringify(result)
@@ -268,7 +270,7 @@ router
 
 
 router.get("/active-issues", (req, res) => {
-    pool.getConnection(function (err, connection) {
+    pool.getConnection(function(err, connection) {
         if (err) {
             return cb(err);
         }
@@ -361,20 +363,20 @@ router
                 return cb(err);
             }
 
-            myQuery = "SELECT PersonnelTable.fullName, TagTable.tagName, PersonnelTable.phoneNo \
+            myQuery="SELECT PersonnelTable.fullName, TagTable.tagName, PersonnelTable.phoneNo \
                 from Specialist join PersonnelTable on Specialist.specialistID = PersonnelTable.ID \
                 join TagTable on Specialist.tagID=TagTable.ID;";
 
-            if (req.body.sortBy == "Name") {
-                myQuery = "SELECT PersonnelTable.fullName, TagTable.tagName, PersonnelTable.phoneNo from Specialist \
+            if(req.body.sortBy=="Name"){
+                myQuery="SELECT PersonnelTable.fullName, TagTable.tagName, PersonnelTable.phoneNo from Specialist \
                 join PersonnelTable on Specialist.specialistID = PersonnelTable.ID join TagTable on Specialist.tagID=TagTable.ID\
                  ORDER by PersonnelTable.fullName";
-            } else if (req.body.sortBy == "Specialism") {
-                myQuery = "SELECT PersonnelTable.fullName, TagTable.tagName, PersonnelTable.phoneNo from Specialist \
+            } else if(req.body.sortBy=="Specialism"){
+                myQuery="SELECT PersonnelTable.fullName, TagTable.tagName, PersonnelTable.phoneNo from Specialist \
                 join PersonnelTable on Specialist.specialistID = PersonnelTable.ID join TagTable on Specialist.tagID=TagTable.ID\
                  ORDER by TagTable.tagName";
-            } else if (req.body.sortBy == "--Choose--") {
-                myQuery = "SELECT PersonnelTable.fullName, TagTable.tagName, PersonnelTable.phoneNo \
+            } else if(req.body.sortBy=="--Choose--"){
+                myQuery="SELECT PersonnelTable.fullName, TagTable.tagName, PersonnelTable.phoneNo \
                 from Specialist join PersonnelTable on Specialist.specialistID = PersonnelTable.ID \
                 join TagTable on Specialist.tagID=TagTable.ID;";
             }
@@ -395,12 +397,12 @@ router.post('/getJson', (req, res) => {
             return cb(err);
         }
 
-        if (req.body.sortBy == "Name") {
-            let myQueryS = "SELECT PersonnelTable.fullName, TagTable.tagName, PersonnelTable.phoneNo from Specialist \
+        if(req.body.sortBy=="Name"){
+            let myQueryS="SELECT PersonnelTable.fullName, TagTable.tagName, PersonnelTable.phoneNo from Specialist \
             join PersonnelTable on Specialist.specialistID = PersonnelTable.ID join TagTable on Specialist.tagID=TagTable.ID\
              ORDER by PersonnelTable.fullName";
-        } else if (req.body.sortBy == "Specialism") {
-            let myQueryS = "SELECT PersonnelTable.fullName, TagTable.tagName, PersonnelTable.phoneNo from Specialist \
+        } else if(req.body.sortBy=="Specialism"){
+            let myQueryS="SELECT PersonnelTable.fullName, TagTable.tagName, PersonnelTable.phoneNo from Specialist \
             join PersonnelTable on Specialist.specialistID = PersonnelTable.ID join TagTable on Specialist.tagID=TagTable.ID\
              ORDER by TagTable.tagName";
         }
@@ -416,14 +418,42 @@ router.post('/getJson', (req, res) => {
         //let result=req.body.sortBy;
         //console.log(req.body.sortBy);
 
-
-        //res.redirect("user/contact", { specialists: result })
-        //res.redirect("/user/contact")
+        
+                //res.redirect("user/contact", { specialists: result })
+                //res.redirect("/user/contact")
+            
+        });
 
     });
 
-});
+  
 
+
+
+router.get("/active-issues", (req, res) => {
+    pool.getConnection(function (err, connection) {
+        if (err) {
+            return cb(err);
+        }
+        connection.query("SELECT ID, Date, (SELECT tagName FROM TagTable WHERE Ticket.mainTag = TagTable.ID) AS mainTag,\
+         (SELECT tagName FROM TagTable WHERE Ticket.secondaryTag = TagTable.ID) AS secondaryTag,\
+          (SELECT tagName FROM TagTable WHERE Ticket.tertiaryTag = TagTable.ID) AS tertiaryTag,\
+           ticketDescription, ticketPriority, solutionID, resolvedTimestamp, ticketState,\
+            assignedSpecialistID, resolvedDescription FROM Ticket WHERE userID = 1;", function (err, result) {
+            connection.release()
+            if (!err) {
+                result = JSON.stringify(result)
+                result = JSON.parse(result)
+                res.render("user/active-issues", { tickets: result })
+            } else {
+                console.log(err)
+            }
+        });
+    });
+})
+router.post("/active-issues", (req, res) => {
+    res.redirect(`/user/active-issues/` + req.body.cardno)
+})
 
 
 
