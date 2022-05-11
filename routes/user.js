@@ -325,6 +325,7 @@ router.get('/history', (req, res) => {
 })
 
 
+
 router
     .get('/contact', (req, res) => {
         pool.getConnection(function (err, connection) {
@@ -335,19 +336,22 @@ router
             
 
             if(req.query.param1==null){
-                myQuery="SELECT PersonnelTable.fullName, TagTable.tagName, PersonnelTable.phoneNo \
+                myQuery="SELECT PersonnelTable.fullName, TagTable.tagName, PersonnelTable.phoneNo, PersonnelTable.email \
                 from Specialist join PersonnelTable on Specialist.specialistID = PersonnelTable.ID \
                 join TagTable on Specialist.tagID=TagTable.ID;";
                 
             
             }else if(req.query.param1=="Name"){
-                myQuery="SELECT PersonnelTable.fullName, TagTable.tagName, PersonnelTable.phoneNo from Specialist \
+                myQuery="SELECT PersonnelTable.fullName, TagTable.tagName, PersonnelTable.phoneNo, PersonnelTable.email from Specialist \
                join PersonnelTable on Specialist.specialistID = PersonnelTable.ID join TagTable on Specialist.tagID=TagTable.ID\
                 ORDER by PersonnelTable.fullName";
            } else if(req.query.param1=="Specialism"){
-                myQuery="SELECT PersonnelTable.fullName, TagTable.tagName, PersonnelTable.phoneNo from Specialist \
+                myQuery="SELECT PersonnelTable.fullName, TagTable.tagName, PersonnelTable.phoneNo, PersonnelTable.email from Specialist \
                join PersonnelTable on Specialist.specialistID = PersonnelTable.ID join TagTable on Specialist.tagID=TagTable.ID\
                 ORDER by TagTable.tagName";
+           }else{
+               searchQuery=req.query.param1;
+               myQuery="SELECT PersonnelTable.fullName, TagTable.tagName, PersonnelTable.phoneNo, PersonnelTable.email from Specialist join PersonnelTable on Specialist.specialistID = PersonnelTable.ID join TagTable on Specialist.tagID=TagTable.ID WHERE PersonnelTable.fullName LIKE '%"+searchQuery+"%' OR TagTable.tagName LIKE  '%"+searchQuery+"%' OR PersonnelTable.phoneNo LIKE  '%"+searchQuery+"%' OR PersonnelTable.email LIKE  '%"+searchQuery+"%'";
            }
             connection.query(myQuery, function (err, result) {
 
@@ -360,7 +364,7 @@ router
         });
     });
 
-router.post('/getJson', (req, res) => {
+router.post('/getSort', (req, res) => {
     pool.getConnection(function (err, connection) {
         if (err) {
             return cb(err);
@@ -375,13 +379,21 @@ router.post('/getJson', (req, res) => {
             
         });
 
+router.post('/getSearch', (req, res) => {
+    pool.getConnection(function (err, connection) {
+        if (err) {
+            return cb(err);
+        }
+        
+        myQuery=req.body.searchbar;
+        
+                res.redirect("/user/contact/?param1="+myQuery)
+        
+        });
+             
+                    
+    });
     
-
-
-  
-
-
-module.exports = router
 
 
 router.get("/active-issues", (req, res) => {
