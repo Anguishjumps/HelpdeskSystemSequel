@@ -10,7 +10,9 @@
 
   </head>
   <style>    
+
     /*div/non-shell css:*/
+
     .maindiv {            
       overflow-x: hidden;
         overflow-y: auto;
@@ -90,13 +92,28 @@
 						<li colspan=1><input type="submit" onclick="location.href='./history';" name="NavHistory" id="NavHistory" value="User History 📋" class="sidebarbutton" title="Access Your Past Tickets" /></li>	
 						<li colspan=1><input type="submit" onclick="location.href='./contact';" name="NavContact" id="NavContact" value="Contact Specialist ✉️" class="sidebarbutton" title="Submit a Ticket to Our Specialists" /></li>	
 						<li colspan=1><input type="submit" onclick="location.href='../';" name="NavLogout" id="NavLogout" value="Log Out 💨" class="sidebarbutton" title="Log Out of Your Account" /></li>
+
+						<h1 class="sidebarheader">Sidebar</h1>
+
+						<li colspan=1><input type="submit" name="Search" id="Search" value="Search 🔎" class="sidebarbutton" title="mouseover text" /></li>	
+
+						<li colspan=1><input type="submit" name="Search" id="Search" value="History" class="sidebarbutton" title="mouseover text" /></li>	
+						<li colspan=1><input type="submit" name="Search" id="Search" value="Contact" class="sidebarbutton" title="mouseover text" /></li>	
+						<li colspan=1><input type="submit" name="Search" id="Search" value="Log Out" class="sidebarbutton" title="mouseover text" /></li>
+
 					</ul>
 				</div>
 				<div class="maindiv" id="maindiv">
 					<ul>
+
 						<h1>Make-It-All Virtual Helpdesk System</h1>
             <form method="post" id="searchbar" action='/user/getSearch'>
 						<li colspan=1><input name="searchbar" value="" class="textinput" type="text" placeholder="Type to Begin Search" size="30" />
+
+						<h1>This is not the sidebar</h1>
+						<li colspan=1><input name="searchbar" type="text" class="textinput" id="searchbar" value="" size="30" />
+
+
 						<input type="submit" name="Search" id="Search" value="Search 🔎" class="searchbutton" title="mouseover text" /></li>	
           </form>
 					</ul>
@@ -173,3 +190,4 @@
     }
   </script>
 </html>
+
