@@ -60,31 +60,28 @@ function showTicket(ticketID) {
         CreatedTimestamp: $("#" + ticketID).data("createdtimestamp"),
         UserID: $("#" + ticketID).data("reporterid"),
         AssignedSpecialistID: $("#" + ticketID).data("assignedspecialistid"),
-        ResolveDate: $("#" + ticketID).data("resolvedate"),
+        TicketPriority: $("#" + ticketID).data("priority"),
         TicketState: $("#" + ticketID).data("state"),
         TypeID: $("#" + ticketID).data("maintag"),
-        SolutionID: $("#" + ticketID).data("solutionid"),
+        TicketDescription: $("#" + ticketID).data("description"),
+        SolutionDescription: $("#" + ticketID).data("resolveddescription"),
+        ResolveDate: $("#" + ticketID).data("resolvedate"),
+
 
     }, obj => {
 
-        // alert(result["ID"]);
+        // alert(result["AssignedSpecialistID"]);
         Object.keys(result).forEach(key => {
             console.log(key)
                 // If object key corresponds to a dropdown menu and values haven't been set
             let input = document.querySelector('#view' + key);
-            // if (["SolutionID", "AssignedSpecialistID"].includes(key) && !result.result[key]) {
-            //     // Set to defaults
-            //     input.value = 0;
-            // If object key corresponds to a personnel dropdown
-            // }
-            //else if (["ReporterNo", "SpecialistNo"].includes(key)) {
-            //     // Set text to result
-            //     input.textContent = result.result[key];
-            // }
-            // else {
-            // Set value to result
-            input.value = result[key];
-            // }
+            if ("FinalSolutionID" == key && result[key] == "") {
+                // Set to defaults
+                input.value = 0;
+            } else {
+                // Set value to result
+                input.value = result[key];
+            }
         });
     });
 };
@@ -246,9 +243,9 @@ function onDrop(event) {
     let ticketID = id.replace('ticket', '');
     $.post('/specialist/getDetails', result = {
         ID: $("#" + ticketID).data("id"),
-        //NewTicketState: dropzone.dataset.typeid,
+        NewState: dropzone.dataset.typeid,
         State: $("#" + ticketID).data("state"),
-        //NewMainTag: dropzone.dataset.typeid,
+        NewMainTag: dropzone.dataset.typeid,
         MainTag: $("#" + ticketID).data("maintag"),
         SecondaryTag: $("#" + ticketID).data("secondarytag"),
         AssignedSpecialistID: $("#" + ticketID).data("assignedspecialistid"),
@@ -260,7 +257,8 @@ function onDrop(event) {
         let ticketDetails = result;
         console.log(ticketDetails)
             // If ticket has not been moved
-        if (dropzone.dataset.typeid == ticketDetails.MainTag && dropzone.dataset.state == ticketDetails.State) {
+        if (dropzone.dataset.typeid == ticketDetails.NewMainTag && dropzone.dataset.state == ticketDetails.NewState) {
+            console.log("oioi");
             return false;
         }
         console.log(dropzone.dataset.typeid)
@@ -298,16 +296,16 @@ function onDrop(event) {
             $.post('/specialist/setTicketResolvedDate', result = {
                 ID: $("#" + ticketID).data("id")
             }, obj => {
-                //console.log(obj);
+                console.log(1);
             });
             // Reload table
             dropzone.appendChild(draggableElement);
         } else {
             // Ajax query to remove resolved time on ticket
-            $.post('/specialist/setTicketResolvedDate', result = {
+            $.post('/specialist/removeTicketResolvedDate', result = {
                 ID: $("#" + ticketID).data("id")
             }, obj => {
-                //console.log(obj);
+                console.log(2);
             });
         }
         // Ajax query to to update ticket state
