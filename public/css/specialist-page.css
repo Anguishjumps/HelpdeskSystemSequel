@@ -23,16 +23,16 @@ th {
     color: #F0F0F0;
 }
 
-.textinput {
+.searchinput {
     font-size: larger;
-    text-align: center;
-    border: 2px solid black;
+    text-align: center!important;
+    border: 2px solid black!important;
     font-weight: bold;
     margin: auto;
     cursor: text;
-    width: 80%;
+    width: 40%!important;
     height: 10%;
-    border-radius: 4px;
+    border-radius: 4px!important;
 }
 
 .searchbutton {
@@ -44,7 +44,6 @@ th {
     background-color: #85C7F2;
     margin: auto;
     cursor: pointer;
-    width: 10%;
     height: 10%;
     border-radius: 4px;
     transition: transform .2s;
@@ -72,55 +71,6 @@ th {
 .maindiv ul {
     list-style: none;
     line-height: 100%;
-}
-
-
-/*Navigation Bar*/
-
-.sidebarheader {
-    margin: auto;
-    width: 50%;
-    padding: 10px;
-    /*border: medium solid blue;*/
-}
-
-.sidebarbutton {
-    font-size: larger;
-    text-align: centre;
-    color: #F0F0F0;
-    border: 1px solid black;
-    font-weight: bold;
-    background-color: #546A7B;
-    margin: auto;
-    cursor: pointer;
-    width: 100%;
-    height: 20%;
-}
-
-.sidebarbutton:hover {
-    background-color: #9EA3B0;
-}
-
-.nav {
-    width: 20%;
-    height: 100%;
-    background: #5D6F7D;
-    border: 1px solid #2C2C3C;
-    overflow: auto;
-    float: left;
-    /*border: medium solid red;*/
-}
-
-.nav ul {
-    line-height: 100%;
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-}
-
-.nav li {
-    margin: auto;
-    text-align: centre;
 }
 
 
@@ -180,6 +130,18 @@ hr {
     padding: 0 2.5%;
 }
 
+.logoutbutton {
+    background-color: #4CAF50;
+    /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: left;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+
 .full-row.newExternalSpecialistCol,
 .full-row.newCreateExternalSpecialistCol {
     display: contents;
@@ -199,11 +161,6 @@ hr {
     .full-row {
         width: 90% !important;
         padding: 0 5% !important;
-    }
-    #search-col {
-        order: 3;
-        width: 95% !important;
-        padding: 0 2.5% !important;
     }
 }
 
@@ -339,8 +296,10 @@ select {
 /* Ticket table styles */
 
 table {
+    margin-left: 5%;
+    margin-right: 5%;
     table-layout: fixed;
-    width: 100%;
+    width: 90%;
 }
 
 table tr:nth-child(even) {
@@ -476,4 +435,37 @@ table tr:nth-child(odd) {
 
 .modal-footer>button {
     display: inline-block;
+}
+
+
+/* Alert banner styles */
+
+.alert-banner {
+    height: 3rem;
+    width: 75%;
+    margin: 0 auto;
+    border-radius: 0.5rem;
+    color: #842029;
+    background-color: #f8d7da;
+    border-color: #f5c2c7;
+    border: 1px solid transparent;
+    display: flex;
+    margin-bottom: 5px;
+}
+
+.alert-banner>div {
+    margin: 1rem;
+    font-size: 0.8rem;
+    text-align: center;
+}
+
+#closeBannerButton {
+    height: 40%;
+    width: auto;
+}
+
+.alert-banner>button {
+    margin-left: auto;
+    background-color: rgba(0, 0, 0, 0);
+    border: 0;
 }

@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 var mysql = require('mysql');
+const session = require('express-session')
 
 
 var pool = mysql.createPool({
@@ -23,7 +24,7 @@ router
                 connection.release();
 
                 if (!err) {
-                    res.render('specialist', { data: result })
+                    res.render('specialist/main', { data: result, session: req.session.userID })
                 } else {
                     console.log(err)
                 }
@@ -142,7 +143,7 @@ router
                 connection.release();
                 // SELECT * FROM Ticket where ID =" + req.bodyID + ";"
                 if (!err) {
-                    res.render('specialist', { data: result })
+                    res.render('specialist/main', { data: result, session: req.session.userID })
                 } else {
                     console.log(err)
                 }
@@ -154,21 +155,100 @@ router
 router
     .post('/updateTicket', (req, res) => {
 
+        let newSolID = 0;
+        pool.getConnection(function(err, connection) {
+            if (err) {
+                return cb(err);
+            }
+            connection.query("SELECT MAX(solutionID) AS NewSolID FROM Ticket;", (err, result) => {
+                connection.release();
+                // SELECT * FROM Ticket where ID =" + req.bodyID + ";"
+                if (!err) {
+                    newSolID = result[0].NewSolID + 1;
+                } else {
+                    console.log(err)
+                }
+            });
+        });
+        console.log(newSolID)
+
 
         pool.getConnection(function(err, connection) {
             if (err) {
                 return cb(err);
             }
-            connection.query("UPDATE Ticket SET ticketPriority =" + req.body.ticketPriority + ", ticketState = '" + req.body.ticketState +
-                "' , mainTag = " + req.body.typeID + ",ticketDescription = '" + req.body.ticketDescription + "' ,resolvedDescription = '" + req.body.solutionDescription +
-                "' WHERE ID =" + req.body.ID + ";", (err, result) => {
-                    connection.release();
+            if (req.body.finalSolutionID != 0 && req.body.finalSolutionID != -1) {
+                connection.query("UPDATE Ticket SET ticketPriority =" + req.body.ticketPriority + ", ticketState = '" + req.body.ticketState +
+                    "' , mainTag = " + req.body.typeID + ",ticketDescription = '" + req.body.ticketDescription + "' ,solutionID = " + req.body.finalSolutionID + " ,resolvedDescription = '" + req.body.solutionDescription +
+                    "' WHERE ID =" + req.body.ID + ";", (err, result) => {
+                        connection.release();
 
-                    if (!err) { res.redirect(req.get('referer')); } else {
-                        console.log(err)
-                    }
-                });
+                        if (!err) { res.redirect(req.get('referer')); } else {
+                            console.log(err)
+                        }
+                    });
+            } else if (req.body.finalSolutionID == 0) {
+                connection.query("UPDATE Ticket SET ticketPriority =" + req.body.ticketPriority + ", ticketState = '" + req.body.ticketState +
+                    "' , mainTag = " + req.body.typeID + ",ticketDescription = '" + req.body.ticketDescription + "' ,solutionID = 0 ,resolvedDescription = NULL WHERE ID =" + req.body.ID + ";", (err, result) => {
+                        connection.release();
+
+                        if (!err) { res.redirect(req.get('referer')); } else {
+                            console.log(err)
+                        }
+                    });
+            } else {
+
+                connection.query("UPDATE Ticket SET ticketPriority =" + req.body.ticketPriority + ", ticketState = '" + req.body.ticketState +
+                    "' , mainTag = " + req.body.typeID + ",ticketDescription = '" + req.body.ticketDescription + "' ,solutionID = " + newSolID + " ,resolvedDescription = '" + req.body.solutionDescription +
+                    "' WHERE ID =" + req.body.ID + ";", (err, result) => {
+                        connection.release();
+
+                        if (!err) { res.redirect(req.get('referer')); } else {
+                            console.log(err)
+                        }
+                    });
+            };
         });
     })
+
+
+router
+    .post('/setSpecialist', (req, res) => {
+
+        pool.getConnection(function(err, connection) {
+            if (err) {
+                return cb(err);
+            }
+            connection.query("UPDATE Ticket SET assignedSpecialistID = " + req.session.userID + " WHERE ID =" + req.body.ID + ";", (err, result) => {
+                connection.release();
+
+                if (!err) {
+                    res.redirect(req.get('referer'));
+                } else {
+                    console.log(err)
+                }
+            });
+        });
+    })
+
+router
+    .post('/unsetSpecialist', (req, res) => {
+
+        pool.getConnection(function(err, connection) {
+            if (err) {
+                return cb(err);
+            }
+            connection.query("UPDATE Ticket SET assignedSpecialistID = NULL WHERE ID =" + req.body.ID + ";", (err, result) => {
+                connection.release();
+
+                if (!err) {
+                    res.redirect(req.get('referer'));
+                } else {
+                    console.log(err)
+                }
+            });
+        });
+    })
+
 
 module.exports = router
