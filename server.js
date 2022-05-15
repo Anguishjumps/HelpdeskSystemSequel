@@ -1,95 +1,126 @@
 const express = require('express')
-const app = express();
-const bcrypt = require('bcrypt');
+const app = express()
+const mysql = require('mysql')
+const session = require('express-session')
+const MySQLStore = require('express-mysql-session')(session);
+const bcrypt = require("bcrypt");
 
-var mysql = require('mysql');
-
-
-var pool = mysql.createPool({
-    connectionLimit: 10,
-    host: "localhost",
-    user: "teamb029",
-    password: "pXdBPQK4cL",
-    database: "teamb029",
-    multipleStatements: true
-});
-
-app.use(express.static("public"));
+app.use(express.static("public"))
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
 app.set('view engine', 'ejs')
 
+var options = {
+    host: "sci-project.lboro.ac.uk",
+    user: "teamb029",
+    password: "pXdBPQK4cL",
+    database: "teamb029",
+}
+
+const sessionConnection = mysql.createConnection(options);
+const sessionStore = new MySQLStore({
+    expiration: 10800000,
+    createDatabaseTable: true,
+    schema:{
+        tableName: 'session_tb',
+        columnNames: {
+            session_id: 'session_id',
+            expires: 'expires',
+            data: 'data'
+        }
+    }
+},sessionConnection)
+
+const comparePassword = async (password, hash) => {
+    try {
+        // Compare password
+        return await bcrypt.compare(password, hash);
+    } catch (error) {
+        console.log(error);
+    }
+
+    // Return false if error
+    return false;
+};
+
+app.use(session ({
+    secret: "lostartofkeepingasecret",
+    store: sessionStore,
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        maxAge: 36000000,
+        httpOnly: false,
+        secure: false
+      },
+}))
+
 app.get('/', (req, res) => {
+    res.render("login")
+})
 
-    console.log("Here")
-    res.render("login", { text: 'Test Text' })
+app.post('/', (req, res) => {
+    var username = req.body.username
+    var password = req.body.password
+    var con = mysql.createConnection(options);
+    con.connect(function(err) {
+        if (err) throw err;
+        con.query("SELECT ID as userID, (SELECT deptName FROM DeptTable WHERE PersonnelTable.deptNo = DeptTable.ID) AS userType, passwordHash FROM `PersonnelTable` WHERE userName = '"+username+"';", function (err, result, fields) {
+            try {
+                if(err || result[0].passwordHash == null) {
+                    res.render("login", {username: req.body.username})
+                }
+                else {
+                    var _ = (async () => {
+                        var validity =  await comparePassword(password, result[0].passwordHash)
+                        if(!validity) {
+                            res.render("login", {username: req.body.username})
+                        }
+                        else {
+                            var userID = result[0].userID
+                            var userType = result[0].userType
+                            req.session.userID = userID
+                            console.log("here")
+                            console.log(userID)
+                            console.log("ended")
+                            console.log(req.session)
+                            if(userType === "Specialist") {
+                                const specRouter = require('./routes/specialist')
+                                app.use('/specialist', specRouter)
+                                res.redirect('/specialist/')
+                            }
+                            else {
+                                const userRouter = require('./routes/user')
+                                app.use('/user', userRouter)
+                                res.redirect('/user/')
+                            }                        
+                        }
+    
+                    })();
+                }
+            } 
+            catch {
+                res.render("login", {username: req.body.username})
+            }
+        });
+      });
+})
 
+app.post('/logout', (req, res) => {
+    console.log(req.session.userID)
+    req.session.destroy(function(err){
+        if(!err) {
+            res.redirect('/')
+        }
+    })
+})
+
+app.use((req, res, next) => {
+    console.log(req.session);
+    console.log(req.session.userID)
+    next()
 })
 
 
-
-const userRouter = require('./routes/user')
-app.use('/user', userRouter)
-
-app.post('/loginCheck', (req, res) => {
-            const hashPassword = async(password, saltRounds = 10) => {
-                try {
-                    // Generate a salt
-                    const salt = await bcrypt.genSalt(saltRounds);
-
-                    // Hash password
-                    return await bcrypt.hash(password, salt);
-                } catch (error) {
-                    console.log(error);
-                }
-
-                // Return null if error
-                return null;
-            };
-
-
-            (async() => {
-                    const hash = await hashPassword(req.body.password);
-                    // $2b$10$5ysgXZUJi7MkJWhEhFcZTObGe18G1G.0rnXkewEtXq6ebVx1qpjYW
-
-                    pool.getConnection(function(err, connection) {
-                        if (err) {
-                            return cb(err);
-                        }
-                        connection.query("UPDATE personnelTable SET passwordHash = " + hash + " WHERE ID =" + req.body.ID + ";", (err, hash) => {
-                            connection.release();
-                            // TODO: store hash in a database
-                        })();
-
-                        (async() => {
-                            pool.getConnection(function(err, connection) {
-                                if (err) {
-                                    return cb(err);
-                                }
-                                connection.query("SELECT passwordHash from personnelTable;", (err, hash) => {
-                                    connection.release();
-
-
-                                    // Check if password is correct
-                                    const isValidPass = await comparePassword(req.body.password, hash);
-
-                                    // Print validation status
-                                    console.log(`Password is ${!isValidPass ? 'not' : ''} valid!`);
-                                    // => Password is valid!    
-                                });
-                            });
-
-
-                        })();
-
-                    })
-
-                    const userRouter = require('./routes/user')
-                    app.use('/user', userRouter)
-
-                    const specRouter = require('./routes/specialist')
-                    app.use('/specialist', specRouter)
-
-
-                    app.listen(5029)
+app.listen(5029)

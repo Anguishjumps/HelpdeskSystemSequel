@@ -41,7 +41,7 @@ router
 
         pool.getConnection(function(err, connection) {
             if (err) {
-                return cb(err);
+                // return cb(err);
             }
             connection.query("SELECT * from Ticket;", (err, result) => {
                 connection.release();
@@ -147,6 +147,27 @@ router
                     console.log(err)
                 }
             });
+        });
+    })
+
+
+router
+    .post('/updateTicket', (req, res) => {
+
+
+        pool.getConnection(function(err, connection) {
+            if (err) {
+                return cb(err);
+            }
+            connection.query("UPDATE Ticket SET ticketPriority =" + req.body.ticketPriority + ", ticketState = '" + req.body.ticketState +
+                "' , mainTag = " + req.body.typeID + ",ticketDescription = '" + req.body.ticketDescription + "' ,resolvedDescription = '" + req.body.solutionDescription +
+                "' WHERE ID =" + req.body.ID + ";", (err, result) => {
+                    connection.release();
+
+                    if (!err) { res.redirect(req.get('referer')); } else {
+                        console.log(err)
+                    }
+                });
         });
     })
 
