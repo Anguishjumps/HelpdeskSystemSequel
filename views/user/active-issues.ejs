@@ -3,6 +3,8 @@
 	<title>Active Issues</title>
 	<link href="/css/shellstylesheet.css" rel="stylesheet">
 	<link href="/css/active-issues.css" rel="stylesheet">
+	<head> 
+	</head>
 	<body>
 		<div class="container">
 			<div class="header">
@@ -13,8 +15,9 @@
 						<h1 class="sidebarheader">Site Navigation</h1>
 						<li colspan=1><input type="submit" onclick="location.href='./';" name="NavHome" id="NavHome" value="Home" class="sidebarbutton" title="Browse Existing Solutions" /></li>	
 						<li colspan=1><input type="submit" onclick="location.href='./history';" name="NavHistory" id="NavHistory" value="User History ðŸ“‹" class="sidebarbutton" title="Access Your Past Tickets" /></li>	
+						<li colspan=1><input type="submit" onclick="location.href='./active-issues';" name="NavIssues" id="NavIssues" value="Active Issues" class="sidebarbutton" title="Monitor Your Active Tickets" /></li>	
 						<li colspan=1><input type="submit" onclick="location.href='./contact';" name="NavContact" id="NavContact" value="Contact Specialist âœ‰ï¸" class="sidebarbutton" title="Submit a Ticket to Our Specialists" /></li>	
-						<li colspan=1><input type="submit" onclick="location.href='../';" name="NavLogout" id="NavLogout" value="Log Out ðŸ’¨" class="sidebarbutton" title="Log Out of Your Account" /></li>
+						<li colspan=1><form action="../logout" method="POST"><input type="submit" name="NavLogout" id="NavLogout" value="Log Out ðŸ’¨" class="sidebarbutton" title="Log Out of Your Account" /></form></li>
 					</ul>
 				</div>
 				<div class="maindiv">
@@ -23,41 +26,66 @@
 						<li colspan=1><input name="searchbar" type="text" class="textinput" id="searchbar" value="" size="30" />
 						<input type="submit" name="Search" id="Search" value="Search ðŸ”Ž" class="searchbutton" title="mouseover text" /></li>	
 					</ul>
-			<div class="historydiv" id="historydiv">
-				<div id="header-div">
-	                <h1>Active Issues</h1>
-					</div>
+					<div class="historydiv" id="historydiv">
+	                        <h1>Active Issues</h1>
 						<script>
-							var tickets = <%- JSON.stringify(locals.tickets) %>;
+							var tickets = <%- JSON.stringify(locals.tickets) %>
 							for (let i = 0; i < tickets.length; i++) {
 								document.addEventListener('DOMContentLoaded', function() {
 									var div = document.createElement('div');
 									div.id = 'card';
-									div.innerHTML = '<form action="/user/active-issues" method="POST">\
-										<div>\
-											<input type = "hidden" name = "cardno" value = "'+i+'"/>\
-											<button id="card-button">\
-												<table>\
-													<tr>\
-														<td><h3>Ticket ID: '+tickets[i].ID+'</h3></td>\
-														<td>'+tickets[i].ticketState+'</td>\
-													</tr>\
-													<tr>\
-														<td><h1>'+tickets[i].ticketDescription+'</h1></td>\
-														<td>'+tickets[i].mainTag+'</td>\
-													</tr>\
-													<tr>\
-														<td><div class="tag-shape">'+tickets[i].mainTag+'</div></td>\
-													</tr>\
-												</table>\
-											</button>\
-										</div>'
+									innerHTMLString = '\
+									<table>\
+									    <col width="75%" />\
+										<col width="25%" />\
+										<row height="50%"/>\
+										<row height="50%"/>\
+										<tr>\
+											<td><b style="font-size:20px">'+tickets[i].ticketDescription+'</b></td>\
+										'
+									if (tickets[i].assignedSpecialistName) {
+										if (tickets[i].resolvedTimestamp) {
+											innerHTMLString += '\
+												<td>Solved '+tickets[i].resolvedTimestamp.substring(0,10)+' by '+tickets[i].assignedSpecialistName+'</td>\
+												'
+											}
+										else {
+											innerHTMLString += '\
+												<td>In Progress, assigned to '+tickets[i].assignedSpecialistName+'</td>\
+											'
+											}
+									}
+									else {
+											innerHTMLString += '\
+												<td>Waiting to be assigned</td>\
+											'
+									}
+									innerHTMLString += '\
+										</tr>\
+										<tr>\
+											<td>Ticket Creation Date:'+tickets[i].Date.substring(0,10)+'</td>\
+											<td rowspan="2"><input type="submit" name="cardbutton" id="cardbutton" value="Edit Ticket" class="cardbutton" /></td>\
+										</tr>\
+										<tr>\
+											<td>\
+										'
+									if (tickets[i].mainTag) { innerHTMLString += '<div class="tag-shape" title="'+tickets[i].mainTag+'" >'+tickets[i].mainTag+'</div>'}
+									if (tickets[i].secondaryTag) { innerHTMLString += '<div class="tag-shape" style="background-color:#0FAA0F" title="'+tickets[i].secondaryTag+'" >'+tickets[i].secondaryTag+'</div>'}
+									if (tickets[i].tertiaryTag) { innerHTMLString += '<div class="tag-shape" style="background-color:#2222CC" title="'+tickets[i].tertiaryTag+'" >'+tickets[i].tertiaryTag+'</div>'}
+									
+									innerHTMLString += '\
+											</td>\
+										</tr>\
+									</table>\
+									';
+									div.innerHTML = innerHTMLString;
 									div.className = 'historycard';
+								 
 									document.getElementById("historydiv").appendChild(div);
 								}, false);
 							}
 						</script>
-                    </div>
+					</div>
 				</div>
 			</div>
 		</div>

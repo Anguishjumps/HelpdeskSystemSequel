@@ -1,5 +1,7 @@
 const express = require('express')
 const router = express.Router()
+const session = require('express-session')
+
 let resultObject = { data: [] }
 var mysql = require('mysql');
 
@@ -257,6 +259,8 @@ router
     });
 
 router.get("/active-issues", (req, res) => {
+    console.log("biggo")
+    console.log("baggo")
     pool.getConnection(function(err, connection) {
         if (err) {
             return cb(err);
@@ -375,6 +379,7 @@ module.exports = router
 
 
 router.get("/active-issues", (req, res) => {
+    console.log(req.session.userID)
     pool.getConnection(function (err, connection) {
         if (err) {
             return cb(err);
