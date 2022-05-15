@@ -1,5 +1,6 @@
 const express = require('express')
 const router = express.Router()
+const session = require('express-session')
 let resultObject = { data: [] }
 var mysql = require('mysql');
 
@@ -82,7 +83,7 @@ router.post('/processnewTicket', (req, res) => {
         if (err) {
             return cb(err);
         }
-        let userId = parseInt(req.body.userID)
+        let userId = parseInt(req.session.userID)
         let problemDescription = req.body.problemDescription
         // let myVariable = (condition ? value when true: value when false)
         let mainTag = req.body.mainTag.split("_")[1] ? parseInt(req.body.mainTag.split("_")[0]) : null
@@ -272,10 +273,11 @@ router.get("/active-issues", (req, res) => {
             return cb(err);
         }
         connection.query("SELECT ID, Date, (SELECT tagName FROM TagTable WHERE Ticket.mainTag = TagTable.ID) AS mainTag,\
-         (SELECT tagName FROM TagTable WHERE Ticket.secondaryTag = TagTable.ID) AS secondaryTag,\
-          (SELECT tagName FROM TagTable WHERE Ticket.tertiaryTag = TagTable.ID) AS tertiaryTag,\
-           ticketDescription, ticketPriority, solutionID, resolvedTimestamp, ticketState,\
-            assignedSpecialistID, resolvedDescription FROM Ticket WHERE userID = 1;", function (err, result) {
+        (SELECT tagName FROM TagTable WHERE Ticket.secondaryTag = TagTable.ID) AS secondaryTag,\
+        (SELECT tagName FROM TagTable WHERE Ticket.tertiaryTag = TagTable.ID) AS tertiaryTag,\
+        ticketDescription, ticketPriority, solutionID, resolvedTimestamp, \
+        ticketState, (SELECT fullName FROM PersonnelTable WHERE Ticket.assignedSpecialistID = PersonnelTable.ID) AS assignedSpecialistName, assignedSpecialistID, \
+	resolvedDescription FROM Ticket WHERE userID = 1;", function (err, result) {
             connection.release()
             if (!err) {
                 result = JSON.stringify(result)

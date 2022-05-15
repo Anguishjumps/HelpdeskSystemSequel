@@ -234,23 +234,14 @@
 		</div>
 		<div class="wrapper clearfix">
 			<div class="nav">
-				<ul>
-					<h1 class="sidebarheader">Menu</h1>
-					<!-- <li colspan=1><input type="submit" name="Search" id="Search" value="Search 🔎" class="sidebarbutton"
-							title="mouseover text" /></li> -->
-					<form action="/user" method="get">
-						<input type="submit" value="Home" class="sidebarbutton">
-					</form>
-					<form action="/user/history" method="get">
-						<input type="submit" value="User History" class="sidebarbutton">
-					</form>
-					<form action="/user/contact" method="get">
-						<input type="submit" value="Contact" class="sidebarbutton">
-					</form>
-					<form action="/" method="get">
-						<input type="submit" value="Log Out" class="sidebarbutton">
-					</form>
-				</ul>
+					<ul>
+						<h1 class="sidebarheader">Site Navigation</h1>
+						<li colspan=1><input type="submit" onclick="location.href='./';" name="NavHome" id="NavHome" value="Home" class="sidebarbutton" title="Browse Existing Solutions" /></li>	
+						<li colspan=1><input type="submit" onclick="location.href='./history';" name="NavHistory" id="NavHistory" value="User History 📋" class="sidebarbutton" title="Access Your Past Tickets" /></li>	
+						<li colspan=1><input type="submit" onclick="location.href='./active-issues';" name="NavIssues" id="NavIssues" value="Active Issues" class="sidebarbutton" title="Monitor Your Active Tickets" /></li>	
+						<li colspan=1><input type="submit" onclick="location.href='./contact';" name="NavContact" id="NavContact" value="Contact Specialist ✉️" class="sidebarbutton" title="Submit a Ticket to Our Specialists" /></li>	
+						<li colspan=1><form action="../logout" method="POST"><input type="submit" name="NavLogout" id="NavLogout" value="Log Out 💨" class="sidebarbutton" title="Log Out of Your Account" /></form></li>
+					</ul>
 			</div>
 			<div class="maindiv">
 				<ul>
@@ -299,8 +290,6 @@
 				</table>
 				<% } else if (point == "newTicketEntry") { %>
 				<form name="form11" id="form11" action="/user/processnewTicket" method="post">
-					User Id:
-					<input type="text" id="userID" name="userID" size="10"><br><br>
 					Problem Description:
 					<input type="text" id="problemDescription" name="problemDescription" size="50" multiple><br><br>
 					mainTag:
