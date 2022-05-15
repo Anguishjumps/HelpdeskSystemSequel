@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 
 <head>
+    <!-- code linking to stylesheet and jquery library -->
     <link rel="stylesheet" href="/css/specialist-page.css">
     <title>Specialist List</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -13,9 +14,11 @@
         <div class="header">
         </div>
 
+
         <ul style="text-align:center" class="search1">
             <div class="wrapper">
                 <div class="third-row">
+                    <!-- logout button. Form that with use a get request to take user to the login page. -->
                     <form action="/" method="get">
                         <input type="submit" value="Log Out" class="logoutbutton">
                     </form>
@@ -24,13 +27,15 @@
                     <h1>Specialist Page</h1>
                 </div>
             </div>
+            <!-- code for search bar:
+            calls the ticketSearch() function that can search for either ticket IDs or problem/solution Description -->
             <input name="searchbar" type="text" class="searchinput" id="searchbar" value="" size="30" onkeyup="ticketSearch()" />
             <input onclick="ticketSearch()" type="submit" name="Search" id="Search" value="Search 🔎" class="searchbutton" title="mouseover text" />
         </ul>
 
         <div class="wrapper clearfix">
-            <!-- View ticket modal -->
 
+            <!-- View ticket modal -->
             <div id="view-ticket-modal" class="modal fade" tabindex="-1">
                 <div class="modal-dialog">
                     <form id="update-form" name="update-form" action="/specialist/updateTicket" method="POST" class="modal-form">
@@ -39,6 +44,7 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h3 class="modal-title">View ticket</h3>
+                                <!-- close button to shut down the modal -->
                                 <button type="button" onclick="closeModal();" class="modal-close button-close" data-bs-dismiss="modal" aria-label="Close"><img type="/close.png"></button>
                             </div>
                             <hr>
@@ -87,11 +93,10 @@
                                     </div>
                                     <!-- Dropdown list of problem types -->
                                     <div class="half-row">
-                                        <!-- Need to include an option here for "other" and allow custom input -->
                                         <label for="viewTypeID">Problem type</label>
                                         <select id="viewTypeID" name="typeID">
                                                 <option value=0>Other</option>
-                                                    <!-- Option to add new problem type -->
+                                                <!-- for loop that displays all problem types taken from the database -->
                                                     <%  var problemType = [];
                                                     for (i in data[0]) {
                                                         var problem_type = data[0][i].mainTag;
@@ -116,17 +121,18 @@
                                                     <%} %>
                                             </select>
                                     </div>
-                                    <!-- Text area for ticket description -->
+                                    // Text area for ticket description
                                     <div class="full-row">
                                         <label for="description">Description</label>
                                         <textarea type="text" id="viewTicketDescription" name="ticketDescription" placeholder="" maxlength="255" required></textarea>
                                     </div>
-                                    <!-- Dropdown list of solutions -->
+                                    //Dropdown list of solutions
                                     <div class="full-row">
                                         <label for="viewFinalSolutionID">Solution</label>
                                         <select onchange="addNewSolution(this);" id="viewFinalSolutionID" name="finalSolutionID">
                                                 <option selected value=0 >Solution has not been provided</option>
                                                 <option value=-1>New</option>
+                                                //for loop that displays all solutions taken from the database
                                                 <%  var solutions_desc = [];
                                                     var solutions_ids=[];
                                                     for (i in data[0]) {
@@ -145,7 +151,7 @@
 
                                             </select>
                                     </div>
-                                    <!-- Textbox to add new solution description -->
+                                    //Textbox to add new solution description
                                     <div class="full-row newSolutionCol" style="display: none;">
                                         <label for="newSolutionText">Solution Description</label>
                                         <input id="viewSolutionDescription" name="solutionDescription" type="text" placeholder="">
@@ -157,7 +163,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- Button group to either cancel or submit ticket -->
+                            // Button group to either cancel or update ticket
                             <hr>
                             <div class="modal-footer">
                                 <button type="button" onclick="closeModal();" class="modal-close button-close-bottom" data-bs-dismiss="modal">Close</button>
@@ -168,10 +174,11 @@
                 </div>
             </div>
 
-            <!-- Table that contains tickets -->
+
+            // Main drag and drop table that contains tickets
             <table id="myTable">
                 <thead>
-                    <!-- Table headers -->
+                    //Table headers
                     <tr>
                         <th>PROBLEM TYPE</th>
                         <th>TODO</th>
@@ -181,10 +188,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- For each type of problem, generate a row -->
 
-                    <% 
-                            var problemType = [];
+                    // For each type of problem, generate a row
+                    <%      var problemType = [];
                             for (i in data[0]) {
                                 var problem_type = data[0][i].mainTag;
                                 if (!problemType.includes(problem_type)) {
@@ -214,6 +220,7 @@
                                     <ul class="ticket-list" data-state="<%=state%>" data-typeID="<%=problemType[i]%>">
                                         <% for (var u =0; u < Object.keys(data[0]).length;  u++ ) {
                                                     %>
+                                            // code that will display all tickets. data tags used to store ticket data
                                             <%if (data[0][u].ticketState == state && data[0][u].mainTag == problemType[i]) { 
                                                 if(data[0][u].assignedSpecialistID == session || data[0][u].ticketState == 'TODO' ){%>
                                                 <li onclick='showTicket("<%= data[0][u].ID %>")' class="ticket" id="<%= data[0][u].ID %>" draggable="true" ondragstart="onDragStart(event)" data-ID="<%= data[0][u].ID %>" data-Description="<%= data[0][u].ticketDescription %>" data-ReporterID="<%= data[0][u].userID %>"

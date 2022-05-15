@@ -19,4 +19,4 @@ app.use('/user', userRouter)
 const specRouter = require('./routes/specialist')
 app.use('/specialist', specRouter)
 
-app.listen(3000)
+app.listen(5029)
