@@ -1,5 +1,7 @@
 const express = require('express')
 const router = express.Router()
+const session = require('express-session')
+
 let resultObject = { data: [] }
 var mysql = require('mysql');
 
@@ -272,9 +274,9 @@ router.get("/active-issues", (req, res) => {
             return cb(err);
         }
         connection.query("SELECT ID, Date, (SELECT tagName FROM TagTable WHERE Ticket.mainTag = TagTable.ID) AS mainTag,\
-         (SELECT tagName FROM TagTable WHERE Ticket.secondaryTag = TagTable.ID) AS secondaryTag,\
-          (SELECT tagName FROM TagTable WHERE Ticket.tertiaryTag = TagTable.ID) AS tertiaryTag,\
-           ticketDescription, ticketPriority, solutionID, resolvedTimestamp, ticketState,\
+            (SELECT tagName FROM TagTable WHERE Ticket.secondaryTag = TagTable.ID) AS secondaryTag,\
+            (SELECT tagName FROM TagTable WHERE Ticket.tertiaryTag = TagTable.ID) AS tertiaryTag,\
+            ticketDescription, ticketPriority, solutionID, resolvedTimestamp, ticketState,\
             assignedSpecialistID, resolvedDescription FROM Ticket WHERE userID = 1;", function (err, result) {
             connection.release()
             if (!err) {
@@ -287,7 +289,10 @@ router.get("/active-issues", (req, res) => {
         });
     });
 })
-
+router.post("/active-issues", (req, res) => {
+    res.redirect(`/user/active-issues/` + req.body.cardno)
+})
+    
 router.post("/active-issues", (req, res) => {
     res.redirect(`/user/active-issues/` + req.body.cardno)
 })
@@ -359,121 +364,5 @@ router
             });
         });
     });
-
-// router.post('/getJson', (req, res) => {
-//     pool.getConnection(function (err, connection) {
-//         if (err) {
-//             return cb(err);
-//         }
-
-//         if (req.body.sortBy == "Name") {
-//             let myQueryS = "SELECT PersonnelTable.fullName, TagTable.tagName, PersonnelTable.phoneNo from Specialist \
-//             join PersonnelTable on Specialist.specialistID = PersonnelTable.ID join TagTable on Specialist.tagID=TagTable.ID\
-//              ORDER by PersonnelTable.fullName";
-//         } else if (req.body.sortBy == "Specialism") {
-//             let myQueryS = "SELECT PersonnelTable.fullName, TagTable.tagName, PersonnelTable.phoneNo from Specialist \
-//             join PersonnelTable on Specialist.specialistID = PersonnelTable.ID join TagTable on Specialist.tagID=TagTable.ID\
-//              ORDER by TagTable.tagName";
-//         }
-
-//         connection.query(myQuery, function (err, result) {
-
-//             if (!err) {
-//                 res.render("user/contact", { specialists: result })
-//             } else {
-//                 console.log(err)
-//             }
-//         });
-//         //let result=req.body.sortBy;
-//         //console.log(req.body.sortBy);
-
-
-//         //res.redirect("user/contact", { specialists: result })
-//         //res.redirect("/user/contact")
-
-//     });
-
-// });
-
-// router.get("/active-issues", (req, res) => {
-//     pool.getConnection(function (err, connection) {
-//         if (err) {
-//             return cb(err);
-//         }
-//         connection.query("SELECT ID, Date, (SELECT tagName FROM TagTable WHERE Ticket.mainTag = TagTable.ID) AS mainTag,\
-//          (SELECT tagName FROM TagTable WHERE Ticket.secondaryTag = TagTable.ID) AS secondaryTag,\
-//           (SELECT tagName FROM TagTable WHERE Ticket.tertiaryTag = TagTable.ID) AS tertiaryTag,\
-//            ticketDescription, ticketPriority, solutionID, resolvedTimestamp, ticketState,\
-//             assignedSpecialistID, resolvedDescription FROM Ticket WHERE userID = 1;", function (err, result) {
-//             connection.release()
-//             if (!err) {
-//                 result = JSON.stringify(result)
-//                 result = JSON.parse(result)
-//                 res.render("user/active-issues", { tickets: result })
-//             } else {
-//                 console.log(err)
-//             }
-//         });
-//     });
-// })
-// router.post("/active-issues", (req, res) => {
-//     res.redirect(`/user/active-issues/` + req.body.cardno)
-// })
-
-// router.get("/active-issues", (req, res) => {
-//     pool.getConnection(function (err, connection) {
-//         if (err) {
-//             return cb(err);
-//         }
-//         connection.query("SELECT ID, Date, (SELECT tagName FROM TagTable WHERE Ticket.mainTag = TagTable.ID) AS mainTag,\
-//          (SELECT tagName FROM TagTable WHERE Ticket.secondaryTag = TagTable.ID) AS secondaryTag,\
-//           (SELECT tagName FROM TagTable WHERE Ticket.tertiaryTag = TagTable.ID) AS tertiaryTag,\
-//            ticketDescription, ticketPriority, solutionID, resolvedTimestamp, ticketState,\
-//             assignedSpecialistID, resolvedDescription FROM Ticket WHERE userID = 1;", function (err, result) {
-//             connection.release()
-//             if (!err) {
-//                 result = JSON.stringify(result)
-//                 result = JSON.parse(result)
-//                 res.render("user/active-issues", { tickets: result })
-//             } else {
-//                 console.log(err)
-//             }
-//         });
-//     });
-// })
-// router.post("/active-issues", (req, res) => {
-//     res.redirect(`/user/active-issues/` + req.body.cardno)
-// })
-
-
-
-// router.get("/active-issues", (req, res) => {
-//     pool.getConnection(function (err, connection) {
-//         if (err) {
-//             return cb(err);
-//         }
-//         connection.query("SELECT ID, Date, (SELECT tagName FROM TagTable WHERE Ticket.mainTag = TagTable.ID) AS mainTag,\
-//          (SELECT tagName FROM TagTable WHERE Ticket.secondaryTag = TagTable.ID) AS secondaryTag,\
-//           (SELECT tagName FROM TagTable WHERE Ticket.tertiaryTag = TagTable.ID) AS tertiaryTag,\
-//            ticketDescription, ticketPriority, solutionID, resolvedTimestamp, ticketState,\
-//             assignedSpecialistID, resolvedDescription FROM Ticket WHERE userID = 1;", function (err, result) {
-//             connection.release()
-//             if (!err) {
-//                 result = JSON.stringify(result)
-//                 result = JSON.parse(result)
-//                 res.render("user/active-issues", { tickets: result })
-//             } else {
-//                 console.log(err)
-//             }
-//         });
-//     });
-// })
-// router.post("/active-issues", (req, res) => {
-//     res.redirect(`/user/active-issues/` + req.body.cardno)
-// })
-
-// router.get("/active-issues/:cardno", (req, res) => {
-//     res.render("user/card-details")
-// })
 
 module.exports = router
