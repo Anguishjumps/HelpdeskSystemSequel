@@ -7,23 +7,10 @@
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="description" content="">
       <meta name="viewport" content="width=device-width, initial-scale=1">
-      <script>
-        var specialists = <%- JSON.stringify(locals.specialists) %>;
-        console.log(specialists[0]);
-        for (let i = 0; i < (Math.ceil(specialists.length)); i++) {
-          console.log("row"+i);
-          var divNewName='row'+i;
-          console.log("got here1");
-          document.createElement(divNewName);
-          divNewName.className = "row";
-          console.log("got here2");
-        }
-      </script>
+
   </head>
   <style>    
-
     /*div/non-shell css:*/
-
     .maindiv {            
       overflow-x: hidden;
         overflow-y: auto;
@@ -64,6 +51,11 @@
       text-align: left;
       padding: 16px;
     }
+
+    .email{
+      color: #545454;
+      font-size: 5px;
+    }
     
     .specialism{
       color: #545454;
@@ -93,63 +85,136 @@
 			<div class="wrapper clearfix">
 				<div class="nav">
 					<ul>
-						<h1 class="sidebarheader">Sidebar</h1>
-
-						<li colspan=1><input type="submit" name="Search" id="Search" value="Search 🔎" class="sidebarbutton" title="mouseover text" /></li>	
-
-						<li colspan=1><input type="submit" name="Search" id="Search" value="History" class="sidebarbutton" title="mouseover text" /></li>	
-						<li colspan=1><input type="submit" name="Search" id="Search" value="Contact" class="sidebarbutton" title="mouseover text" /></li>	
-						<li colspan=1><input type="submit" name="Search" id="Search" value="Log Out" class="sidebarbutton" title="mouseover text" /></li>
+						<h1 class="sidebarheader">Site Navigation</h1>
+						<li colspan=1><input type="submit" onclick="location.href='./';" name="NavHome" id="NavHome" value="Home" class="sidebarbutton" title="Browse Existing Solutions" /></li>	
+						<li colspan=1><input type="submit" onclick="location.href='./history';" name="NavHistory" id="NavHistory" value="User History 📋" class="sidebarbutton" title="Access Your Past Tickets" /></li>	
+						<li colspan=1><input type="submit" onclick="location.href='./active-issues';" name="NavIssues" id="NavIssues" value="Active Issues" class="sidebarbutton" title="Monitor Your Active Tickets" /></li>	
+						<li colspan=1><input type="submit" onclick="location.href='./contact';" name="NavContact" id="NavContact" value="Contact Specialist ✉️" class="sidebarbutton" title="Submit a Ticket to Our Specialists" /></li>	
+						<li colspan=1><form action="../logout" method="POST"><input type="submit" name="NavLogout" id="NavLogout" value="Log Out 💨" class="sidebarbutton" title="Log Out of Your Account" /></form></li>
 					</ul>
 				</div>
-				<div class="maindiv">
+				<div class="maindiv" id="maindiv">
 					<ul>
-						<h1>This is not the sidebar</h1>
-						<li colspan=1><input name="searchbar" type="text" class="textinput" id="searchbar" value="" size="30" />
-
+						<h1>Make-It-All Virtual Helpdesk System</h1>
+            <form method="post" id="searchbar" action='/user/getSearch'>
+						<li colspan=1><input name="searchbar" value="" class="textinput" type="text" placeholder="Type to Begin Search" size="30" />
 						<input type="submit" name="Search" id="Search" value="Search 🔎" class="searchbutton" title="mouseover text" /></li>	
+          </form>
 					</ul>
-                    <br></br>
+          <br></br>
+          <form method="post" id="sortSelect" action='/user/getSort'>
+              <label for="sortBy">Filter By:</label>
+              <select name="sortBy" id="sortBy" class="sortBy" onchange="this.form.submit()">
+                <option value="Choose">--Choose--</option>
+                <option value="Name">Name</option>
+                <option value="Specialism">Specialism</option>
+              </select>
+          <br><br>
+          <!--<input type="submit" value="Submit">-->
+          </form>
                                         <!--Row 1-->
-          `<div id ="row"></div>
-            <script>
-              var specialists = <%- JSON.stringify(locals.specialists) %>;
-              console.log(specialists[0]);
-              for (let i = 0; i <specialists.length; i++) {
-                console.log(specialists[i]);
-                document.addEventListener('DOMContentLoaded', function() {
-                  var div = document.createElement('div');
-                  div.id = 'specialisttable';
-                  div.innerHTML = '<div class="column">\
-                     <table class="test">\
-                          <tr>\
-                          <th colspan="2" style="text-align: center;"><img src="/css/img_avatar.png" style="width:75%"></th>\
-                          \
-                          </tr>\
-                          <tr>\
-                          <td>Name:</td>\
-                          <td>'+specialists[i].fullName+'</td>\
-                          </tr>\
-                          <tr>\
-                          <td class="specialism">Specialism:</td>\
-                          <td>'+specialists[i].tagName+'</td>\
-                          </tr>\
-                          <tr>\
-                          <td>Phone number:</td>\
-                          <td>'+specialists[i].phoneNo+'</td>\
-                          </tr>\
-                      </table>\
-                      </div>'
-                  div.idName = 'testrow';
-                  document.getElementById("row").appendChild(div);
-                }, false);
-              }
-            </script>
+          <div id ="row"></div>
+
+          <div id="test"></div>
+           
 				</div>
 			</div>
 		</div>
 
 			
 	</body>
-</html>
 
+   <script>
+    var specialists = <%- JSON.stringify(locals.specialists) %>;
+    console.log(specialists[0]);
+    
+    for (let i = 0, y=1; i <specialists.length; i++, y++) {
+      console.log(specialists[i]);
+      document.addEventListener('DOMContentLoaded', function() {
+        var div = document.createElement('div');
+        div.id = 'specialisttable';
+        if (y % 3 == 0){
+        div.innerHTML = '</div>\
+        <div class="column">\
+           <table class="test">\
+                <tr>\
+                <th colspan="2" style="text-align: center;"><img src="/css/img_avatar.png" style="width:75%"></th>\
+                \
+                </tr>\
+                <tr>\
+                <td>Name:</td>\
+                <td>'+specialists[i].fullName+'</td>\
+                </tr>\
+                <tr>\
+                <td class="specialism">Specialism:</td>\
+                <td>'+specialists[i].tagName+'</td>\
+                </tr>\
+                <tr>\
+                <td>Phone number:</td>\
+                <td>'+specialists[i].phoneNo+'</td>\
+                </tr>\
+                <tr>\
+                <td class="specialism">Email:</td>\
+                <td style="font-size: 12px;">'+specialists[i].email+'</td>\
+                </tr>\
+            </table>\
+            </div> \
+          </div>\
+          <div class="row">'
+        } else if (y==specialists.length){
+          div.innerHTML = '<div class="column">\
+           <table class="test">\
+                <tr>\
+                <th colspan="2" style="text-align: center;"><img src="/css/img_avatar.png" style="width:75%"></th>\
+                \
+                </tr>\
+                <tr>\
+                <td>Name:</td>\
+                <td>'+specialists[i].fullName+'</td>\
+                </tr>\
+                <tr>\
+                <td class="specialism">Specialism:</td>\
+                <td>'+specialists[i].tagName+'</td>\
+                </tr>\
+                <tr>\
+                <td>Phone number:</td>\
+                <td>'+specialists[i].phoneNo+'</td>\
+                </tr>\
+                <tr>\
+                <td class="specialism">Email:</td>\
+                <td style="font-size: 12px;">'+specialists[i].email+'</td>\
+                </tr>\
+            </table>\
+            </div>'
+        } else{
+          div.innerHTML = '<div class="column">\
+           <table class="test">\
+                <tr>\
+                <th colspan="2" style="text-align: center;"><img src="/css/img_avatar.png" style="width:75%"></th>\
+                \
+                </tr>\
+                <tr>\
+                <td>Name:</td>\
+                <td>'+specialists[i].fullName+'</td>\
+                </tr>\
+                <tr>\
+                <td class="specialism">Specialism:</td>\
+                <td>'+specialists[i].tagName+'</td>\
+                </tr>\
+                <tr>\
+                <td>Phone number:</td>\
+                <td>'+specialists[i].phoneNo+'</td>\
+                </tr>\
+                <tr>\
+                <td class="specialism">Email:</td>\
+                <td style="font-size: 12px;">'+specialists[i].email+'</td>\
+                </tr>\
+            </table>\
+            </div>'
+        }
+        div.idName = 'testrow';
+        document.getElementById("row").appendChild(div);
+      }, false);
+    }
+  </script>
+</html>
