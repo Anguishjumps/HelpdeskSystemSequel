@@ -1,215 +1,32 @@
+<!DOCTYPE HTML>
 <html>
-<title>Test Main Page</title>
-<link href="./shellstylesheet.css" rel="stylesheet">
+<title>User Home</title>
+<link href="/css/shellstylesheet.css" rel="stylesheet">
 
 <head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style>
-		/*
-#9EA3B0 light grey
-#546A7B blue
-#0D1F2D navy
-*/
-		.button {
-			background-color: #4CAF50;
-			border: none;
-			color: white;
-			padding: 15px 32px;
-			text-align: center;
-			text-decoration: none;
-			display: inline-block;
-			font-size: 16px;
-			margin: 4px 2px;
-			cursor: pointer;
-		}
-
-		* {
-			box-sizing: border-box
-		}
-
-		body {
-			font-family: Verdana, Arial, Helvetica, sans-serif;
-			background-color: #0D1F2D;
-		}
-
-		.center {
-			text-align: center;
-		}
-
-		body,
-		td,
-		th {
-			color: #F0F0F0;
-		}
-
-		.textinput {
-			font-size: larger;
-			text-align: centre;
-			border: 2px solid black;
-			font-weight: bold;
-			margin: auto;
-			cursor: text;
-			width: 80%;
-			height: 10%;
-			border-radius: 4px;
-		}
-
-		.searchbutton {
-			font-size: larger;
-			text-align: centre;
-			color: #2C2C3C;
-			border: 2px solid black;
-			font-weight: bold;
-			background-color: #85C7F2;
-			margin: auto;
-			cursor: pointer;
-			width: 10%;
-			height: 10%;
-			border-radius: 4px;
-			transition: transform .2s;
-		}
-
-		.searchbutton:hover {
-			transform: scale(1.1);
-		}
-
-		.container {
+		table {
 			width: 100%;
-			overflow: hidden;
-
 		}
-
-		.maindiv {
-			width: 79%;
-			height: 100%;
-			background: #0D1F2D;
-			border: 0px solid #2C2C3C;
-			overflow: hidden;
-			float: left;
-		}
-
-		.maindiv ul {
-			list-style: none;
-			line-height: 100%;
-
-		}
-
-		.sidebarheader {
-			margin: auto;
-			width: 50%;
-			padding: 10px;
-		}
-
-		.sidebarbutton {
-			font-size: larger;
-			text-align: centre;
-			color: #F0F0F0;
-			border: 1px solid black;
-			font-weight: bold;
-			background-color: #546A7B;
-			margin: auto;
-			cursor: pointer;
-			width: 100%;
-			height: 20%;
-		}
-
-		.sidebarbutton:hover {
-			background-color: #9EA3B0;
-
-		}
-
-		.nav {
-			width: 20%;
-			height: 100%;
-			background: #5D6F7D;
-			border: 1px solid #2C2C3C;
-			overflow: auto;
-			float: left;
-		}
-
-		.nav ul {
-			line-height: 100%;
-			list-style-type: none;
-			padding: 0;
-			margin: 0;
-		}
-
-		.nav form {
-			margin: auto;
-			text-align: centre;
-		}
-
 		table,
 		th,
 		td {
-			border: 1px solid black;
+			border: 0px solid black;
 			border-collapse: collapse;
 		}
 
 		th,
 		td {
-			padding: 15px;
+			padding: 5px;
+			width: 30%;
 		}
 
 		.submitInputClass {
 			display: none;
 		}
-
-		/* Modal */
-
-
-		/* The Modal (background) */
-
-		.modal {
-			display: none;
-			position: fixed;
-			z-index: 1;
-			left: 0;
-			top: 0;
-			width: 100%;
-			height: 100%;
-			overflow: auto;
-			background-color: rgb(0, 0, 0);
-			background-color: rgba(0, 0, 0, 0.4);
-		}
-
-		.modal-content {
-			background-color: #fefefe;
-			margin: 5% auto;
-			border: 1px solid #888;
-			width: 50%;
-			border-radius: 0.5rem;
-		}
-
-		@media (max-width: 768px) {
-			.modal-content {
-				width: 75%;
-			}
-		}
-
-		.modal-header {
-			height: 40px;
-			padding: 1rem;
-			border-top-right-radius: 10px;
-			border-top-left-radius: 10px;
-			display: flex;
-		}
-
-		.modal-title {
-			font-weight: 100;
-			width: 100%;
-			margin: 0;
-		}
-
-		.modal-body {
-			padding: 1rem;
-			font-size: 0.75rem;
-		}
-
-		.modal-footer {
-			padding: 1rem;
-			display: flex;
-		}
-
+		
+		
 		.button-close {
 			float: right;
 			width: 3rem;
@@ -221,13 +38,8 @@
 			margin-left: auto;
 			background-color: lightgrey;
 		}
-
-		.modal-footer>button {
-			display: inline-block;
-		}
 	</style>
 </head>
-
 <body>
 	<div class="container">
 		<div class="header">
@@ -248,11 +60,26 @@
 					<h1>Welcome to the mainpage!</h1>
 					<form action="/user/searched" method="post">
 						<li colspan=1><input placeholder="Search for a problem type..." name="searchbar" type="text"
-								class="textinput" id="searchbar" value="" size="30" />
+								class="textinput" id="searchbar" value="" size="30" list="taglist" />
+								<datalist id="taglist">
+									<option value="Computers">Computers</option>
+									<option value="Printers">Printers</option>
+									<option value="Network">Network</option>
+									<option value="Laptop">Laptop</option>
+									<option value="Charger">Charger</option>
+									<option value="Monitor">Monitor</option>
+									<option value="Ports">Ports</option>
+									<option value="Windows">Windows</option>
+									<option value="Linux">Linux</option>
+									<option value="Paper Jam">Paper Jam</option>
+									<option value="Monitor Screen">Monitor Screen</option>
+									<option value="Startup Issues">Startup Issues</option>
+								</datalist>
 							<input type="submit" value="Search" class="searchbutton">
 					</form>
 					
-					<button onclick="initiateNewTicketForm()" type="submit" class="button">New Ticket</button>
+					<button onclick="initiateNewTicketForm()" type="submit" class="searchbutton" style="width:30%;">Open New Ticket</button>
+					<input id="BackButton" type="submit" value="Back" onclick="location.href='./';" method="get" class="searchbutton" style="visibility:hidden">
 
 				</ul>
 				<%	if(point == "initialEntry") {
@@ -271,6 +98,7 @@
 						<% }} %>
 				</table>
 				<% } else if (point == "maintagEntry") { %>
+				<script>document.getElementById("BackButton").style.visibility="visible";</script>
 				<table>
 					<tr>
 						<th>Issue</th>
@@ -327,7 +155,6 @@
 					<button>Cancel</button>
 				</form>
 				<% } else { %>
-				<h1>searchEntry</h1>
 				<% if (data.length == 0) { %>
 				<h1>NO RESULTS FOUND</h1>
 				<% } else { %>
@@ -445,6 +272,7 @@
 			}
 			decideOnTheMessage()
 		}
+		
 	</script>
 
 
