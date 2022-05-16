@@ -8,6 +8,7 @@ function getProblemName(id, problemTypes) {
 
 }
 
+// function needed to update tickets
 function fillNewSol(text) {
     var newSol = document.getElementById("viewSolutionDescription")
     newSol.value = text;
@@ -45,14 +46,6 @@ function closeAlert(event) {
 }
 
 
-/**
- * Check if characters in string are valid and aren't used for script injection
- * 
- * @param {String} string to check characters of 
- * @returns true if string is valid, false otherwise
- */
-const validateCharacters = string => !string.match(/[|&;$%@"<>()+]/g);
-
 
 // Close ticket modals when close button is clicked
 function closeModal() {
@@ -60,22 +53,6 @@ function closeModal() {
     var viewTicketModal = document.getElementById("view-ticket-modal");
     viewTicketModal.style.display = "none";
 }
-
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = (event) => {
-    if (event.target.className == "modal fade" || event.target.className == "modal-form") {
-        createTicketModal.style.display = "none";
-        viewTicketModal.style.display = "none";
-    }
-}
-
-// When user presses "ESC" on keyboard, close modal
-window.onkeydown = (event) => {
-    if (event.key == "Escape" && (createTicketModal.style.display == "block" || viewTicketModal.style.display == "block")) {
-        createTicketModal.style.display = "none";
-        viewTicketModal.style.display = "none";
-    }
-};
 
 
 /**
@@ -89,13 +66,14 @@ function showTicket(ticketID) {
     var viewTicketModal = document.getElementById("view-ticket-modal");
     viewTicketModal.style.display = "block";
 
-    // Ajax request to get ticket details from database
-    $.post('/specialist/show', result = {
+    // Post request to get ticket details from html data tags
+    $.post('/specialist/show', ticketDetails = {
+        //use individual ticket ID passed through in function to identify ticket and read its data tags
         ID: $("#" + ticketID).data("id"),
         CreatedTimestamp: $("#" + ticketID).data("createdtimestamp"),
         UserID: $("#" + ticketID).data("reporterid"),
         AssignedSpecialistID: $("#" + ticketID).data("assignedspecialistid"),
-        ResolveDate: $("#" + ticketID).data("resolvedate"),
+        TicketPriority: $("#" + ticketID).data("priority"),
         TicketState: $("#" + ticketID).data("state"),
         TypeID: $("#" + ticketID).data("maintag"),
         TicketDescription: $("#" + ticketID).data("description"),
@@ -105,18 +83,17 @@ function showTicket(ticketID) {
 
 
     }, obj => {
-
-        // alert(result["ID"]);
-        Object.keys(result).forEach(key => {
+        //set the values of the view ticket modal to those of the ticket data tags
+        Object.keys(ticketDetails).forEach(key => {
             console.log(key)
-                // If object key corresponds to a dropdown menu and values haven't been set
             let input = document.querySelector('#view' + key);
+            // If timestamp then take substring to have only day, month and year
             if ("CreatedTimestamp" == key || "ResolveDate" == key) {
                 //substring for timestamp entries
-                input.value = result[key].substr(0, 15);
+                input.value = ticketDetails[key].substr(0, 15);
             } else {
-                // Set value to result
-                input.value = result[key];
+                // Set value to ticketDetails
+                input.value = ticketDetails[key];
             }
         });
     });
@@ -124,11 +101,10 @@ function showTicket(ticketID) {
 
 
 
-// When searchbar is focused and key is pressed
+// When search button is pressed or key is pressed
 function ticketSearch() {
+    //get input of searchbar
     let search = document.querySelector('#searchbar').value.toLowerCase();
-    // Check if "only show assigned" is checked
-    // Get userid
 
     // Get all tickets
     let tickets = document.querySelectorAll('.ticket');
@@ -143,7 +119,9 @@ function ticketSearch() {
         });
         return false;
     }
+    //check if search input is numeric or not
     var hasNumber = /\d/;
+    //if search is numeric, look for ticket ids
     if (hasNumber.test(search)) {
         // Loop through tickets
         tickets.forEach(ticket => {
@@ -157,6 +135,7 @@ function ticketSearch() {
                 ticket.style.display = 'list-item';
             }
         });
+        //if search is a string search for problem/solution description
     } else {
         // Loop through tickets
         tickets.forEach(ticket => {
@@ -272,11 +251,11 @@ function onDrop(event, sessionID) {
 
     // Ajax request for getting ticket details
     let ticketID = id.replace('ticket', '');
-    $.post('/specialist/getDetails', result = {
+    $.post('/specialist/getDetails', ticketData = {
         ID: $("#" + ticketID).data("id"),
-        //NewTicketState: dropzone.dataset.typeid,
+        NewState: dropzone.dataset.typeid,
         State: $("#" + ticketID).data("state"),
-        //NewMainTag: dropzone.dataset.typeid,
+        NewMainTag: dropzone.dataset.typeid,
         MainTag: $("#" + ticketID).data("maintag"),
         SecondaryTag: $("#" + ticketID).data("secondarytag"),
         AssignedSpecialistID: $("#" + ticketID).data("assignedspecialistid"),
@@ -285,16 +264,17 @@ function onDrop(event, sessionID) {
 
     }, obj => {
         // Reload ticket table
-        let ticketDetails = result;
+        let ticketDetails = ticketData;
         console.log(ticketDetails)
             // If ticket has not been moved
-        if (dropzone.dataset.typeid == ticketDetails.MainTag && dropzone.dataset.state == ticketDetails.State) {
+        if (dropzone.dataset.typeid == ticketDetails.NewMainTag && dropzone.dataset.state == ticketDetails.NewState) {
+            console.log("oioi");
             return false;
         }
         console.log(dropzone.dataset.typeid)
             // Problem type has been changed
         if (dropzone.dataset.typeid != ticketDetails.MainTag) {
-            $.post('/specialist/updateTicketType', result = {
+            $.post('/specialist/updateTicketType', ticketData = {
                 ID: $("#" + ticketID).data("id"),
                 Maintag: dropzone.dataset.typeid
 
@@ -314,7 +294,7 @@ function onDrop(event, sessionID) {
 
         // If ticket is moved from "TODO", assign ticket to current specialist
         if (dropzone.dataset.state != "TODO") {
-            $.post('/specialist/setSpecialist', result = {
+            $.post('/specialist/setSpecialist', ticketData = {
                 ID: $("#" + ticketID).data("id")
             }, obj => {
                 console.log("setting specialist");
@@ -323,7 +303,7 @@ function onDrop(event, sessionID) {
             // Reload table
             dropzone.appendChild(draggableElement);
         } else {
-            $.post('/specialist/unsetSpecialist', result = {
+            $.post('/specialist/unsetSpecialist', ticketData = {
                 ID: $("#" + ticketID).data("id")
             }, obj => {
                 console.log("removing specialist");
@@ -334,7 +314,7 @@ function onDrop(event, sessionID) {
         // If destination column is "RESOLVED"
         if (dropzone.dataset.state == "RESOLVED") {
             // Ajax query to set resolved time on ticket
-            $.post('/specialist/setTicketResolvedDate', result = {
+            $.post('/specialist/setTicketResolvedDate', ticketData = {
                 ID: $("#" + ticketID).data("id"),
             }, obj => {
                 $("#" + ticketID).data("resolvedate", new Date())
@@ -343,14 +323,14 @@ function onDrop(event, sessionID) {
             dropzone.appendChild(draggableElement);
         } else {
             // Ajax query to remove resolved time on ticket
-            $.post('/specialist/setTicketResolvedDate', result = {
+            $.post('/specialist/removeTicketResolvedDate', ticketData = {
                 ID: $("#" + ticketID).data("id")
             }, obj => {
                 $("#" + ticketID).data("resolvedTimestamp", "")
             });
         }
         // Ajax query to to update ticket state
-        $.post('/specialist/updateTicketState', result = {
+        $.post('/specialist/updateTicketState', ticketData = {
             ID: $("#" + ticketID).data("id"),
             TicketState: dropzone.dataset.state
 

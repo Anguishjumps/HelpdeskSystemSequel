@@ -5,7 +5,7 @@ const session = require('express-session')
 const MySQLStore = require('express-mysql-session')(session);
 const bcrypt = require("bcrypt");
 
-app.use(express.static("public"));
+app.use(express.static("public"))
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
@@ -121,6 +121,7 @@ app.use((req, res, next) => {
     console.log(req.session.userID)
     next()
 })
+
 
 
 app.listen(5029)

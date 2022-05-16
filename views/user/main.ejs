@@ -9,6 +9,18 @@
 #546A7B blue
 #0D1F2D navy
 */
+		.button {
+			background-color: #4CAF50;
+			border: none;
+			color: white;
+			padding: 15px 32px;
+			text-align: center;
+			text-decoration: none;
+			display: inline-block;
+			font-size: 16px;
+			margin: 4px 2px;
+			cursor: pointer;
+		}
 
 		* {
 			box-sizing: border-box
@@ -75,12 +87,6 @@
 			float: left;
 		}
 
-		.resultsDiv {
-			border: 5px outset red;
-			background-color: lightblue;
-			text-align: center;
-		}
-
 		.maindiv ul {
 			list-style: none;
 			line-height: 100%;
@@ -131,6 +137,94 @@
 			margin: auto;
 			text-align: centre;
 		}
+
+		table,
+		th,
+		td {
+			border: 1px solid black;
+			border-collapse: collapse;
+		}
+
+		th,
+		td {
+			padding: 15px;
+		}
+
+		.submitInputClass {
+			display: none;
+		}
+
+		/* Modal */
+
+
+		/* The Modal (background) */
+
+		.modal {
+			display: none;
+			position: fixed;
+			z-index: 1;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+			overflow: auto;
+			background-color: rgb(0, 0, 0);
+			background-color: rgba(0, 0, 0, 0.4);
+		}
+
+		.modal-content {
+			background-color: #fefefe;
+			margin: 5% auto;
+			border: 1px solid #888;
+			width: 50%;
+			border-radius: 0.5rem;
+		}
+
+		@media (max-width: 768px) {
+			.modal-content {
+				width: 75%;
+			}
+		}
+
+		.modal-header {
+			height: 40px;
+			padding: 1rem;
+			border-top-right-radius: 10px;
+			border-top-left-radius: 10px;
+			display: flex;
+		}
+
+		.modal-title {
+			font-weight: 100;
+			width: 100%;
+			margin: 0;
+		}
+
+		.modal-body {
+			padding: 1rem;
+			font-size: 0.75rem;
+		}
+
+		.modal-footer {
+			padding: 1rem;
+			display: flex;
+		}
+
+		.button-close {
+			float: right;
+			width: 3rem;
+			height: 3rem;
+			background-color: lightgrey;
+		}
+
+		.button-close-bottom {
+			margin-left: auto;
+			background-color: lightgrey;
+		}
+
+		.modal-footer>button {
+			display: inline-block;
+		}
 	</style>
 </head>
 
@@ -144,6 +238,9 @@
 					<h1 class="sidebarheader">Menu</h1>
 					<!-- <li colspan=1><input type="submit" name="Search" id="Search" value="Search 🔎" class="sidebarbutton"
 							title="mouseover text" /></li> -->
+					<form action="/user" method="get">
+						<input type="submit" value="Home" class="sidebarbutton">
+					</form>
 					<form action="/user/history" method="get">
 						<input type="submit" value="User History" class="sidebarbutton">
 					</form>
@@ -159,46 +256,211 @@
 				<ul>
 					<h1>Welcome to the mainpage!</h1>
 					<form action="/user/searched" method="post">
-						<li colspan=1><input placeholder="Search for a problem type..." name="searchbar" type="text" class="textinput" id="searchbar" value=""
-								size="30" />
+						<li colspan=1><input placeholder="Search for a problem type..." name="searchbar" type="text"
+								class="textinput" id="searchbar" value="" size="30" />
 							<input type="submit" value="Search" class="searchbutton">
 					</form>
+					
+					<button onclick="initiateNewTicketForm()" type="submit" class="button">New Ticket</button>
+
 				</ul>
-				<% if (results.length > 0) { %>
+				<%	if(point == "initialEntry") {
+					%>
+				<table>
+					<tr>
+						<% for(var u = 0; u < Object.keys(data).length; u++) { %>
+						<td>
+							<button onclick="grabProblemCategory()" type="submit" id=<%= data[u].tagName %>
+								class="sidebarbutton">
+								<%= data[u].tagName %> </button>
+						</td>
+						<%	if (((u + 1) % 3) === 0) { %>
+					</tr>
+					<tr>
+						<% }} %>
+				</table>
+				<% } else if (point == "maintagEntry") { %>
 				<table>
 					<tr>
 						<th>Issue</th>
 						<th>Resolution</th>
 					</tr>
-					<% for(let singleresult of results) { %>
 					<tr>
-						<td><%= singleresult.issue %></td>
-						<td><%= singleresult.resolution %></td>
-
+						<% for(var u = 0; u < Object.keys(data).length; u++) { %>
+						<td>
+							<%= data[u].ticketDescription %>
+						</td>
+						<td>
+							<%= data[u].resolvedDescription %>
+						</td>
 					</tr>
-					<% } %>
+					<tr>
+						<% } %>
 				</table>
-				<% } %>
-				<div class="resultsdiv">
-					<% if(results.length > 0) { %>
-					<% for(let singleresult of results) { %>
-					<div class="resultsdiv">
-						<h2>
-							<%= singleresult.issue %>
-						</h2>
-						<p>
-							<%= singleresult.resolution %>
-						</p>
-					</div>
-					<% } %>
-					<% } %>
-				</div>
-				<div class="maindiv">
-					<%- include('partials/onepartial')  %>
-				</div>
+				<% } else if (point == "newTicketEntry") { %>
+				<form name="form11" id="form11" action="/user/processnewTicket" method="post">
+					User Id:
+					<input type="text" id="userID" name="userID" size="10"><br><br>
+					Problem Description:
+					<input type="text" id="problemDescription" name="problemDescription" size="50" multiple><br><br>
+					mainTag:
+					<select name="mainTag" id="mainTag"
+						onchange="secondaryTagChangeFunction(<%=JSON.stringify(mainTagObject)%>)">
+						<option value="select-mainTag-value" selected="selected">Select main tag</option>
+						<% let values = Object.keys(mainTagObject)
+       for (let index=0;index< values.length;index++) { %>
+						<option value="<%=values[index]%>"><%=values[index].split("_")[1]%></option>
+						<% }%>
+					</select>
+					<br /><br />
+					secondaryTag:
+					<select name="secondaryTag" id="secondaryTag"
+						onchange="tertiaryTagChangeFunction(<%=JSON.stringify(mainTagObject)%>)">
+						<option value="" selected="selected">
+							Please select main tag first
+						</option>
+					</select>
+					<br /><br />
+					tertiaryTag:
+					<select name="tertiaryTag" id="tertiaryTag" onchange="decideOnTheMessage()">
+						<option value="" selected="selected">
+							Please select secondary tag first
+						</option>
+					</select>
+					<br /><br />
+					<div id="submitInput" class="submitInputClass"><input type="submit" value="Submit" /></div>
+					<br>
+
+				</form>
+				<p id="commMessage">Please choose at least the main tag to be able to submit the ticket</p>
+				<br>
+				<form name="form111" id="form111" action="/user" method="get">
+					<button>Cancel</button>
+				</form>
+				<% } else { %>
+				<h1>searchEntry</h1>
+				<% if (data.length == 0) { %>
+				<h1>NO RESULTS FOUND</h1>
+				<% } else { %>
+				<table>
+					<tr>
+						<th>issue</th>
+						<th>resolution</th>
+					</tr>
+					<tr>
+						<% for(var u = 0; u < Object.keys(data).length; u++) { %>
+						<td>
+							<%= data[u].ticketDescription %>
+						</td>
+						<td>
+							<%= data[u].resolvedDescription %>
+						</td>
+					</tr>
+					<tr>
+						<% } %>
+				</table>
+				<% }} %>
 			</div>
 		</div>
 	</div>
+	<script type="text/javascript">
+
+		function standardPost(path, params, method = 'post') {
+
+			// The rest of this code assumes you are not using a library.
+			// It can be made less verbose if you use one.
+			const form = document.createElement('form');
+			form.method = method;
+			form.action = path;
+
+			for (const key in params) {
+				if (params.hasOwnProperty(key)) {
+					const hiddenField = document.createElement('input');
+					hiddenField.type = 'hidden';
+					hiddenField.name = key;
+					hiddenField.value = params[key];
+
+					form.appendChild(hiddenField);
+				}
+			}
+
+			document.body.appendChild(form);
+			form.submit();
+		}
+		function grabProblemCategory() {
+			// let currentVal = document.getElementById("testbtn").value
+			let currentVal2 = event.target.id
+			standardPost('/user/maintag', { problemCategory: currentVal2 });
+			console.log(currentVal2)
+		}
+		function initiateNewTicketForm() {
+			// ACTION: you can capture anything from the form here and pass to route
+			standardPost('/user/initiatenewticket', {})
+		}
+		function decideOnTheMessage() {
+			let mainTagSel = document.getElementById("mainTag");
+			let messageP = document.getElementById("commMessage")
+			let submitInput = document.getElementById("submitInput")
+			if (mainTagSel.value !== "select-mainTag-value") {
+				messageP.innerText = "Thanks for the selections!"
+				submitInput.style.display = "block" //so that submit button will be presented
+			} else {
+				messageP.innerText = "Please choose at least the main tag to be able to submit the ticket!"
+				submitInput.style.display = "none"
+			}
+		}
+
+		function secondaryTagChangeFunction(mainTagObject) {
+			let mainTagSel = document.getElementById("mainTag");
+			let secondaryTagSel = document.getElementById("secondaryTag");
+			let tertiaryTagSel = document.getElementById("tertiaryTag")
+			if (mainTagSel.value !== "select-mainTag-value") {
+				let possibleValuesForSecondaryTag = mainTagObject[mainTagSel.value]
+				secondaryTagSel.options[0] = new Option("select secondary tag", "select secondary tag")
+				secondaryTagSel.length = 1
+				tertiaryTagSel.length = 0
+				let optionsReset = document.createElement("option")
+				optionsReset.text = "Please select secondary tag first"
+				optionsReset.value = "Please select secondary tag first"
+				tertiaryTagSel.add(optionsReset)
+				for (let index = 0; index < possibleValuesForSecondaryTag.length; index++) {
+					secondaryTagSel.options[index + 1] = new Option(possibleValuesForSecondaryTag[index].split("_")[1],
+						possibleValuesForSecondaryTag[index])
+				}
+			} else {
+				secondaryTagSel.length = 0
+				let optionsReset = document.createElement("option")
+				optionsReset.text = "Please select main tag first"
+				optionsReset.value = "Please select main tag first"
+				secondaryTagSel.add(optionsReset)
+				tertiaryTagSel.length = 0
+				optionsReset = document.createElement("option")
+				optionsReset.text = "Please select secondary tag first"
+				optionsReset.value = "Please select secondary tag first"
+				tertiaryTagSel.add(optionsReset)
+			}
+			decideOnTheMessage()
+		}
+
+		function tertiaryTagChangeFunction(mainTagObject) {
+			let mainTagSel = document.getElementById("mainTag");
+			let secondaryTagSel = document.getElementById("secondaryTag");
+			let tertiaryTagSel = document.getElementById("tertiaryTag")
+			if (secondaryTagSel.value !== "select secondary tag") {
+				let possibleValuesForTertiaryTagArr = mainTagObject[mainTagSel.value]
+				tertiaryTagSel.options[0] = new Option("select tertiary tag", "select tertiary tag")
+				for (let index = 0; index < possibleValuesForTertiaryTagArr.length; index++) {
+					tertiaryTagSel.options[index + 1] = new Option(possibleValuesForTertiaryTagArr[index].split("_")[1],
+						possibleValuesForTertiaryTagArr[index])
+				}
+			}
+			decideOnTheMessage()
+		}
+	</script>
+
+
+
 </body>
+<script src="javascript/functions1.js"></script>
 
 </html>
