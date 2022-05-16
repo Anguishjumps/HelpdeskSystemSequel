@@ -76,7 +76,7 @@ router.post('/processnewTicket', (req, res) => {
         if (err) {
             return cb(err);
         }
-        let userId = parseInt(req.body.userID)
+        let userId = parseInt(req.session.userID)
         let problemDescription = req.body.problemDescription
         // let myVariable = (condition ? value when true: value when false)
         let mainTag = req.body.mainTag.split("_")[1] ? parseInt(req.body.mainTag.split("_")[0]) : null
