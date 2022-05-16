@@ -8,6 +8,41 @@ function getProblemName(id, problemTypes) {
 
 }
 
+function fillNewSol(text) {
+    var newSol = document.getElementById("viewSolutionDescription")
+    newSol.value = text;
+}
+
+// Displays an error banner with a given message.
+function alertBanner(message) {
+    // If a banner already exists, remove its content.
+    if (document.getElementById("individualAlertBanner")) {
+        // Stop the timeout for the existing banner.
+        clearTimeout(bannerTimeout);
+        document.getElementById("individualAlertBanner").remove();
+    }
+    // Create content for the new banner.
+    var wrapper = document.createElement('div');
+    wrapper.innerHTML = '<div id="individualAlertBanner" class="alert-banner"><div>' + message + '</div><button onclick="closeAlert(this)" ' +
+        'type="button" class="alert-close button-close" data-bs-dismiss="alert" aria-label="Close">' +
+        '<img id="closeBannerButton" src="/close.png"></button></div>';
+
+    $(document).ready(function() {
+        // Find the container for the banner and add the new content.
+        let alertContainer = document.querySelector('.alertContainer');
+        alertContainer.append(wrapper);
+        // Start a timeout for the banner to dissapear after 3 seconds.
+        bannerTimeout = setTimeout(function() {
+            alertContainer.innerHTML = "";
+        }, 3000);
+    })
+}
+
+
+// Close alert
+function closeAlert(event) {
+    event.parentNode.remove();
+}
 
 
 /**
@@ -63,7 +98,11 @@ function showTicket(ticketID) {
         ResolveDate: $("#" + ticketID).data("resolvedate"),
         TicketState: $("#" + ticketID).data("state"),
         TypeID: $("#" + ticketID).data("maintag"),
-        SolutionID: $("#" + ticketID).data("solutionid"),
+        TicketDescription: $("#" + ticketID).data("description"),
+        FinalSolutionID: $("#" + ticketID).data("solutionid"),
+        SolutionDescription: $("#" + ticketID).data("resolveddescription"),
+        ResolveDate: $("#" + ticketID).data("resolvedate"),
+
 
     }, obj => {
 
@@ -72,75 +111,24 @@ function showTicket(ticketID) {
             console.log(key)
                 // If object key corresponds to a dropdown menu and values haven't been set
             let input = document.querySelector('#view' + key);
-            // if (["SolutionID", "AssignedSpecialistID"].includes(key) && !result.result[key]) {
-            //     // Set to defaults
-            //     input.value = 0;
-            // If object key corresponds to a personnel dropdown
-            // }
-            //else if (["ReporterNo", "SpecialistNo"].includes(key)) {
-            //     // Set text to result
-            //     input.textContent = result.result[key];
-            // }
-            // else {
-            // Set value to result
-            input.value = result[key];
-            // }
+            if ("CreatedTimestamp" == key || "ResolveDate" == key) {
+                //substring for timestamp entries
+                input.value = result[key].substr(0, 15);
+            } else {
+                // Set value to result
+                input.value = result[key];
+            }
         });
     });
 };
 
 
-/**
- * Show ticket modal when ticket card is clicked
- * 
- * @param {Number} ticketID  Unique ID of ticket
- */
-function makeTicket() {
-
-    // Show view ticket modal
-    var makeTicketModal = document.getElementById("make-ticket-modal");
-    makeTicketModal.style.display = "block";
-
-    // // Ajax request to get ticket details from database
-    // $.post('/user/make', result = {
-    //     ID: $("#" + ticketID).data("id")
-
-    // }, obj => {
-
-    //     alert(result["ID"]);
-    //     // let result = JSON.parse(obj);
-    //     Object.keys(result.result).forEach(key => {
-    //         // If object key corresponds to a dropdown menu and values haven't been set
-    //         let input = document.querySelector('#view' + key);
-    //         if (["SoftwareID", "HardwareID", "SolutionID", "OperatorID", "AssignedSpecialistID", "FinalSolutionID"].includes(key) && !result.result[key]) {
-    //             // Set to defaults
-    //             input.value = 0;
-    //             // If object key corresponds to a personnel dropdown
-    //         } else if (["ReporterNo", "OperatorNo", "SpecialistNo"].includes(key)) {
-    //             // Set text to result
-    //             input.textContent = result.result[key];
-    //         } else {
-    //             // Set value to result
-    //             input.value = result.result[key];
-    //         }
-    //     });
-    //     getTicketLogs(ticketID);
-    // });
-};
-
-
-
 
 // When searchbar is focused and key is pressed
 function ticketSearch() {
-    console.log("wagwan");
-    let search = document.querySelector('#ticket-search').value.toLowerCase();
-    let select = document.querySelector('#search-dropdown');
-    let selectedOption = select.options[select.selectedIndex].text;
+    let search = document.querySelector('#searchbar').value.toLowerCase();
     // Check if "only show assigned" is checked
-    let assignedOnly = document.querySelector('#onlyShowAssigned').checked;
     // Get userid
-    let userid = document.querySelector('#username').dataset.userid;
 
     // Get all tickets
     let tickets = document.querySelectorAll('.ticket');
@@ -148,33 +136,73 @@ function ticketSearch() {
     if (search == '') {
         // Redisplay all tickets
         tickets.forEach(ticket => {
-            // If only show assigned is checked and user is not assigned to ticket
-            if (assignedOnly && ![ticket.dataset.assignedspecialistid, ticket.dataset.operatorid].includes(userid)) {
+
+            // Display ticket
+            ticket.style.display = 'list-item';
+
+        });
+        return false;
+    }
+    var hasNumber = /\d/;
+    if (hasNumber.test(search)) {
+        // Loop through tickets
+        tickets.forEach(ticket => {
+            // If ticket field does not contain search
+            if (ticket.dataset.id != search) {
                 // Hide ticket
                 ticket.style.display = 'none';
             } else {
+
                 // Display ticket
                 ticket.style.display = 'list-item';
             }
         });
-        return false;
-    }
-
-    // Loop through tickets
-    tickets.forEach(ticket => {
-        // If ticket field does not contain search
-        if (!ticket.dataset[selectedOption.toLowerCase()] ||
-            assignedOnly && ![ticket.dataset.assignedspecialistid, ticket.dataset.operatorid].includes(userid) ||
-            ticket.dataset[selectedOption.toLowerCase()].toString().toLowerCase().indexOf(search) == -1) {
-            // Hide ticket
-            ticket.style.display = 'none';
-        } else {
-            if (assignedOnly && [ticket.dataset.assignedspecialistid, ticket.dataset.operatorid].includes(userid))
-            // Display ticket
+    } else {
+        // Loop through tickets
+        tickets.forEach(ticket => {
+            // If ticket field does not contain search
+            if (ticket.dataset.description.includes(search) || ticket.dataset.resolveddescription.includes(search)) {
+                // Display ticket
                 ticket.style.display = 'list-item';
-        }
-    });
+            } else {
+                // Hide ticket
+                ticket.style.display = 'none';
+            }
+        });
+
+    }
 }
+
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = (event) => {
+    var viewTicketModal = document.getElementById("view-ticket-modal");
+    if (event.target.className == "modal fade" || event.target.className == "modal-form") {
+        viewTicketModal.style.display = "none";
+    }
+}
+
+// When user presses "ESC" on keyboard, close modal
+window.onkeydown = (event) => {
+    var viewTicketModal = document.getElementById("view-ticket-modal");
+    if (event.key == "Escape" && (viewTicketModal.style.display == "block")) {
+        viewTicketModal.style.display = "none";
+    }
+};
+
+
+function addNewSolution(event) {
+    let newCreateTypeCol = document.querySelector('.newSolutionCol');
+    // If value is changed to -1
+    if (event.value == -1) {
+        // Show new solution column
+        newCreateTypeCol.style.display = 'block';
+    } else {
+        // Hide new solution column
+        newCreateTypeCol.style.display = 'none';
+    }
+}
+
 
 /**
  * Sets target data when user starts dragging ticket card
@@ -212,7 +240,7 @@ function onDragOver(event) {
  * 
  * @param {Event} event Event for when the user drops a ticket card 
  */
-function onDrop(event) {
+function onDrop(event, sessionID) {
     // If Firefox 1.0+
     if (typeof window["InstallTrigger"] !== 'undefined') {
         alert("Error: Your browser does not support drag and drop.");
@@ -271,34 +299,45 @@ function onDrop(event) {
                 Maintag: dropzone.dataset.typeid
 
             }, obj => {
-                console.log(result);
+                $("#" + ticketID).data("maintag", dropzone.dataset.typeid)
             });
         }
         // Ticket state has not been changed
         if (dropzone.dataset.state == ticketDetails.TicketState) {
             dropzone.appendChild(draggableElement);
-        }
-        // If ticket is not assigned and destination state is not "TODO"
-        // else if (!(ticketDetails.AssignedSpecialistID) && dropzone.dataset.state != 'TODO') {
-        //     // Display error message
-        //     window.scrollTo({ top: 0, behavior: 'smooth' });
-        //     alertBanner("ERROR: Ticket must have operator or specialist assigned to move to \"IN PROGRESS\", \"IN REVIEW\" or \"RESOLVED\" columns", "danger");
-        //     return;
-        //     // If ticket has no solution and destination state is "INREVIEW" or "RESOLVED"
-        // } 
-        else if (!ticketDetails["SolutionID"] && ["INREVIEW", "RESOLVED"].includes(dropzone.dataset.state)) {
+        } else if (ticketDetails["SolutionID"] == "NULL" || ticketDetails["SolutionID"] == 0 && ["INREVIEW", "RESOLVED"].includes(dropzone.dataset.state)) {
             // Display error message
             window.scrollTo({ top: 0, behavior: 'smooth' });
             alertBanner("ERROR: Ticket must have solution to move to \"IN REVIEW\" or \"RESOLVED\" columns", "danger");
             return;
         }
+
+        // If ticket is moved from "TODO", assign ticket to current specialist
+        if (dropzone.dataset.state != "TODO") {
+            $.post('/specialist/setSpecialist', result = {
+                ID: $("#" + ticketID).data("id")
+            }, obj => {
+                console.log("setting specialist");
+                $("#" + ticketID).data("assignedspecialistid", sessionID)
+            });
+            // Reload table
+            dropzone.appendChild(draggableElement);
+        } else {
+            $.post('/specialist/unsetSpecialist', result = {
+                ID: $("#" + ticketID).data("id")
+            }, obj => {
+                console.log("removing specialist");
+                $("#" + ticketID).data("assignedspecialistid", "")
+            });
+        }
+
         // If destination column is "RESOLVED"
         if (dropzone.dataset.state == "RESOLVED") {
             // Ajax query to set resolved time on ticket
             $.post('/specialist/setTicketResolvedDate', result = {
-                ID: $("#" + ticketID).data("id")
+                ID: $("#" + ticketID).data("id"),
             }, obj => {
-                //console.log(obj);
+                $("#" + ticketID).data("resolvedate", new Date())
             });
             // Reload table
             dropzone.appendChild(draggableElement);
@@ -307,7 +346,7 @@ function onDrop(event) {
             $.post('/specialist/setTicketResolvedDate', result = {
                 ID: $("#" + ticketID).data("id")
             }, obj => {
-                //console.log(obj);
+                $("#" + ticketID).data("resolvedTimestamp", "")
             });
         }
         // Ajax query to to update ticket state
@@ -316,7 +355,8 @@ function onDrop(event) {
             TicketState: dropzone.dataset.state
 
         }, obj => {
-            //console.log(obj);
+            $("#" + ticketID).data("state", dropzone.dataset.state)
+                //console.log(obj);
         });
         // Reload table
         dropzone.appendChild(draggableElement);
