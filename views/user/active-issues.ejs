@@ -3,7 +3,13 @@
 	<title>Active Issues</title>
 	<link href="/css/shellstylesheet.css" rel="stylesheet">
 	<link href="/css/active-issues.css" rel="stylesheet">
-	<head> 
+	<head>
+		<script>
+			function showEditing(divToHide, divToShow) {
+				document.getElementById(divToHide).style.display = "none";
+				document.getElementById(divToShow).style.display ="block";
+			}
+		</script>
 	</head>
 	<body>
 		<div class="container">
@@ -33,7 +39,13 @@
 							for (let i = 0; i < tickets.length; i++) {
 								document.addEventListener('DOMContentLoaded', function() {
 									var div = document.createElement('div');
-									div.id = 'card';
+									div.id = 'card'+i;
+									div.style.display = 'block';
+
+									var editDiv = document.createElement('div');
+									editDiv.id = 'editCard'+i;
+									editDiv.style.display = 'none';
+
 									innerHTMLString = '\
 									<table>\
 									    <col width="75%" />\
@@ -41,17 +53,20 @@
 										<row height="50%"/>\
 										<row height="50%"/>\
 										<tr>\
-											<td><b style="font-size:20px">'+tickets[i].ticketDescription+'</b></td>\
+											<td><b style="font-size:20px">'+tickets[i].ID+": "+tickets[i].ticketDescription+'</b></td>\
 										'
 									if (tickets[i].assignedSpecialistName) {
 										if (tickets[i].resolvedTimestamp) {
 											innerHTMLString += '\
-												<td>Solved '+tickets[i].resolvedTimestamp.substring(0,10)+' by '+tickets[i].assignedSpecialistName+'</td>\
+												<td>Solved '+tickets[i].resolvedTimestamp.substring(0,10)+' \
+												by <a href = "mailto: '+tickets[i].specEmail+'?subject=Ticket%20ID:%20'+tickets[i].ticketDescription+'\
+												&body='+tickets[i].ticketDescription+'">'+tickets[i].assignedSpecialistName+'</a></td>\
 												'
 											}
 										else {
 											innerHTMLString += '\
-												<td>In Progress, assigned to '+tickets[i].assignedSpecialistName+'</td>\
+												<td>In Progress, assigned to <a href = "mailto: '+tickets[i].specEmail+'?subject=Ticket%20ID:%20'+tickets[i].ticketDescription+'\
+												&body='+tickets[i].ticketDescription+'">'+tickets[i].assignedSpecialistName+'</a></td>\
 											'
 											}
 									}
@@ -64,7 +79,7 @@
 										</tr>\
 										<tr>\
 											<td>Ticket Creation Date:'+tickets[i].Date.substring(0,10)+'</td>\
-											<td rowspan="2"><input type="submit" name="cardbutton" id="cardbutton" value="Edit Ticket" class="cardbutton" /></td>\
+											<td rowspan="2"><button name="cardbutton" id="cardbutton" class="cardbutton" onClick="showEditing(\''+div.id+'\', \''+editDiv.id+'\')">Edit Ticket</button></td>\
 										</tr>\
 										<tr>\
 											<td>\
@@ -82,6 +97,61 @@
 									div.className = 'historycard';
 								 
 									document.getElementById("historydiv").appendChild(div);
+
+
+
+									innerHTMLString = '\
+									<form action="/user/update-ticket" method="POST">\
+										<input type="hidden" id="tickID" name="tickID" value="'+tickets[i].ID+'">\
+										<table>\
+											<col width="75%" />\
+											<col width="25%" />\
+											<row height="50%"/>\
+											<row height="50%"/>\
+											<tr>\
+												<td><input style="font-size:20px;height:50px" size="50" type="text" id="ticketDesc" name="ticketDesc" value="'+tickets[i].ticketDescription+'"></td>\
+											'
+										if (tickets[i].assignedSpecialistName) {
+											if (tickets[i].resolvedTimestamp) {
+												innerHTMLString += '\
+													<td>Solved '+tickets[i].resolvedTimestamp.substring(0,10)+' by '+tickets[i].assignedSpecialistName+'</td>\
+													'
+												}
+											else {
+												innerHTMLString += '\
+													<td>In Progress, assigned to '+tickets[i].assignedSpecialistName+'</td>\
+												'
+												}
+										}
+										else {
+												innerHTMLString += '\
+													<td>Waiting to be assigned</td>\
+												'
+										}
+										innerHTMLString += '\
+											</tr>\
+												<tr>\
+													<td>Ticket Creation Date:'+tickets[i].Date.substring(0,10)+'</td>\
+													<td rowspan="2"><button name="cardbutton" id="cardbutton" class="cardbutton" onClick="showEditing(\''+div.id+'\', \''+editDiv.id+'\')">Save Ticket</button></td>\
+												</tr>\
+												<tr>\
+											<td>\
+											'
+										if (tickets[i].mainTag) { innerHTMLString += '<div class="tag-shape" title="'+tickets[i].mainTag+'" >'+tickets[i].mainTag+'</div>'}
+										if (tickets[i].secondaryTag) { innerHTMLString += '<div class="tag-shape" style="background-color:#0FAA0F" title="'+tickets[i].secondaryTag+'" >'+tickets[i].secondaryTag+'</div>'}
+										if (tickets[i].tertiaryTag) { innerHTMLString += '<div class="tag-shape" style="background-color:#2222CC" title="'+tickets[i].tertiaryTag+'" >'+tickets[i].tertiaryTag+'</div>'}
+										
+										innerHTMLString += '\
+												</td>\
+											</tr>\
+										</table>\
+									</form>\
+									';
+									editDiv.innerHTML = innerHTMLString;
+									editDiv.className = 'historycard';
+								 
+									document.getElementById("historydiv").appendChild(editDiv);
+
 								}, false);
 							}
 						</script>

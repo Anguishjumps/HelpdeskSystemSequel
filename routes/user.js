@@ -1,8 +1,6 @@
 const express = require('express')
 const router = express.Router()
 const session = require('express-session')
-
-let resultObject = { data: [] }
 var mysql = require('mysql');
 
 var pool = mysql.createPool({
@@ -32,14 +30,11 @@ router.get('/', (req, res) => {
 
 router.post('/searched', (req, res) => {
     pool.getConnection(function (err, connection) {
-
         if (err) {
             return cb(err);
         }
         let searchTerm = req.body.searchbar
         let myQuery = `SELECT ticketDescription, resolvedDescription FROM Ticket WHERE ticketState = "RESOLVED" AND ((ticketDescription  LIKE '%` + searchTerm.toLowerCase() + `%' OR resolvedDescription LIKE '%` + searchTerm.toLowerCase() + `%') OR (ticketDescription  LIKE '%` + searchTerm + `%' OR resolvedDescription LIKE '%` + searchTerm + `%'))`
-        let resultObject
-
         connection.query(myQuery, function (err, result, fields) {
             connection.release()
             if (!err) {
@@ -56,13 +51,10 @@ router.post('/maintag', (req, res) => {
         if (err) {
             return cb(err);
         }
-        console.log("LOOK AT ME")
         let problemCategory = req.body.problemCategory
         let myQuery = `SELECT Ticket.ticketDescription, Ticket.resolvedDescription FROM TagTable INNER JOIN Ticket ON TagTable.ID = Ticket.mainTag WHERE tagName = "` + problemCategory + `" AND ticketState = "RESOLVED"`
         //order by date
         console.log("problem category: " + problemCategory)
-        // con.connect(function(err) {
-        //     if (err) throw err;
         connection.query(myQuery, function (err, result, fields) {
             connection.release()
             if (!err) {
@@ -185,7 +177,6 @@ router.post('/searched', (req, res) => {
 
         let searchTerm = req.body.searchbar
         let myQuery = `SELECT ticketDescription, resolvedDescription FROM Ticket WHERE ticketState = "RESOLVED" AND ((ticketDescription  LIKE '%` + searchTerm.toLowerCase() + `%' OR resolvedDescription LIKE '%` + searchTerm.toLowerCase() + `%') OR (ticketDescription  LIKE '%` + searchTerm + `%' OR resolvedDescription LIKE '%` + searchTerm + `%'))`
-        let resultObject
         connection.query(myQuery, function (err, result, fields) {
             connection.release()
             if (!err) {
@@ -204,9 +195,12 @@ router.get('/history', (req, res) => {
         if (err) {
             return cb(err);
         }
-        connection.query("SELECT ID, Date, mainTag, secondaryTag, tertiaryTag, \
+                connection.query("SELECT ID, Date, (SELECT tagName FROM TagTable WHERE Ticket.mainTag = TagTable.ID) AS mainTag,\
+        (SELECT tagName FROM TagTable WHERE Ticket.secondaryTag = TagTable.ID) AS secondaryTag,\
+        (SELECT tagName FROM TagTable WHERE Ticket.tertiaryTag = TagTable.ID) AS tertiaryTag,\
         ticketDescription, ticketPriority, solutionID, resolvedTimestamp, \
-        ticketState, assignedSpecialistID, resolvedDescription FROM Ticket WHERE userID = 1;", function (err, result) {
+        ticketState, (SELECT fullName FROM PersonnelTable WHERE Ticket.assignedSpecialistID = PersonnelTable.ID) AS assignedSpecialistName, assignedSpecialistID, \
+	resolvedDescription FROM Ticket WHERE userID = "+req.session.userID+" ORDER BY Date DESC;", function (err, result) {
             connection.release()
             if (!err) {
                 result = JSON.stringify(result)
@@ -224,13 +218,10 @@ router.post('/maintag', (req, res) => {
         if (err) {
             return cb(err);
         }
-        console.log("LOOK AT ME")
         let problemCategory = req.body.problemCategory
         let myQuery = `SELECT Ticket.ticketDescription, Ticket.resolvedDescription FROM TagTable INNER JOIN Ticket ON TagTable.ID = Ticket.mainTag WHERE tagName = "` + problemCategory + `" AND ticketState = "RESOLVED"`
         //order by date
         console.log("problem category: " + problemCategory)
-        // con.connect(function(err) {
-        //     if (err) throw err;
         connection.query(myQuery, function (err, result, fields) {
             connection.release()
             if (!err) {
@@ -252,10 +243,13 @@ router.get("/active-issues", (req, res) => {
             return cb(err);
         }
         connection.query("SELECT ID, Date, (SELECT tagName FROM TagTable WHERE Ticket.mainTag = TagTable.ID) AS mainTag,\
-            (SELECT tagName FROM TagTable WHERE Ticket.secondaryTag = TagTable.ID) AS secondaryTag,\
-            (SELECT tagName FROM TagTable WHERE Ticket.tertiaryTag = TagTable.ID) AS tertiaryTag,\
-            ticketDescription, ticketPriority, solutionID, resolvedTimestamp, ticketState,\
-            assignedSpecialistID, resolvedDescription FROM Ticket WHERE userID = 1;", function (err, result) {
+        (SELECT tagName FROM TagTable WHERE Ticket.secondaryTag = TagTable.ID) AS secondaryTag,\
+        (SELECT tagName FROM TagTable WHERE Ticket.tertiaryTag = TagTable.ID) AS tertiaryTag,\
+        ticketDescription, ticketPriority, solutionID, resolvedTimestamp, \
+        ticketState, (SELECT fullName FROM PersonnelTable WHERE Ticket.assignedSpecialistID = PersonnelTable.ID) AS assignedSpecialistName, \
+        assignedSpecialistID, \
+        (SELECT email from PersonnelTable WHERE Ticket.assignedSpecialistID = PersonnelTable.ID)AS specEmail, \
+        resolvedDescription FROM Ticket WHERE userID = "+req.session.userID+";", function (err, result) {
             connection.release()
             if (!err) {
                 result = JSON.stringify(result)
@@ -267,22 +261,23 @@ router.get("/active-issues", (req, res) => {
         });
     });
 })
-router.post("/active-issues", (req, res) => {
-    res.redirect(`/user/active-issues/` + req.body.cardno)
-})
-    
-router.post("/active-issues", (req, res) => {
-    res.redirect(`/user/active-issues/` + req.body.cardno)
+
+router.post("/update-ticket", (req, res) => {
+    pool.getConnection(function (err, connection) {
+        if (err) {
+            return cb(err);
+        }// = "` + problemCategory + `" 
+        connection.query(`UPDATE Ticket SET ticketDescription = "` + req.body.ticketDesc + `" WHERE ID = `+req.body.tickID+`;`, function (err, result) {
+            connection.release()
+            if (!err) {
+                res.redirect(`/user/active-issues/`)
+            } else {
+                console.log(err)
+            }
+        });
+    });
 })
 
-router.get("/active-issues/:cardno", (req, res) => {
-    res.render("user/card-details")
-})
-
-
-router.get('/new', (req, res) => {
-    res.render("user/new")
-})
 
 router.get('/history', (req, res) => {
     pool.getConnection(function (err, connection) {
@@ -305,49 +300,60 @@ router.get('/history', (req, res) => {
             }
         });
     });
-
 })
 
-
-
-
-router
-    .get('/contact', (req, res) => {
-        pool.getConnection(function (err, connection) {
-            if (err) {
-                return cb(err);
+router.get('/contact', (req, res) => {
+    pool.getConnection(function (err, connection) {
+        if (err) {
+            return cb(err);
+        }
+        if(req.query.param1==null){
+            myQuery="SELECT PersonnelTable.fullName, TagTable.tagName, PersonnelTable.phoneNo, PersonnelTable.email \
+            from Specialist join PersonnelTable on Specialist.specialistID = PersonnelTable.ID \
+            join TagTable on Specialist.tagID=TagTable.ID;";
+            
+        
+        }else if(req.query.param1=="Name"){
+            myQuery="SELECT PersonnelTable.fullName, TagTable.tagName, PersonnelTable.phoneNo, PersonnelTable.email from Specialist \
+            join PersonnelTable on Specialist.specialistID = PersonnelTable.ID join TagTable on Specialist.tagID=TagTable.ID\
+            ORDER by PersonnelTable.fullName";
+        } else if(req.query.param1=="Specialism"){
+            myQuery="SELECT PersonnelTable.fullName, TagTable.tagName, PersonnelTable.phoneNo, PersonnelTable.email from Specialist \
+            join PersonnelTable on Specialist.specialistID = PersonnelTable.ID join TagTable on Specialist.tagID=TagTable.ID\
+            ORDER by TagTable.tagName";
+        }else{
+            searchQuery=req.query.param1;
+            myQuery="SELECT PersonnelTable.fullName, TagTable.tagName, PersonnelTable.phoneNo, PersonnelTable.email from Specialist join PersonnelTable on Specialist.specialistID = PersonnelTable.ID join TagTable on Specialist.tagID=TagTable.ID WHERE PersonnelTable.fullName LIKE '%"+searchQuery+"%' OR TagTable.tagName LIKE  '%"+searchQuery+"%' OR PersonnelTable.phoneNo LIKE  '%"+searchQuery+"%' OR PersonnelTable.email LIKE  '%"+searchQuery+"%'";
+        }
+        connection.query(myQuery, function (err, result) {
+            if (!err) {
+                res.render("user/contact", { specialists: result })
+            } else {
+                console.log(err)
             }
-
-            
-
-            if(req.query.param1==null){
-                myQuery="SELECT PersonnelTable.fullName, TagTable.tagName, PersonnelTable.phoneNo, PersonnelTable.email \
-                from Specialist join PersonnelTable on Specialist.specialistID = PersonnelTable.ID \
-                join TagTable on Specialist.tagID=TagTable.ID;";
-                
-            
-            }else if(req.query.param1=="Name"){
-                myQuery="SELECT PersonnelTable.fullName, TagTable.tagName, PersonnelTable.phoneNo, PersonnelTable.email from Specialist \
-               join PersonnelTable on Specialist.specialistID = PersonnelTable.ID join TagTable on Specialist.tagID=TagTable.ID\
-                ORDER by PersonnelTable.fullName";
-           } else if(req.query.param1=="Specialism"){
-                myQuery="SELECT PersonnelTable.fullName, TagTable.tagName, PersonnelTable.phoneNo, PersonnelTable.email from Specialist \
-               join PersonnelTable on Specialist.specialistID = PersonnelTable.ID join TagTable on Specialist.tagID=TagTable.ID\
-                ORDER by TagTable.tagName";
-           }else{
-               searchQuery=req.query.param1;
-               myQuery="SELECT PersonnelTable.fullName, TagTable.tagName, PersonnelTable.phoneNo, PersonnelTable.email from Specialist join PersonnelTable on Specialist.specialistID = PersonnelTable.ID join TagTable on Specialist.tagID=TagTable.ID WHERE PersonnelTable.fullName LIKE '%"+searchQuery+"%' OR TagTable.tagName LIKE  '%"+searchQuery+"%' OR PersonnelTable.phoneNo LIKE  '%"+searchQuery+"%' OR PersonnelTable.email LIKE  '%"+searchQuery+"%'";
-           }
-            connection.query(myQuery, function (err, result) {
-
-                if (!err) {
-                    res.render("user/contact", { specialists: result })
-                } else {
-                    console.log(err)
-                }
-            });
         });
     });
+});
+
+router.post('/getSort', (req, res) => {
+    pool.getConnection(function (err, connection) {
+        if (err) {
+            return cb(err);
+        }
+        myQuery=req.body.sortBy;
+        res.redirect("/user/contact/?param1="+myQuery)
+    });     
+});
+
+router.post('/getSearch', (req, res) => {
+    pool.getConnection(function (err, connection) {
+        if (err) {
+            return cb(err);
+        }
+        myQuery=req.body.searchbar;
+        res.redirect("/user/contact/?param1="+myQuery)
+    });         
+});
 
 
 router.post('/getSort', (req, res) => {
@@ -383,4 +389,3 @@ router.post('/getSearch', (req, res) => {
 
 
 module.exports = router
-
